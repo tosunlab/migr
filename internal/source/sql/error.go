@@ -4,12 +4,12 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // ErrMalformed marks a .sql file whose sections cannot be read as this format, for errors.Is.
-var ErrMalformed = errors.New("this file is not a migr SQL migration")
+var ErrMalformed = errors.New("this file is not a migrasyon SQL migration")
 
 // FormatError reports a file this package refuses, and what about its shape it refuses.
 type FormatError struct {
@@ -110,11 +110,11 @@ func misplacedMarker(file string, line int, why string) error {
 // unreadable reports a migration whose file could not be read at all.
 func unreadable(file string, err error) error {
 	return remedy.With(fmt.Errorf("reading %s: %w", file, err),
-		"make the file readable by the user migr runs as, or move it out of the migrations directory")
+		"make the file readable by the user migrasyon runs as, or move it out of the migrations directory")
 }
 
 // unknownDirection reports a direction that is neither of the two a migration runs.
 func unknownDirection(file string, dir ir.Direction) error {
 	return malformed(file, fmt.Sprintf("it was asked for direction %q, which is neither %q nor %q",
-		dir, ir.Up, ir.Down), "this is a bug in migr itself: report it at https://github.com/emrebdr/migr/issues")
+		dir, ir.Up, ir.Down), "this is a bug in migrasyon itself: report it at https://github.com/tosunlab/migrasyon/issues")
 }

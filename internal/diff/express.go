@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The two things in the snapshot model whose whole purpose is to be refused on are read here and
@@ -15,7 +15,7 @@ import (
 //
 // A marker is read as a lookup rather than as a report: an element that carries one and is identical
 // in both schemas produces no operation, so it produces no refusal either. That is what makes
-// diffing a database against itself empty however much of it migr could not have created.
+// diffing a database against itself empty however much of it migrasyon could not have created.
 
 // A marker's detail is passed through verbatim rather than framed, because it is written to follow a
 // colon -- schema.Finding.Describe renders one that way and so does Refusal.Describe. Measured against

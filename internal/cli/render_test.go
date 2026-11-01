@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/source"
-	"github.com/emrebdr/migr/internal/source/golang"
-	"github.com/emrebdr/migr/internal/source/typescript"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/source"
+	"github.com/tosunlab/migrasyon/internal/source/golang"
+	"github.com/tosunlab/migrasyon/internal/source/typescript"
 )
 
 // writer is one language's renderer, named so a coverage failure says which language is short.
@@ -25,10 +25,10 @@ type writer struct {
 // Every language a migration can be written in has to be able to write every operation a differ
 // emits, so the coverage checks run over this list rather than over one renderer. A fourth language
 // is a row here and nothing else. sql is deliberately absent: every .sql migration is ir.Raw, so a
-// project in that format has no foldable desired schema and migr diff refuses it before reaching a
+// project in that format has no foldable desired schema and migrasyon diff refuses it before reaching a
 // renderer at all.
 
-// writers are every language this package renders, which is every one migr create can write but sql.
+// writers are every language this package renders, which is every one migrasyon create can write but sql.
 func writers() []writer {
 	return []writer{
 		{name: "go", render: golang.Render},
@@ -53,7 +53,7 @@ func TestEveryLogicalTypeHasASpellingInEveryLanguage(t *testing.T) {
 	t.Log("Coverage is derived from schema.Kinds(), so a nineteenth logical type fails this until")
 	t.Log("every language names it -- which is a table of names plus four parameterised shapes")
 	t.Log("internal/source already knows, rather than a renderer per language.")
-	t.Log("It lives here because only cmd/migr and internal/cli may name a concrete source, and")
+	t.Log("It lives here because only cmd/migrasyon and internal/cli may name a concrete source, and")
 	t.Log("a check over every language has to name every one of them (invariant #1).")
 }
 
@@ -99,7 +99,7 @@ func TestNoLanguageWritesTheOneOperationThatIsEngineSQL(t *testing.T) {
 	}
 
 	t.Log("Which is also why there is no sql writer: every .sql migration is ir.Raw, so such a")
-	t.Log("project has no foldable desired schema and migr diff refuses it before it reaches a")
+	t.Log("project has no foldable desired schema and migrasyon diff refuses it before it reaches a")
 	t.Log("renderer at all.")
 }
 

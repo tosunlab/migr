@@ -10,8 +10,8 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // longName builds a table name of a given length, for the identifier limits.
@@ -32,7 +32,7 @@ func TestAHistoryTableNameTooLongForItsIndexIsRefused(t *testing.T) {
 		{name: "one over", table: longName(maxIdentifier - derived + 1), refused: true},
 		{name: "under 63 but over the index limit", table: longName(maxIdentifier - 1), refused: true},
 		{name: "over an identifier itself", table: longName(maxIdentifier + 1), refused: true},
-		{name: "holding a NUL", table: "migr\x00migrations", refused: true},
+		{name: "holding a NUL", table: "migrasyon\x00migrations", refused: true},
 	}
 
 	for _, c := range cases {
@@ -73,7 +73,7 @@ func TestRefusingATableNameNamesTheDerivedIndex(t *testing.T) {
 }
 
 func TestTheInsertBindsEveryColumnTheRecordCarries(t *testing.T) {
-	store := pgHistory{table: "migr_migrations"}
+	store := pgHistory{table: "migrasyon_migrations"}
 
 	fields := reflect.TypeOf(history.Record{}).NumField()
 	if len(historyColumns) != fields {
@@ -98,13 +98,13 @@ func TestTheInsertBindsEveryColumnTheRecordCarries(t *testing.T) {
 		t.Error("the insert binds more placeholders than there are columns")
 	}
 
-	if !strings.Contains(stmt, `INSERT INTO "migr_migrations"`) {
+	if !strings.Contains(stmt, `INSERT INTO "migrasyon_migrations"`) {
 		t.Errorf("the insert does not write to the configured table:\n%s", stmt)
 	}
 }
 
 func TestTheReadersOrderByTheKeyAndNotByTheClock(t *testing.T) {
-	store := pgHistory{table: "migr_migrations"}
+	store := pgHistory{table: "migrasyon_migrations"}
 
 	listing := store.selectStatement(runOrder)
 	latest := store.selectStatement(latestOrder)
@@ -132,7 +132,7 @@ func TestTheReadersOrderByTheKeyAndNotByTheClock(t *testing.T) {
 
 	if strings.Contains(listing, "*") {
 		t.Errorf("a reader selects every column rather than the ones it scans:\n%s", listing)
-		t.Log("SELECT * cannot survive a newer migr adding a sixteenth column: the scan targets")
+		t.Log("SELECT * cannot survive a newer migrasyon adding a sixteenth column: the scan targets")
 		t.Log("would shift silently rather than the read simply ignoring what it does not know.")
 	}
 }
@@ -189,14 +189,14 @@ func serverError(code string) error {
 }
 
 func TestAMissingHistoryTableIsNeverReadAsADatabaseWithNoRuns(t *testing.T) {
-	store := pgHistory{table: "migr_migrations"}
+	store := pgHistory{table: "migrasyon_migrations"}
 
 	err := store.classifyRead(serverError(undefinedTableCode))
 	if !errors.Is(err, history.ErrNoTable) {
 		t.Fatalf("reading a missing table returned %v, want history.ErrNoTable", err)
 	}
 
-	if !strings.Contains(err.Error(), "migr_migrations") {
+	if !strings.Contains(err.Error(), "migrasyon_migrations") {
 		t.Errorf("the failure does not name the table it looked for: %v", err)
 	}
 
@@ -207,7 +207,7 @@ func TestAMissingHistoryTableIsNeverReadAsADatabaseWithNoRuns(t *testing.T) {
 }
 
 func TestTheSameSQLSTATEMeansDifferentThingsInDifferentPlaces(t *testing.T) {
-	store := pgHistory{table: "migr_migrations", session: &pgConn{}}
+	store := pgHistory{table: "migrasyon_migrations", session: &pgConn{}}
 	rec := history.Record{Version: "20260728T120000", Batch: 4, Ordinal: 2}
 
 	raced := store.classifyCreate(serverError(uniqueViolation))
@@ -235,7 +235,7 @@ func TestTheSameSQLSTATEMeansDifferentThingsInDifferentPlaces(t *testing.T) {
 }
 
 func TestACreateThatLostTheRaceNamesTheLockThatPreventsIt(t *testing.T) {
-	store := pgHistory{table: "migr_migrations", session: &pgConn{}}
+	store := pgHistory{table: "migrasyon_migrations", session: &pgConn{}}
 
 	unlocked := store.classifyCreate(serverError(duplicateTable))
 	if !strings.Contains(unlocked.Error(), "migration lock") {
@@ -246,7 +246,7 @@ func TestACreateThatLostTheRaceNamesTheLockThatPreventsIt(t *testing.T) {
 
 	if strings.Contains(unlocked.Error(), "different key") {
 		t.Errorf("a race without the lock reports the diagnosis for one under it: %v", unlocked)
-		t.Log("Telling an operator who never took the lock that their two migr.yaml files disagree")
+		t.Log("Telling an operator who never took the lock that their two migrasyon.yaml files disagree")
 		t.Log("sends them to look at configuration when the fix is to take the lock.")
 	}
 
@@ -261,7 +261,7 @@ func TestACreateThatLostTheRaceNamesTheLockThatPreventsIt(t *testing.T) {
 }
 
 func TestAWriteAgainstAnUnusableTableSaysWhichWayItIsUnusable(t *testing.T) {
-	store := pgHistory{table: "migr_migrations"}
+	store := pgHistory{table: "migrasyon_migrations"}
 	rec := history.Record{Version: "20260728T120000"}
 
 	missing := store.classifyWrite(rec, serverError(undefinedTableCode))
@@ -286,7 +286,7 @@ func TestAWriteAgainstAnUnusableTableSaysWhichWayItIsUnusable(t *testing.T) {
 }
 
 func TestMarkingARunThatDidNotCompleteNeedsTheFailure(t *testing.T) {
-	store := pgHistory{table: "migr_migrations"}
+	store := pgHistory{table: "migrasyon_migrations"}
 
 	if err := store.checkCause("MarkFailed", nil); err == nil {
 		t.Error("a run was marked failed with nothing to say why")
@@ -302,7 +302,7 @@ func TestMarkingARunThatDidNotCompleteNeedsTheFailure(t *testing.T) {
 }
 
 func TestTheDeclaredColumnsComeFromTheNeutralSchema(t *testing.T) {
-	declared := declaredColumns("migr_migrations")
+	declared := declaredColumns("migrasyon_migrations")
 
 	if len(declared) != len(historyColumns) {
 		t.Fatalf("the schema declares %d columns and this store binds %d",
@@ -320,19 +320,19 @@ func TestTheDeclaredColumnsComeFromTheNeutralSchema(t *testing.T) {
 }
 
 func TestATableMissingAColumnIsNamedAndExtrasAreNot(t *testing.T) {
-	declared := declaredColumns("migr_migrations")
+	declared := declaredColumns("migrasyon_migrations")
 
 	present := make(map[string]bool, len(declared)+1)
 	for _, name := range declared {
 		present[name] = true
 	}
 
-	present["something_a_newer_migr_added"] = true
+	present["something_a_newer_migrasyon_added"] = true
 
 	if missing := missingColumns(declared, present); len(missing) != 0 {
 		t.Errorf("a table with an extra column was reported as missing %v", missing)
 		t.Log("Requiring exactly these columns rather than at least these would make a table a")
-		t.Log("newer migr extended unreadable by this build, for no gain.")
+		t.Log("newer migrasyon extended unreadable by this build, for no gain.")
 	}
 
 	delete(present, "checksum")

@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // rebuildReason is the refusal both sides of an agreeing driver give for drop_column.
@@ -60,7 +60,7 @@ func TestAServerRefusalWithNoReasonFails(t *testing.T) {
 		"giving a reason") {
 		t.Errorf("problems %q accept a server refusal that explains nothing", problems)
 		t.Log("This reason is the only thing that says what the server cannot do, since the")
-		t.Log("compiler produced statements and nothing else disagrees with them: migr validate")
+		t.Log("compiler produced statements and nothing else disagrees with them: migrasyon validate")
 		t.Log("and the engine gate both print it verbatim.")
 	}
 
@@ -83,7 +83,7 @@ func TestRefusingAnOperationDeclaredSupportedFails(t *testing.T) {
 	problems := joined(s.check())
 	if !strings.Contains(problems, "drop_column: Compile refuses it, but the driver declares it") {
 		t.Errorf("problems %q do not report the disagreement", problems)
-		t.Log("This is the direction that reaches production: migr plan says the operation is")
+		t.Log("This is the direction that reaches production: migrasyon plan says the operation is")
 		t.Log("native, validation lets it through, and it fails at apply time instead.")
 	}
 }
@@ -209,7 +209,7 @@ func TestCompilingToNoStatementsFails(t *testing.T) {
 			if problems := joined(s.check()); !strings.Contains(problems, tt.want) {
 				t.Errorf("problems %q accept a migration that changes nothing", problems)
 				t.Log("An operation that compiles to nothing and refuses nothing is the other")
-				t.Log("third possibility: migr up reports success and the schema is untouched.")
+				t.Log("third possibility: migrasyon up reports success and the schema is untouched.")
 			}
 		})
 	}

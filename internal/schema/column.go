@@ -17,7 +17,7 @@ const (
 	CertaintyExact Certainty = "exact"
 	// CertaintyAmbiguous names the best of several: MySQL's datetime(6) is timestamp or timestamptz.
 	CertaintyAmbiguous Certainty = "ambiguous"
-	// CertaintyUnknown names none at all: PostgreSQL's tsvector is no logical type migr has.
+	// CertaintyUnknown names none at all: PostgreSQL's tsvector is no logical type migrasyon has.
 	CertaintyUnknown Certainty = "unknown"
 )
 

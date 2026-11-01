@@ -1,5 +1,5 @@
-import type { Rows } from "@migr/sdk";
-import { defineMigration, literal, t } from "@migr/sdk";
+import type { Rows } from "@migrasyon/sdk";
+import { defineMigration, literal, t } from "@migrasyon/sdk";
 
 /** counted reports whether a read found anything, which is the branch each pinned answer decides. */
 function counted(rows: Rows): boolean {

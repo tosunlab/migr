@@ -8,13 +8,13 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
-// holderQuery names the session holding migr's advisory lock, and how long that session has existed.
+// holderQuery names the session holding migrasyon's advisory lock, and how long that session has existed.
 //
 // objsubid is 2 for the two-integer key form and 1 for the bigint form, and dropping it is not a
-// harmless simplification: pg_advisory_lock((migr's class id::bigint << 32) | migr's obj id)
+// harmless simplification: pg_advisory_lock((migrasyon's class id::bigint << 32) | migrasyon's obj id)
 // produces a row with an identical classid and objid, differing in nothing else. Measured on both
 // servers. The existing waitingQuery test helper omits it, which is fine for counting and wrong
 // for a report that tells an operator which process to terminate.

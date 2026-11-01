@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // impatient is a wait short enough that a test giving up on the lock is not a test waiting.
@@ -364,7 +364,7 @@ func TestAMigrationRunsWithTheLockHeld(t *testing.T) {
 	}
 
 	t.Log("The lock is taken before the transaction begins, and the lock file is a separate")
-	t.Log("file from the database, so SQLite's own fcntl locking never meets migr's flock.")
+	t.Log("file from the database, so SQLite's own fcntl locking never meets migrasyon's flock.")
 }
 
 // errFrom drops the release a successful acquire returns, leaving the failure a test asserts on.

@@ -12,8 +12,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // update rewrites golden files from what a driver compiles, instead of holding it against them.
@@ -23,7 +23,7 @@ var update = flag.Bool("update", false, "rewrite golden files from what the driv
 const extension = ".sql"
 
 // marker introduces the metadata lines a statement's own SQL cannot carry.
-const marker = "-- migr:"
+const marker = "-- migrasyon:"
 
 // The metadata a golden file records beside the statements themselves.
 const (

@@ -12,7 +12,7 @@ import (
 
 	lib "github.com/go-sql-driver/mysql"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // lagWait bounds one replica's lag read, so an unreachable replica holds a chunk rather than hanging it.
@@ -34,7 +34,7 @@ var ErrReplicationStopped = errors.New("replication is stopped")
 // ErrNoLagReported marks a running replica that reports no lag at all.
 var ErrNoLagReported = errors.New("the replica reports no lag")
 
-// replica is one server migr.yaml names as a replica of this one, opened the first time its lag is read.
+// replica is one server migrasyon.yaml names as a replica of this one, opened the first time its lag is read.
 type replica struct {
 	// name is its address, which is what an operator recognizes and carries no credential.
 	name string

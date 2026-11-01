@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // sdk is a fixture runtime: it makes one callback at a time, through the codec, and reads the answer.
@@ -135,7 +135,7 @@ func TestPlanAndApplyEmitIdenticalIRForAMigrationThatDoesNotBranchOnData(t *test
 	if !bytes.Equal(emitted[protocol.ModeApply], emitted[protocol.ModePlan]) {
 		t.Errorf("applying emitted %s and planning emitted %s",
 			emitted[protocol.ModeApply], emitted[protocol.ModePlan])
-		t.Log("This is what makes migr plan worth reading: the operations a preview reports are")
+		t.Log("This is what makes migrasyon plan worth reading: the operations a preview reports are")
 		t.Log("the operations the apply will run, byte for byte, and the checksum covers that")
 		t.Log("same encoding. host.schema.apply records in both modes and always did.")
 	}

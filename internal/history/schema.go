@@ -1,8 +1,8 @@
 package history
 
 import (
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // versionIndex is the suffix the lookup index carries, so its name follows the table's.

@@ -1,6 +1,6 @@
 package mysql
 
-import "github.com/emrebdr/migr/internal/ir"
+import "github.com/tosunlab/migrasyon/internal/ir"
 
 // columnDefinition renders one column as CREATE TABLE and ADD COLUMN spell it.
 func columnDefinition(c ir.Column) string {

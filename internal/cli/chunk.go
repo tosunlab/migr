@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
 // chunkerOf returns the session that runs a data operation a chunk at a time, where the engine has one.
@@ -18,7 +18,7 @@ func chunkerOf(conn driver.Conn) driver.Chunker {
 	return chunker
 }
 
-// paced gives a run its chunk size, its pacer, and the progress it logs, all from migr.yaml.
+// paced gives a run its chunk size, its pacer, and the progress it logs, all from migrasyon.yaml.
 func (t *target) paced(options engine.Options, conn driver.Conn, log *slog.Logger) engine.Options {
 	rows := t.cfg.Safety.Rows()
 

@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 )
 
 // ErrInvalidOnline marks a migration declaring an online strategy this SDK does not know.
-var ErrInvalidOnline = errors.New("a migration declares an online strategy migr does not know")
+var ErrInvalidOnline = errors.New("a migration declares an online strategy migrasyon does not know")
 
 // Strategy is how a migration runs against a live table rather than as a plain ALTER.
 type Strategy string
@@ -38,7 +38,7 @@ func checkOnline(m Migration, file string) error {
 		return nil
 	}
 
-	return fmt.Errorf("%w: %s declares %q, and the one migr knows is %q", ErrInvalidOnline, file,
+	return fmt.Errorf("%w: %s declares %q, and the one migrasyon knows is %q", ErrInvalidOnline, file,
 		strategy, ShadowTable)
 }
 

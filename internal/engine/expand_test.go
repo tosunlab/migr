@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // What a deferred operation costs and buys, with no database and no driver that emulates anything.
@@ -142,7 +142,7 @@ func TestAPreviewCompilesTheFirstEmulatedOperationAndDefersTheRest(t *testing.T)
 
 	t.Log("A preview applies nothing, so only the first operation of the first migration reads the")
 	t.Log("catalog it will actually run against. Printing what the rest compile to now would print")
-	t.Log("SQL that is not the SQL that runs, which is the rule migr plan already follows for a")
+	t.Log("SQL that is not the SQL that runs, which is the rule migrasyon plan already follows for a")
 	t.Log("bound argument it counts rather than splices.")
 }
 
@@ -338,6 +338,6 @@ func TestAPreviewDoesNotFailOverAnExpansionItOnlyAskedForToPrintMore(t *testing.
 	}
 
 	t.Log("judgedFirst drops a failed read for the same reason: a preview must not fail over a")
-	t.Log("question it only asked in order to annotate. migr up asks the same question and does")
+	t.Log("question it only asked in order to annotate. migrasyon up asks the same question and does")
 	t.Log("fail over it, which is where an operator finds out.")
 }

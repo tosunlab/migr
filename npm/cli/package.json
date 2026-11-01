@@ -1,19 +1,19 @@
 {
-  "name": "@migr/cli",
+  "name": "@migrasyon/cli",
   "version": "0.0.0",
-  "description": "The migr binary for your platform, run through npx or a package script.",
+  "description": "The migrasyon binary for your platform, run through npx or a package script.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emrebdr/migr.git",
+    "url": "git+https://github.com/tosunlab/migrasyon.git",
     "directory": "npm/cli"
   },
-  "homepage": "https://github.com/emrebdr/migr#readme",
+  "homepage": "https://github.com/tosunlab/migrasyon#readme",
   "bin": {
-    "migr": "bin/migr.js"
+    "migrasyon": "bin/migrasyon.js"
   },
   "files": [
-    "bin/migr.js",
+    "bin/migrasyon.js",
     "README.md"
   ],
   "engines": {

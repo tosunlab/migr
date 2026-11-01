@@ -3,16 +3,16 @@ package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(BackfillTiers{}) }
+func init() { migrasyon.Register(BackfillTiers{}) }
 
 // BackfillTiers is the fixture that reads, branches on what it read, and reaches the database itself.
 type BackfillTiers struct{}
 
 // Up counts two things, fills one in, and emits an operation shaped by both answers.
-func (m BackfillTiers) Up(ctx context.Context, s *migr.Schema) error {
+func (m BackfillTiers) Up(ctx context.Context, s *migrasyon.Schema) error {
 	tiers, err := s.Query(ctx, "SELECT count(*) FROM people WHERE tier IS NULL")
 	if err != nil {
 		return err
@@ -31,10 +31,10 @@ func (m BackfillTiers) Up(ctx context.Context, s *migr.Schema) error {
 		return err
 	}
 
-	people := s.Table("people").AddColumn("tier_backfilled", migr.Bool())
+	people := s.Table("people").AddColumn("tier_backfilled", migrasyon.Bool())
 
 	if counted(tiers) {
-		people.Default(migr.Literal("true"))
+		people.Default(migrasyon.Literal("true"))
 	}
 
 	if counted(notes) {
@@ -45,10 +45,10 @@ func (m BackfillTiers) Up(ctx context.Context, s *migr.Schema) error {
 }
 
 // Down removes the column and undoes the raw statement, which nothing could have derived.
-func (m BackfillTiers) Down(ctx context.Context, s *migr.Schema) error {
+func (m BackfillTiers) Down(ctx context.Context, s *migrasyon.Schema) error {
 	if err := s.Table("people").
-		DropColumn("tier_backfilled").Was(migr.Column{
-		Name: "tier_backfilled", Type: migr.Bool(), Default: migr.Literal("true"),
+		DropColumn("tier_backfilled").Was(migrasyon.Column{
+		Name: "tier_backfilled", Type: migrasyon.Bool(), Default: migrasyon.Literal("true"),
 	}).
 		Apply(ctx); err != nil {
 		return err
@@ -58,7 +58,7 @@ func (m BackfillTiers) Down(ctx context.Context, s *migr.Schema) error {
 }
 
 // counted reports whether a read found anything, which is the branch each pinned answer decides.
-func counted(rows migr.Rows) bool {
+func counted(rows migrasyon.Rows) bool {
 	if rows.Len() != 1 || len(rows.Values[0]) != 1 || rows.Values[0][0] == nil {
 		return false
 	}

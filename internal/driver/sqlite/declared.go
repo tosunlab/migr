@@ -3,7 +3,7 @@ package sqlite
 import (
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The keywords a recorded item is read for, each of which the pragmas answer nothing about.

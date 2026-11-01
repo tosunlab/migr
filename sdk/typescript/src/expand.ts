@@ -4,7 +4,7 @@
 // is a migration object a file exports as its default, and the replacement is restated in every one
 // of those files, so an applied file cannot change what it emits underneath its checksum. Swap and
 // contract are unsafe while an older app version is still serving, and each says so with a warning
-// sent in both modes, so migr plan shows it before migr up runs it.
+// sent in both modes, so migrasyon plan shows it before migrasyon up runs it.
 
 import type { Column, Default } from "./column.ts";
 import type { Migration, Phase } from "./migration.ts";

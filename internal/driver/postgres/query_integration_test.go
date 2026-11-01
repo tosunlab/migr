@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestAReadThatWritesIsRefusedByTheServerAndChangesNothing(t *testing.T) {
@@ -163,7 +163,7 @@ func TestAMigrationsOwnSQLIsRefusedInsideATransaction(t *testing.T) {
 func readTable(t *testing.T, conn driver.Conn) string {
 	t.Helper()
 
-	const name = "migr_query_probe"
+	const name = "migrasyon_query_probe"
 
 	perform(t, conn, fmt.Sprintf("DROP TABLE IF EXISTS %s", name))
 	perform(t, conn, fmt.Sprintf("CREATE TABLE %s (id bigint PRIMARY KEY, note text)", name))

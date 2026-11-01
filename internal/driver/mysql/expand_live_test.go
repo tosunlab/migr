@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // expandAndRun compiles a column change against the database and runs what it became.
@@ -255,7 +255,7 @@ func TestAColumnCarryingSomethingARedefinitionWouldLoseIsRefusedAgainstARealServ
 		t.Log("Four real columns, four refusals, and each one still exactly as it was. Every one of")
 		t.Log("these would have been silently dropped by a MODIFY that restated only what the")
 		t.Log("operation named -- the auto-increment on a primary key, the ON UPDATE clause, the")
-		t.Log("generation expression, and a collation the operator chose and migr did not.")
+		t.Log("generation expression, and a collation the operator chose and migrasyon did not.")
 	})
 }
 

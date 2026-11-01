@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // invalidWait bounds the one catalog read that names an index a failed build left behind.
@@ -36,7 +36,7 @@ type InvalidIndexError struct {
 // Error names the index left INVALID and the drop to run before the dirty run is settled.
 func (e *InvalidIndexError) Error() string {
 	return fmt.Sprintf("%v -- PostgreSQL left %s behind INVALID: it slows every write to the table "+
-		"and no query uses it. migr drops it before trying the build again; where it could not, run "+
+		"and no query uses it. migrasyon drops it before trying the build again; where it could not, run "+
 		"DROP INDEX CONCURRENTLY %s yourself, since a second build fails on its name", e.Err,
 		quote(e.Index), quote(e.Index))
 }

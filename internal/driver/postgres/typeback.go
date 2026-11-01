@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // arraySuffix is what format_type appends to an element type, however many dimensions it has.
@@ -227,7 +227,7 @@ var catalogActions = map[string]schema.ReferentialAction{
 func referentialAction(recorded string) (schema.ReferentialAction, error) {
 	action, known := catalogActions[strings.TrimSpace(recorded)]
 	if !known {
-		return "", fmt.Errorf("%w: this server records the referential action %q, which migr has "+
+		return "", fmt.Errorf("%w: this server records the referential action %q, which migrasyon has "+
 			"no name for", ErrIntrospect, recorded)
 	}
 

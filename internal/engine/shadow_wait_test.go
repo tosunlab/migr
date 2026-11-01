@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // detached runs the staged shadow-table migration and cancels it once the hold has read the log three times.
@@ -140,7 +140,7 @@ func TestTheHoldRecordsTheLagItMeasuredWhereAnotherProcessCanReadIt(t *testing.T
 
 	if !recorded || app.polls < 8 {
 		t.Errorf("no read of the held log recorded the lag it measured, over %d polls", app.polls)
-		t.Log("migr cutover runs in another process, so a lag held only in memory is a lag no")
+		t.Log("migrasyon cutover runs in another process, so a lag held only in memory is a lag no")
 		t.Log("operator asked to confirm the swap can see (M13-T14).")
 	}
 }

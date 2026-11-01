@@ -1,21 +1,21 @@
-// Package migr is the Go SDK for writing migr migrations.
+// Package migrasyon is the Go SDK for writing migrasyon migrations.
 //
 // A migration is a type with an Up method. Everything else is optional, and each
 // optional part is one method:
 //
-//	func init() { migr.Register(AddUsers{}) }
+//	func init() { migrasyon.Register(AddUsers{}) }
 //
 //	type AddUsers struct{}
 //
-//	func (m AddUsers) Up(ctx context.Context, s *migr.Schema) error {
+//	func (m AddUsers) Up(ctx context.Context, s *migrasyon.Schema) error {
 //		return s.CreateTable("users").
-//			Column("id", migr.UUID()).
-//			Column("email", migr.String(255)).
+//			Column("id", migrasyon.UUID()).
+//			Column("email", migrasyon.String(255)).
 //			PrimaryKey("id").
 //			Apply(ctx)
 //	}
 //
-//	func (m AddUsers) Down(ctx context.Context, s *migr.Schema) error { ... }  // optional
+//	func (m AddUsers) Down(ctx context.Context, s *migrasyon.Schema) error { ... }  // optional
 //	func (m AddUsers) Irreversible() string                           { ... }  // optional
 //	func (m AddUsers) Validate() error                                { ... }  // optional
 //	func (m AddUsers) Dependencies() []string                         { ... }  // optional
@@ -34,7 +34,7 @@
 // added to is not one.
 //
 // Errors are deferred to Apply rather than returned at every link, because a chain
-// cannot return one. That includes a logical type: migr.String(0) has no canonical
+// cannot return one. That includes a logical type: migrasyon.String(0) has no canonical
 // spelling, and carries the reason it has none until the operation using it is emitted.
 //
 // A column is NOT NULL unless the chain says Null, which is what an unqualified column
@@ -46,7 +46,7 @@
 // a chain and the operation written out emit the same bytes.
 //
 // Schema.Raw and Schema.Exec are not the same escape hatch. Raw emits an operation: the
-// engine records it, compiles it, shows it in migr plan, and runs it in the migration's
+// engine records it, compiles it, shows it in migrasyon plan, and runs it in the migration's
 // transaction, and it names one engine so no other will run it. Exec reaches the database
 // directly, before that transaction opens, and is the one thing below that no Down can be
 // derived over.
@@ -59,10 +59,10 @@
 //
 // # Import path and package name
 //
-// The import path ends in "go" and the package is named migr, because go is a
-// reserved keyword and cannot be a package name. Import it plain and refer to migr:
+// The import path ends in "go" and the package is named migrasyon, because go is a
+// reserved keyword and cannot be a package name. Import it plain and refer to migrasyon:
 //
-//	import migr "github.com/emrebdr/migr/sdk/go"
+//	import migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 //
 // # Down, or a reason there is none
 //
@@ -88,8 +88,8 @@
 // file cannot change what it emits underneath its checksum:
 //
 //	func init() {
-//		migr.Register(migr.ReplaceColumn("users", "email", migr.String(255)).
-//			With(migr.String(320)).Expand())
+//		migrasyon.Register(migrasyon.ReplaceColumn("users", "email", migrasyon.String(255)).
+//			With(migrasyon.String(320)).Expand())
 //	}
 //
 // Expand adds the replacing column, nullable whatever it ends as. Backfill fills it from
@@ -99,10 +99,10 @@
 //
 // Swap and Contract are unsafe while an app version that reads the old column is still
 // serving, and so is undoing Expand while one writes the new column; each sends a
-// warning saying so, in plan mode too, so migr plan shows it before migr up runs it.
+// warning saying so, in plan mode too, so migrasyon plan shows it before migrasyon up runs it.
 // Each phase declares itself a step of the change, waiting on the phase before it
-// (Phased), and migr runs a step only under a release after the one that
-// applied its prior step -- so a deploy passes migr up --release <build> and the four
+// (Phased), and migrasyon runs a step only under a release after the one that
+// applied its prior step -- so a deploy passes migrasyon up --release <build> and the four
 // land a deploy apart, the run holding at the next one rather than failing. A hand-written
 // migration declares the same through Phase. The backfill's data_transform and the
 // contract's drop_column are destructive by kind, so a project permits both in
@@ -160,14 +160,14 @@
 //
 // # Testing a migration
 //
-// Package migrtest, beside this one, holds three helpers: one that captures the IR a half
+// Package migrasyontest, beside this one, holds three helpers: one that captures the IR a half
 // emits against a recording host, one that reports which of the three answers to "what
-// undoes this" a migration gives, and one that runs the real migr binary against a database
+// undoes this" a migration gives, and one that runs the real migrasyon binary against a database
 // it throws away. None of them inverts an operation -- that is the engine's, so two SDKs
-// cannot reach two answers -- so whether a rollback can run at all is reported by migr validate through the
+// cannot reach two answers -- so whether a rollback can run at all is reported by migrasyon validate through the
 // third helper rather than guessed by the first two.
 //
-//	migrtest.Up(t, AddUsers{}).Is(t, migr.CreateTable{Table: "users", ...})
+//	migrasyontest.Up(t, AddUsers{}).Is(t, migrasyon.CreateTable{Table: "users", ...})
 //
 // The seam those helpers stand on is exported here: NewWindow opens the window one
 // migration.execute acts through, over any Host, and is what the session itself uses. Seal
@@ -175,5 +175,5 @@
 // cannot close the call it is running in.
 //
 // Status: the migration contract, the protocol client, the whole v1 schema builder
-// (M6-T7, M6-T8), and the test helpers in migrtest (M10-T6).
-package migr
+// (M6-T7, M6-T8), and the test helpers in migrasyontest (M10-T6).
+package migrasyon

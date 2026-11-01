@@ -11,11 +11,11 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // lockSuffix names the lock file beside the database, following SQLite's own sidecar convention.
-const lockSuffix = "-migr.lock"
+const lockSuffix = "-migrasyon.lock"
 
 // lockMode is what the lock file is created with, since it carries no secret and names a process.
 const lockMode = 0o644

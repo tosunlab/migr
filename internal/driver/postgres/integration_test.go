@@ -10,11 +10,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
-	conformance "github.com/emrebdr/migr/test/conformance/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/driver"
 )
 
 // servers are the PostgreSQL majors this driver is held to, and the environment variables
@@ -27,14 +27,14 @@ var servers = []struct {
 }{
 	{
 		name:  "postgres16",
-		env:   "MIGR_TEST_PG16_DSN",
-		dsn:   "postgres://migr:migr@127.0.0.1:55416/migr?sslmode=disable",
+		env:   "MIGRASYON_TEST_PG16_DSN",
+		dsn:   "postgres://migrasyon:migrasyon@127.0.0.1:55416/migrasyon?sslmode=disable",
 		major: 16,
 	},
 	{
 		name:  "postgres17",
-		env:   "MIGR_TEST_PG17_DSN",
-		dsn:   "postgres://migr:migr@127.0.0.1:55417/migr?sslmode=disable",
+		env:   "MIGRASYON_TEST_PG17_DSN",
+		dsn:   "postgres://migrasyon:migrasyon@127.0.0.1:55417/migrasyon?sslmode=disable",
 		major: 17,
 	},
 }
@@ -124,7 +124,7 @@ func TestAnUnreachableServerFailsClosed(t *testing.T) {
 		t.Fatalf("New: %v", err)
 	}
 
-	_, err = d.Open(t.Context(), "postgres://migr:migr@127.0.0.1:1/migr?sslmode=disable")
+	_, err = d.Open(t.Context(), "postgres://migrasyon:migrasyon@127.0.0.1:1/migrasyon?sslmode=disable")
 	if err == nil {
 		t.Fatal("opening a session against a closed port succeeded")
 	}
@@ -133,7 +133,7 @@ func TestAnUnreachableServerFailsClosed(t *testing.T) {
 		t.Errorf("Open failed with %v, want ErrConnect", err)
 	}
 
-	if strings.Contains(err.Error(), "migr:migr") {
+	if strings.Contains(err.Error(), "migrasyon:migrasyon") {
 		t.Errorf("the failure rendered the credentials: %s", err)
 	}
 }

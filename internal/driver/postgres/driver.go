@@ -8,9 +8,9 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Name is the name this driver is registered under, and the name every refusal it gives states.
@@ -19,7 +19,7 @@ const Name = "postgres"
 // strategy is the one migration lock this driver implements, and the only one lock.strategy may ask for.
 const strategy = "advisory"
 
-// New builds the PostgreSQL driver from the settings resolved out of migr.yaml.
+// New builds the PostgreSQL driver from the settings resolved out of migrasyon.yaml.
 func New(opts driver.Options) (driver.Driver, error) {
 	schema, table := opts.Namespace()
 
@@ -80,9 +80,9 @@ type pgDriver struct {
 	// seeds is where seeds are recorded, a second table that keys no lock of its own.
 	seeds string
 	key   lockKey
-	// lockWait bounds an acquire server-side, and is migr.yaml's lock.timeout.
+	// lockWait bounds an acquire server-side, and is migrasyon.yaml's lock.timeout.
 	lockWait time.Duration
-	// statementLockWait bounds each statement, and is migr.yaml's safety.lock_timeout.
+	// statementLockWait bounds each statement, and is migrasyon.yaml's safety.lock_timeout.
 	statementLockWait time.Duration
 }
 

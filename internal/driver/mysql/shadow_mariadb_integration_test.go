@@ -12,8 +12,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
 // MariaDB's cutover is a holder, a renamer and a prober beside the session, and these hold it
@@ -25,7 +25,7 @@ import (
 type mariadbCutover struct {
 	// c is the session the cutover runs on.
 	c *mysqlConn
-	// pool is what writers and strays write through, which is no migr session.
+	// pool is what writers and strays write through, which is no migrasyon session.
 	pool *sql.DB
 	// shadow names the table, its shadow and the retired name.
 	shadow driver.Shadow

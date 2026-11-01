@@ -7,8 +7,8 @@ import (
 	gomysql "github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/go-mysql-org/go-mysql/replication"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // The events here are what MariaDB 11.4.13 was measured writing: a GTID event opening every group with no
@@ -96,7 +96,7 @@ func TestAMariaDBStandaloneGroupCommitsAtItsStatementAndAnAlterOfTheTableStopsTh
 
 	for _, e := range []*replication.BinlogEvent{
 		mariadbGTID(150, 11, true),
-		event(replication.QUERY_EVENT, 200, &replication.QueryEvent{Schema: []byte("migr"),
+		event(replication.QUERY_EVENT, 200, &replication.QueryEvent{Schema: []byte("migrasyon"),
 			Query: []byte("CREATE TABLE other (id int)")}),
 		event(replication.MARIADB_BINLOG_CHECKPOINT_EVENT, 250, &replication.MariadbBinlogCheckPointEvent{}),
 		event(replication.MARIADB_GTID_LIST_EVENT, 300, &replication.MariadbGTIDListEvent{}),
@@ -115,7 +115,7 @@ func TestAMariaDBStandaloneGroupCommitsAtItsStatementAndAnAlterOfTheTableStopsTh
 		t.Fatal(err)
 	}
 
-	_, err := s.consume(event(replication.QUERY_EVENT, 400, &replication.QueryEvent{Schema: []byte("migr"),
+	_, err := s.consume(event(replication.QUERY_EVENT, 400, &replication.QueryEvent{Schema: []byte("migrasyon"),
 		Query: []byte("ALTER TABLE people ADD COLUMN x int")}))
 	if err == nil || !strings.Contains(err.Error(), "changed under") {
 		t.Errorf("an ALTER of the stream's table returned %v, want the stream stopped naming it", err)
@@ -141,7 +141,7 @@ func TestTheRenameMustHoldEveryNameThatSortsBeforeTheTable(t *testing.T) {
 	c := &mysqlConn{}
 
 	for table, want := range map[string][]string{
-		"people": {"_people_migr_old", "_people_migr_new"},
+		"people": {"_people_migrasyon_old", "_people_migrasyon_new"},
 		"People": {},
 		"Ab":     {},
 	} {
@@ -154,5 +154,5 @@ func TestTheRenameMustHoldEveryNameThatSortsBeforeTheTable(t *testing.T) {
 
 // shadowFor names a table's shadow and retired copy as the engine derives them, less the version.
 func shadowFor(table string) driver.Shadow {
-	return driver.Shadow{Table: table, Shadow: "_" + table + "_migr_new", Retired: "_" + table + "_migr_old"}
+	return driver.Shadow{Table: table, Shadow: "_" + table + "_migrasyon_new", Retired: "_" + table + "_migrasyon_old"}
 }

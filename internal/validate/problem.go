@@ -3,9 +3,9 @@ package validate
 import (
 	"slices"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/rule"
 )
 
 // Check names what a problem was found by, which is also what it stopped this migration at.

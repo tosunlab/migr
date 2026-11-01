@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // stagedRows is a table of two rows, one whose nickname is NULL and one whose nickname is set.

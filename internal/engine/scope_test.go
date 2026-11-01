@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // versions renders what a result acted on, in the order it acted.
@@ -375,7 +375,7 @@ func TestTheLastBatchIsTheMostRecentOneTheDatabaseStillCarries(t *testing.T) {
 		t.Errorf("the run reports %v left alone, want %v", stoppedShortOf(result), want)
 	}
 
-	t.Log("This is what migr down with no arguments means, and it is a batch rather than a")
+	t.Log("This is what migrasyon down with no arguments means, and it is a batch rather than a")
 	t.Log("single migration because one invocation is the unit an operator undoes.")
 }
 
@@ -399,7 +399,7 @@ func TestTheLastBatchIsReadFromTheRunsThatAppliedItRatherThanFromLatest(t *testi
 
 	t.Log("Batch 3 is a rollback's own, and batch 2 is already given back. Latest is direction-")
 	t.Log("and outcome-blind, so reading the batch from it would name a batch with nothing left")
-	t.Log("to undo -- and a second migr down would then report nothing to do, forever.")
+	t.Log("to undo -- and a second migrasyon down would then report nothing to do, forever.")
 }
 
 func TestTheLastBatchIsARollbacksAloneAndAnApplyRefusesItBeforeTheLock(t *testing.T) {
@@ -468,7 +468,7 @@ func TestWhatANarrowedRunStoppedShortOfIsReportedWithTheStateItIsStillIn(t *test
 		}
 	}
 
-	t.Log("Without this, migr up --step 1 cannot say there is more to do without reconciling")
+	t.Log("Without this, migrasyon up --step 1 cannot say there is more to do without reconciling")
 	t.Log("a second time against a database it has already given the lock back on.")
 }
 

@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"bytes"
@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // version is the migration version every fixture here registers itself under.
@@ -79,7 +79,7 @@ func (m oneWay) Irreversible() string {
 	return "the dropped rows are not recoverable; restore from a backup"
 }
 
-// checked is a migration that checks itself, which migr validate runs.
+// checked is a migration that checks itself, which migrasyon validate runs.
 type checked struct {
 	plain
 	// problem is what Validate reports, nil when the migration is fine.
@@ -317,7 +317,7 @@ func (e *engine) greet() *wire.Message {
 	id := e.send(wire.Initialize, wire.InitializeParams{
 		ProtocolVersions: []int{wire.Version},
 		IRVersion:        wire.IRVersion,
-		Client:           wire.Client{Name: "migr", Version: "0.1.0"},
+		Client:           wire.Client{Name: "migrasyon", Version: "0.1.0"},
 		Migrations:       wire.MigrationsAt{Dir: "/srv/app/migrations", Language: "go"},
 		Database:         wire.DatabaseAt{Name: "default", Driver: "postgres"},
 	})

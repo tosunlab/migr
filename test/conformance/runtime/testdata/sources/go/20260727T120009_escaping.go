@@ -3,10 +3,10 @@ package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(Escaping{}) }
+func init() { migrasyon.Register(Escaping{}) }
 
 // expression carries every character two SDKs are most likely to render differently.
 const expression = `total >= 0 AND note <> 'a&b' AND label <> 'naïve — "ok"'`
@@ -18,7 +18,7 @@ const query = "SELECT id FROM orders WHERE total < 100 AND note <> 'a&b'"
 type Escaping struct{}
 
 // Up adds a constraint and a view whose text no encoder may rewrite.
-func (m Escaping) Up(ctx context.Context, s *migr.Schema) error {
+func (m Escaping) Up(ctx context.Context, s *migrasyon.Schema) error {
 	if err := s.Table("orders").
 		AddCheck("ck_orders_sane", expression).
 		Apply(ctx); err != nil {
@@ -29,12 +29,12 @@ func (m Escaping) Up(ctx context.Context, s *migr.Schema) error {
 }
 
 // Down removes both, recording the same text a second time.
-func (m Escaping) Down(ctx context.Context, s *migr.Schema) error {
+func (m Escaping) Down(ctx context.Context, s *migrasyon.Schema) error {
 	if err := s.View("small_orders").Drop().Was(query).Apply(ctx); err != nil {
 		return err
 	}
 
 	return s.Table("orders").
-		DropCheck("ck_orders_sane").Was(migr.CheckDef{Expression: expression}).
+		DropCheck("ck_orders_sane").Was(migrasyon.CheckDef{Expression: expression}).
 		Apply(ctx)
 }

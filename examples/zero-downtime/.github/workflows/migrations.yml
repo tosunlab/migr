@@ -32,10 +32,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Install migr
-        run: npm install --global @migr/cli
+      - name: Install migrasyon
+        run: npm install --global @migrasyon/cli
       - name: Gate on lock cost
-        run: migr validate --require-safe
+        run: migrasyon validate --require-safe
 
   migrate:
     if: github.event_name == 'push'
@@ -51,7 +51,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Install migr
-        run: npm install --global @migr/cli
+      - name: Install migrasyon
+        run: npm install --global @migrasyon/cli
       - name: Migrate under this release
-        run: migr up --release "$GITHUB_SHA"
+        run: migrasyon up --release "$GITHUB_SHA"

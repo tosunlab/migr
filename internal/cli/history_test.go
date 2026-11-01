@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // decodeLog reads the document --json promised, failing the test rather than the command.
@@ -21,7 +21,7 @@ func decodeLog(t *testing.T, stdout string) executionLog {
 
 	var log executionLog
 	if err := json.Unmarshal([]byte(stdout), &log); err != nil {
-		t.Fatalf("migr history --json emitted %v:\n%s", err, stdout)
+		t.Fatalf("migrasyon history --json emitted %v:\n%s", err, stdout)
 	}
 
 	return log
@@ -43,7 +43,7 @@ func TestHistoryPrintsEveryRunInTheOrderTheyHappened(t *testing.T) {
 
 	for _, args := range [][]string{{"up"}, {"down"}, {"up"}} {
 		if _, _, err := runWith(t, dir, noon, drivers, args...); err != nil {
-			t.Fatalf("migr %s: %v", args[0], err)
+			t.Fatalf("migrasyon %s: %v", args[0], err)
 		}
 	}
 
@@ -126,7 +126,7 @@ func TestHistoryNamesAMigrationTheOnlyWayARowCan(t *testing.T) {
 	if strings.Contains(stdout, ".sql") {
 		t.Errorf("history rendered a filename:\n%s", stdout)
 		t.Log("A history row carries a version and a name and no extension, deliberately: a run")
-		t.Log("may outlive the file it ran from. migr status renders filenames; this cannot.")
+		t.Log("may outlive the file it ran from. migrasyon status renders filenames; this cannot.")
 	}
 
 	if !strings.Contains(stdout, versionAt(0)+"_add_users") {

@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // builtWith returns this package's driver built from options, failing the test if it refuses them.
@@ -27,7 +27,7 @@ func builtWith(t *testing.T, opts driver.Options) *pgDriver {
 	return d
 }
 
-func TestTheAdvisoryWaitIsWhateverMigrYamlConfigured(t *testing.T) {
+func TestTheAdvisoryWaitIsWhateverMigrasyonYamlConfigured(t *testing.T) {
 	d := builtWith(t, driver.Options{LockWait: 7 * time.Second})
 
 	if d.lockWait != 7*time.Second {
@@ -74,7 +74,7 @@ func TestTheTwoLockBoundsAreNotTheSameSetting(t *testing.T) {
 			d.lockWait, d.statementLockWait)
 		t.Log("lock.timeout bounds the advisory acquire and safety.lock_timeout bounds each")
 		t.Log("statement. Swapped, invariant #12's per-statement bound becomes whatever an")
-		t.Log("operator set for waiting on other migr runs.")
+		t.Log("operator set for waiting on other migrasyon runs.")
 	}
 }
 
@@ -98,7 +98,7 @@ func TestTheStrategyThisDriverImplementsIsAccepted(t *testing.T) {
 	for _, requested := range []string{"", strategy} {
 		if _, err := New(driver.Options{LockStrategy: requested}); err != nil {
 			t.Errorf("New refused lock.strategy %q: %v", requested, err)
-			t.Log("An empty strategy means migr.yaml named none, which is the driver's own.")
+			t.Log("An empty strategy means migrasyon.yaml named none, which is the driver's own.")
 		}
 	}
 }
@@ -164,7 +164,7 @@ func TestTheApplicationNameFitsWhatPostgreSQLWillKeep(t *testing.T) {
 	name := applicationName()
 
 	if name == "" {
-		t.Fatal("a migr session identifies itself as nothing, so every holder report is anonymous")
+		t.Fatal("a migrasyon session identifies itself as nothing, so every holder report is anonymous")
 	}
 
 	if len(name) > applicationNameLimit {
@@ -218,7 +218,7 @@ func TestAVersionTooLongOrUnprintableIsCutBeforeTheServerCutsIt(t *testing.T) {
 func TestEveryLockSettingReachesTheStartupPacket(t *testing.T) {
 	d := builtWith(t, driver.Options{StatementLockWait: 1234 * time.Millisecond})
 
-	cfg, err := parseDSN("postgres://migr@localhost:5432/migr")
+	cfg, err := parseDSN("postgres://migrasyon@localhost:5432/migrasyon")
 	if err != nil {
 		t.Fatalf("parseDSN: %v", err)
 	}
@@ -242,8 +242,8 @@ func TestEveryLockSettingReachesTheStartupPacket(t *testing.T) {
 	}
 }
 
-func TestMigrsOwnSettingsOverrideOnesTheDSNCarried(t *testing.T) {
-	cfg, err := parseDSN("postgres://migr@localhost:5432/migr" +
+func TestMigrasyonsOwnSettingsOverrideOnesTheDSNCarried(t *testing.T) {
+	cfg, err := parseDSN("postgres://migrasyon@localhost:5432/migrasyon" +
 		"?lock_timeout=0&application_name=somebody_else&tcp_keepalives_idle=7200")
 	if err != nil {
 		t.Fatalf("parseDSN: %v", err)

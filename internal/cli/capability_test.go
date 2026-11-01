@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/validate"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/validate"
 )
 
 // refusedStatement is the one statement the staged server compiles and declares it cannot perform.
@@ -30,11 +30,11 @@ func TestValidateChecksNothingAgainstAServerUntilItIsAskedTo(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "validate")
 	if err != nil {
-		t.Fatalf("migr validate: %v", err)
+		t.Fatalf("migrasyon validate: %v", err)
 	}
 
 	if f.asked("open") {
-		t.Error("migr validate opened a database with no --connect")
+		t.Error("migrasyon validate opened a database with no --connect")
 	}
 
 	for _, want := range []string{"no problems found", noDatabase, "--connect"} {
@@ -51,11 +51,11 @@ func TestValidateConnectReportsWhatThisServerWillNotPerform(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "validate", "--connect")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr validate --connect exited %d, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon validate --connect exited %d, want %d: %v", got, ExitValidation, err)
 	}
 
 	if !f.asked("open") {
-		t.Fatalf("migr validate --connect asked the database for %v", f.calls)
+		t.Fatalf("migrasyon validate --connect asked the database for %v", f.calls)
 	}
 
 	for _, want := range []string{
@@ -78,7 +78,7 @@ func TestValidateConnectFailsRatherThanSkippingWhenNothingAnswers(t *testing.T) 
 
 	_, _, err := runWith(t, dir, noon, drivers, "validate", "--connect")
 	if got := ExitCode(err); got != ExitRuntime {
-		t.Fatalf("migr validate --connect exited %d, want %d: %v", got, ExitRuntime, err)
+		t.Fatalf("migrasyon validate --connect exited %d, want %d: %v", got, ExitRuntime, err)
 	}
 
 	if !strings.Contains(err.Error(), `database "default"`) {
@@ -86,7 +86,7 @@ func TestValidateConnectFailsRatherThanSkippingWhenNothingAnswers(t *testing.T) 
 	}
 
 	if _, _, offline := runWith(t, dir, noon, drivers, "validate"); offline != nil {
-		t.Errorf("migr validate without the flag failed over the same unreachable database: %v",
+		t.Errorf("migrasyon validate without the flag failed over the same unreachable database: %v",
 			offline)
 		t.Log("The flag is what asks for a database, so the no-secret run validate was built")
 		t.Log("for is unchanged by a DSN that points nowhere.")
@@ -99,11 +99,11 @@ func TestValidateConnectTakesNoMigrationLock(t *testing.T) {
 	f.serverRefuses = ""
 
 	if _, _, err := runWith(t, dir, noon, drivers, "validate", "--connect"); err != nil {
-		t.Fatalf("migr validate --connect failed against a database whose lock is held: %v", err)
+		t.Fatalf("migrasyon validate --connect failed against a database whose lock is held: %v", err)
 	}
 
 	if f.asked("lock") {
-		t.Error("migr validate --connect took the migration lock, which no report may")
+		t.Error("migrasyon validate --connect took the migration lock, which no report may")
 		t.Log("It answers what these migrations are, not what will run, and it is the command")
 		t.Log("an operator reaches for during a deploy.")
 	}
@@ -114,11 +114,11 @@ func TestARunIsRefusedBeforeSendingAnythingThisServerCannotPerform(t *testing.T)
 
 	_, _, err := runWith(t, dir, noon, drivers, "up")
 	if got := ExitCode(err); got != ExitRuntime {
-		t.Fatalf("migr up exited %d, want %d: %v", got, ExitRuntime, err)
+		t.Fatalf("migrasyon up exited %d, want %d: %v", got, ExitRuntime, err)
 	}
 
 	if !errors.Is(err, engine.ErrUnsupported) {
-		t.Fatalf("migr up returned %v, want the server's refusal", err)
+		t.Fatalf("migrasyon up returned %v, want the server's refusal", err)
 	}
 
 	message := err.Error()
@@ -150,7 +150,7 @@ func TestTheRefusalCarriesItsOwnDocumentUnderJSON(t *testing.T) {
 
 	_, stderr, err := runWith(t, dir, noon, drivers, "--json", "up")
 	if err == nil {
-		t.Fatal("migr --json up succeeded over an operation this server refuses")
+		t.Fatal("migrasyon --json up succeeded over an operation this server refuses")
 	}
 
 	got := decodeFailure(t, strings.TrimSpace(stderr))
@@ -190,14 +190,14 @@ func TestARollbackIsRefusedForTheSameReason(t *testing.T) {
 	f.serverRefuses = ""
 
 	if _, _, err := runWith(t, dir, noon, drivers, "up"); err != nil {
-		t.Fatalf("migr up: %v", err)
+		t.Fatalf("migrasyon up: %v", err)
 	}
 
 	f.serverRefuses = "DROP TABLE teams;"
 
 	_, _, err := runWith(t, dir, noon, drivers, "down")
 	if !errors.Is(err, engine.ErrUnsupported) {
-		t.Fatalf("migr down returned %v, want the server's refusal", err)
+		t.Fatalf("migrasyon down returned %v, want the server's refusal", err)
 	}
 
 	if !strings.Contains(err.Error(), "down") {
@@ -210,7 +210,7 @@ func TestAPreviewMarksWhatARunRefusesAndSucceeds(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "plan")
 	if err != nil {
-		t.Fatalf("migr plan: %v", err)
+		t.Fatalf("migrasyon plan: %v", err)
 	}
 
 	for _, want := range []string{
@@ -222,7 +222,7 @@ func TestAPreviewMarksWhatARunRefusesAndSucceeds(t *testing.T) {
 		if !strings.Contains(out, want) {
 			t.Errorf("the plan does not print %q:\n%s", want, out)
 			t.Log("A report finds a problem without failing (CLAUDE.md §5), and this is the")
-			t.Log("command that tells an operator what migr up will refuse -- with the reason,")
+			t.Log("command that tells an operator what migrasyon up will refuse -- with the reason,")
 			t.Log("which before M10-T2 it printed nowhere at all.")
 		}
 	}
@@ -233,12 +233,12 @@ func TestADryRunCountsWhatThisServerCannotPerform(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "up", "--dry-run")
 	if err != nil {
-		t.Fatalf("migr up --dry-run: %v", err)
+		t.Fatalf("migrasyon up --dry-run: %v", err)
 	}
 
 	if !strings.Contains(out, "1 operation this server declares it cannot perform") {
 		t.Errorf("the dry run says nothing about the refusal:\n%s", out)
-		t.Log("A dry run that reported two migrations it would apply and then watched migr up")
+		t.Log("A dry run that reported two migrations it would apply and then watched migrasyon up")
 		t.Log("refuse the second would be describing a run that cannot happen.")
 	}
 }
@@ -248,7 +248,7 @@ func TestThePlanCarriesTheReasonUnderJSON(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "--json", "plan")
 	if err != nil {
-		t.Fatalf("migr --json plan: %v", err)
+		t.Fatalf("migrasyon --json plan: %v", err)
 	}
 
 	var got compiledPlan
@@ -302,7 +302,7 @@ func TestARefusedMigrationIsNeverCompiledAgainstTheDatabase(t *testing.T) {
 
 	_, _, err := runWith(t, dir, noon, drivers, "up")
 	if !errors.Is(err, engine.ErrUnsupported) {
-		t.Fatalf("migr up returned %v, want the server's refusal", err)
+		t.Fatalf("migrasyon up returned %v, want the server's refusal", err)
 	}
 
 	if f.asked("expand") {

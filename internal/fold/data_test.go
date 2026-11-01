@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 func TestADataOperationChangesNoSchema(t *testing.T) {

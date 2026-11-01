@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // offlineFor builds an offline session for a test, failing the test rather than the code under it.
@@ -105,7 +105,7 @@ func TestAnOfflineSessionRefusesEveryOperationWithAStatedReason(t *testing.T) {
 	caps := offlineFor(t).Capabilities()
 
 	if caps.Driver() != "postgres" {
-		t.Errorf("the capability set names %q, want the driver migr.yaml chose", caps.Driver())
+		t.Errorf("the capability set names %q, want the driver migrasyon.yaml chose", caps.Driver())
 	}
 
 	verdict := caps.Resolve(ir.Raw{Driver: "postgres", SQL: "SELECT 1"})

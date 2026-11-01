@@ -3,7 +3,7 @@ package fold
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Refusal is one operation this projection could not fold, and what stopped it.

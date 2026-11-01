@@ -9,7 +9,7 @@ import (
 const DefaultBudget = 1500 * time.Millisecond
 
 // BudgetVariable overrides the budget, as a Go duration, for a machine slower than the one it was set on.
-const BudgetVariable = "MIGR_ZERODOWNTIME_BUDGET"
+const BudgetVariable = "MIGRASYON_ZERODOWNTIME_BUDGET"
 
 // budgetFrom reads the budget from the variable's value, the default where it is empty.
 func budgetFrom(value string) (time.Duration, error) {

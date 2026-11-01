@@ -1,18 +1,18 @@
 package rule
 
 import (
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // Rule is one judgement a validation run makes about a migration it has already read.
 type Rule struct {
-	// ID names the rule, and is what migr.yaml configures it by.
+	// ID names the rule, and is what migrasyon.yaml configures it by.
 	ID ID
 	// Default is the severity a project that says nothing about this rule gets.
 	Default Severity
-	// Summary says in one line what the rule checks, which migr config prints beside the severity.
+	// Summary says in one line what the rule checks, which migrasyon config prints beside the severity.
 	Summary string
 	// Judge reports everything the rule found, and nothing at all for a migration it approves of.
 	Judge func(Subject) []Finding

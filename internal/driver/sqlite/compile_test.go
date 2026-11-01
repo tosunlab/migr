@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // statements compiles an operation that is expected to succeed, and returns each statement's text.
@@ -73,7 +73,7 @@ func TestAUniqueConstraintIsAUniqueIndex(t *testing.T) {
 
 	t.Log("A UNIQUE constraint is a unique index in SQLite, and adding one to an existing table")
 	t.Log("any other way means a rebuild. The IR gives create_table no way to declare a unique")
-	t.Log("inline, so every unique in a migr-managed database came from add_unique -- which is")
+	t.Log("inline, so every unique in a migrasyon-managed database came from add_unique -- which is")
 	t.Log("what makes DROP INDEX always find it.")
 }
 

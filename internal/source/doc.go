@@ -1,5 +1,5 @@
 // Package source turns IR operations back into the migration source a language
-// writes them as, which is what lets migr diff write a migration file.
+// writes them as, which is what lets migrasyon diff write a migration file.
 //
 // Status: complete (M11-T5).
 //
@@ -11,7 +11,7 @@
 // internal/source/typescript. The two SDKs are the same shape with different
 // spelling, so what is not shared is only ever how something is written down:
 //
-//	s.Table("users").AddColumn("plan", migr.String(32)).Null().Apply(ctx)
+//	s.Table("users").AddColumn("plan", migrasyon.String(32)).Null().Apply(ctx)
 //	await s.table("users").addColumn("plan", t.string(32)).null().apply();
 //
 // A third language is a writer plus an eighteen-row table of type names, a prefix
@@ -21,20 +21,20 @@
 //
 // Each writer produces a whole file rather than a body, because that is what a
 // command writing a migration needs. The file carries an up half and no down: every
-// operation a differ emits records what it replaced, so migr derives the inverse.
+// operation a differ emits records what it replaced, so migrasyon derives the inverse.
 //
 // # It writes the recorded payloads, and that is the point
 //
-// The differ's stated payoff is that a migration migr diff writes is reversible by
+// The differ's stated payoff is that a migration migrasyon diff writes is reversible by
 // derivation. The differ declines to emit a drop whose prior definition it cannot
 // record precisely so that the derived down is exact -- so a writer that dropped
 // .Was(...) would spend that for nothing and write migrations this project's own
-// migr validate rejects.
+// migrasyon validate rejects.
 //
 // # What is not here
 //
 // There is no sql writer. Every .sql migration reaches the database as ir.Raw, so a
-// project in that format has no foldable desired schema and migr diff refuses it
+// project in that format has no foldable desired schema and migrasyon diff refuses it
 // before anything reaches a renderer -- a backend for it would be unreachable.
 // raw is the one operation Chains refuses outright, for the same reason: a schema
 // builder has no call for engine SQL.

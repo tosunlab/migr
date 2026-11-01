@@ -3,7 +3,7 @@ package driver
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The columns the mutation adds, stated once so the target and the operations cannot drift.

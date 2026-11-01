@@ -1,11 +1,11 @@
-package migr
+package migrasyon
 
 import (
 	"errors"
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // stepped is a hand-written migration declaring itself one step of a change across deploys.

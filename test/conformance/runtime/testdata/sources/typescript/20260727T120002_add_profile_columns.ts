@@ -4,7 +4,7 @@
 // would pass with esbuild switched off. One file carrying one is enough: a file that cannot be
 // imported fails the whole migration.discover, which takes the run with it.
 
-import { defineMigration, literal, t } from "@migr/sdk";
+import { defineMigration, literal, t } from "@migrasyon/sdk";
 
 /** Tier names the default a new account starts on. */
 enum Tier {

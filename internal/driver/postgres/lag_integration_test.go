@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // standbyName is what the compose standby calls itself in primary_conninfo.
@@ -126,8 +126,8 @@ func TestAUserWhoMayNotReadTheStandbysStateReadsItsLagAsUnknown(t *testing.T) {
 	session := scratchSession(t, 0)
 
 	for _, sql := range []string{
-		`DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'migr_lagplain') THEN ` +
-			`CREATE ROLE migr_lagplain LOGIN PASSWORD 'migr_lagplain'; END IF; END $$`,
+		`DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'migrasyon_lagplain') THEN ` +
+			`CREATE ROLE migrasyon_lagplain LOGIN PASSWORD 'migrasyon_lagplain'; END IF; END $$`,
 	} {
 		if err := session.Exec(t.Context(), driver.Statement{SQL: sql}); err != nil {
 			t.Fatalf("staging the role: %v", err)
@@ -136,7 +136,7 @@ func TestAUserWhoMayNotReadTheStandbysStateReadsItsLagAsUnknown(t *testing.T) {
 
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 	at := strings.Index(dsn, "@")
-	plain := open(t, "postgres://migr_lagplain:migr_lagplain"+dsn[at:], driver.Options{})
+	plain := open(t, "postgres://migrasyon_lagplain:migrasyon_lagplain"+dsn[at:], driver.Options{})
 
 	lags, err := plain.(*pgConn).ReplicaLag(t.Context())
 	if err != nil {

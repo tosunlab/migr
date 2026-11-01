@@ -2,7 +2,7 @@
 //
 // Planning is deterministic: no time.Now, no randomness, no map-iteration-order dependence, so
 // golden tests stay stable (CLAUDE.md invariant #8). Compiling opens no database, and that is a
-// property rather than a convenience — migr plan must print statements without touching one
+// property rather than a convenience — migrasyon plan must print statements without touching one
 // (M5-T4), and CI catching a migration that will not compile is what makes the executor's lazy
 // operation seam survivable.
 //
@@ -38,12 +38,12 @@
 //
 // So Compile and Step take no context, and Expand is the one method here that is honest about
 // needing a database. A planner with no Expander still returns the sentinel rather than deferring,
-// which is what migr validate reads to report the operation unchecked: deferring there
+// which is what migrasyon validate reads to report the operation unchecked: deferring there
 // would hand it a step nothing could ever fill in.
 //
 // Plan.Len is therefore the count of statements compiled so far, not the count a run will send, and
 // Plan.Deferred is how many operations are still to be compiled. Both callers of the pair say which
-// they mean: a dirty row renders a partial total as one, and migr plan qualifies its own count.
+// they mean: a dirty row renders a partial total as one, and migrasyon plan qualifies its own count.
 //
 // # A step carries the operation and the statements together
 //
@@ -81,7 +81,7 @@
 // # Every step carries what it costs
 //
 // Planner.Capabilities is the session's declaration, and Compile resolves each operation against it
-// into Step.Verdict -- nil leaves the verdict zero, which is what migr validate offline compiles
+// into Step.Verdict -- nil leaves the verdict zero, which is what migrasyon validate offline compiles
 // with. Step.Lock is the one answer a gate and a plan read: nothing for an operation on a
 // table this migration creates, since nothing can be waiting on it; else the rewrite's cost where
 // the step was rewritten; else the verdict's. The verdict itself stays the declaration, so a plan

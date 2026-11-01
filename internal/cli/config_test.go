@@ -18,7 +18,7 @@ func TestConfigCommandRendersResolvedConfig(t *testing.T) {
 		t.Fatalf("config command failed: %v", err)
 	}
 
-	for _, want := range []string{"version: 1", "driver: postgres", "migr_migrations"} {
+	for _, want := range []string{"version: 1", "driver: postgres", "migrasyon_migrations"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("output should contain %q, got:\n%s", want, stdout)
 		}

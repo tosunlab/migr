@@ -12,10 +12,10 @@
 // direction: a caller that knows less than the layer that failed attaches a remedy only where that
 // layer said nothing, so it never hides the more precise one.
 //
-// This is a leaf package with no migr dependencies, deliberately, so that core, drivers and runtimes
+// This is a leaf package with no migrasyon dependencies, deliberately, so that core, drivers and runtimes
 // can all attach one and only internal/cli reads it. It is the same shape internal/version has for
 // the same reason.
 //
-// A remedy is an imperative a person can act on: it names a command, a flag, a migr.yaml key or a
+// A remedy is an imperative a person can act on: it names a command, a flag, a migrasyon.yaml key or a
 // file. "Check your configuration" is not one.
 package remedy

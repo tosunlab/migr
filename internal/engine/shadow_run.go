@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // A shadow-table migration is four stages, and each is recorded in the transaction of the work it
@@ -567,7 +567,7 @@ type ShadowError struct {
 func (e *ShadowError) Error() string {
 	return fmt.Sprintf("%s stopped while %s through the shadow table %s: %v. The copy and the change "+
 		"stream %s are kept, and every change before log position %q is applied to it -- the next "+
-		"migr up carries it on from there, and migr resolve --rolled-back abandons it, dropping the "+
+		"migrasyon up carries it on from there, and migrasyon resolve --rolled-back abandons it, dropping the "+
 		"copy and releasing the stream", e.Migration.Filename(), describeStage(e.State.Stage),
 		e.State.Shadow, e.Err, e.State.Capture, e.State.Position)
 }
@@ -591,8 +591,8 @@ type WaitingError struct {
 func (e *WaitingError) Error() string {
 	return fmt.Sprintf("%s is waiting for its cutover: the run holding the shadow table %s in sync "+
 		"stopped (%v), keeping the copy and the change stream %s with every change before log position "+
-		"%q applied. migr cutover --confirm %s confirms the swap, and the next migr up resumes the hold "+
-		"and performs it; migr resolve --rolled-back abandons it", e.Migration.Filename(), e.State.Shadow,
+		"%q applied. migrasyon cutover --confirm %s confirms the swap, and the next migrasyon up resumes the hold "+
+		"and performs it; migrasyon resolve --rolled-back abandons it", e.Migration.Filename(), e.State.Shadow,
 		e.Err, e.State.Capture, e.State.Position, e.Migration.Version)
 }
 
@@ -634,7 +634,7 @@ func (e *executor) resumeShadow(ctx context.Context, item queued) (Run, error) {
 	if !e.shadows(item.migration) {
 		return Run{}, e.fail(item, ready.compiled, fmt.Errorf("%w: it stopped partway through a "+
 			"shadow-table migration, and it no longer declares one -- declare it again to carry it on, "+
-			"or abandon it with migr resolve --rolled-back", ErrNotResumable))
+			"or abandon it with migrasyon resolve --rolled-back", ErrNotResumable))
 	}
 
 	return e.performShadow(ctx, ready, item.shadow)

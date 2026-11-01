@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // M11-T3's done-when is that a diff emits a correct, ordered operation list, and nothing can fold IR
@@ -152,7 +152,7 @@ func (s Diff) checkSelf(t *testing.T, before schema.Snapshot) {
 // names is the one case where a confirmed rename emits two operations and an unconfirmed one emits
 // four, two of which destroy the data. Both halves are asserted, and then the derived down is run --
 // ir.ReverseAll of the forward list, which is what internal/engine hands a rollback when the
-// migration migr diff wrote authored none. That is the claim the emission order's asymmetry is for.
+// migration migrasyon diff wrote authored none. That is the claim the emission order's asymmetry is for.
 
 // checkRenamed asks the differ to close a gap that is nothing but two renames, and runs both ways.
 func (s Diff) checkRenamed(t *testing.T) {

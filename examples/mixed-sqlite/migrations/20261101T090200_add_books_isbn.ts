@@ -1,4 +1,4 @@
-import { defineMigration, t } from "@migr/sdk";
+import { defineMigration, t } from "@migrasyon/sdk";
 
 export default defineMigration({
   dependencies: ["20261101T090100"],

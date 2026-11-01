@@ -8,8 +8,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // checkedTable is the statement the fake session rewrites, standing in for an add_check.
@@ -28,11 +28,11 @@ func rewritten(t *testing.T, safety string) (string, *fake, *driver.Registry) {
 
 		body, err := os.ReadFile(path)
 		if err != nil {
-			t.Fatalf("reading migr.yaml: %v", err)
+			t.Fatalf("reading migrasyon.yaml: %v", err)
 		}
 
 		if err := os.WriteFile(path, append(body, []byte(safety)...), 0o600); err != nil {
-			t.Fatalf("writing migr.yaml: %v", err)
+			t.Fatalf("writing migrasyon.yaml: %v", err)
 		}
 	}
 

@@ -46,7 +46,7 @@
 // is a subprocess of side effects for an answer nothing reads.
 //
 // The cost is real and is stated rather than hidden: a migration that will not load is discovered
-// only after the ones before it have applied. migr plan emits and compiles the whole queue with no
+// only after the ones before it have applied. migrasyon plan emits and compiles the whole queue with no
 // database, which is where that is caught, and is why internal/plan opens none.
 //
 // # The order is the design
@@ -142,11 +142,11 @@
 //
 // Nothing observes the difference yet: internal/source/sql reads a text file and cannot branch,
 // which is why it ignores the parameter and a test asserts it emits the same operations either
-// way. The day a Go migration is previewed, asking it as a run is how migr plan performs the side
+// way. The day a Go migration is previewed, asking it as a run is how migrasyon plan performs the side
 // effects it was invoked to avoid.
 //
 // The engine owns the distinction rather than borrowing internal/runtime/protocol's spelling of it,
-// because it exists with no runtime in sight: migr plan over .sql migrations is plan mode, and migr
+// because it exists with no runtime in sight: migrasyon plan over .sql migrations is plan mode, and migrasyon
 // validate opens no database at all. The two spellings are held level by a test in that package.
 //
 // # The order a rollback undoes in is the order the runs happened
@@ -181,7 +181,7 @@
 // LastBatch reads the highest recorded.Batch among the applied queue, which is the anchor up run of
 // each migration the database still carries. It deliberately does not read Latest: that is
 // direction- and outcome-blind, so after one rollback the highest batch in the table is the
-// rollback's own, and a second migr down would report nothing to do while every earlier batch stayed
+// rollback's own, and a second migrasyon down would report nothing to do while every earlier batch stayed
 // unreachable. LastBatch is a rollback's alone — a pending migration has never run and belongs to no
 // batch — and an apply given it is refused before the lock.
 //
@@ -190,17 +190,17 @@
 // properties of the reconciled database rather than of one invocation's appetite. It over-refuses
 // for missing, which is stated rather than hidden.
 //
-// migr down with no arguments rolls back the last batch. The zero Scope is not that, because a zero
+// migrasyon down with no arguments rolls back the last batch. The zero Scope is not that, because a zero
 // value meaning something different per direction is one nobody can read at a call site — so M5-T2's
 // down command passes LastBatch() when neither flag is given, and that line is the last piece of
 // M4-T8's done-when.
 //
 // # A batch belongs to one database
 //
-// A batch is one migr invocation against one database, and it is one more than that database's own
-// last recorded run. No lock spans two databases, so a shared counter has no allocator; migr down
+// A batch is one migrasyon invocation against one database, and it is one more than that database's own
+// last recorded run. No lock spans two databases, so a shared counter has no allocator; migrasyon down
 // reverses one database's last batch, and a shared number can name a batch that database never
-// used. Two databases in one migr.yaml therefore get unrelated numbers, and migr up loops.
+// used. Two databases in one migrasyon.yaml therefore get unrelated numbers, and migrasyon up loops.
 //
 // It is read from Latest rather than from the log already in hand, because the batch is a decision
 // about writing while the log was read for reconciling — and M4-T8 now filters that log by --step
@@ -308,7 +308,7 @@
 //   - a version the database carries that no file describes, on a rollback only. An apply skips it
 //     because there is nothing to run for it; a rollback runs newest first, so it sits in front of
 //     every migration older than it and stepping around it would undo them while it stays. The case
-//     that decides the rule is migr down against a misconfigured migrations.dir: every applied
+//     that decides the rule is migrasyon down against a misconfigured migrations.dir: every applied
 //     version reconciles to missing, and a skip rule reports nothing to undo against a fully
 //     migrated database.
 //
@@ -435,7 +435,7 @@
 // the recomputed source digest in full beside it. There is no recomputed IR half and none is
 // invented: producing one needs a language runtime and a live database, and a migration
 // may branch on live query results, so a mismatch there would have three possible causes
-// and only one of them would be drift. Rendering a placeholder inside a migr1: value would be a
+// and only one of them would be drift. Rendering a placeholder inside a migrasyon1: value would be a
 // checksum no parser accepts, which is worse than an absence the message explains.
 //
 // Nothing here recomputes or re-compares anything. history.stateOf already decided this, on
@@ -457,7 +457,7 @@
 // A run that failed is recorded after its transaction has rolled back, on a context that outlives
 // whatever canceled it, and the write is joined into the failure rather than replacing it.
 // Reporting only the bookkeeping failure swaps the operator's problem for a diagnostic's; reporting
-// only the migration's hides that migr history will not show the event. A failure that happens
+// only the migration's hides that migrasyon history will not show the event. A failure that happens
 // before the operations are known writes nothing, because a run whose operations were never
 // produced is not a run and has no checksum to be recorded under.
 //
@@ -465,7 +465,7 @@
 //
 // Destructive is the policy half of invariant #7 and lives here rather than in internal/validate,
 // because that package already imports this one to read its refusals -- and the reverse import
-// would be a cycle. An Allowance is what migr.yaml permits for the project plus what
+// would be a cycle. An Allowance is what migrasyon.yaml permits for the project plus what
 // --allow-destructive permits for the run, and Destructive reports every operation in a list it
 // does not cover, each with the object it destroys. Subject names that object and is total over the
 // twenty kinds; the exhaustive linter does not read a type switch, so a test over
@@ -473,12 +473,12 @@
 //
 // The gate is one call in forward, after the migration says what it does and before anything is
 // compiled, and it reads the mode: an apply refuses, a preview does not. That is not a shortcut --
-// migr plan and --dry-run share forward with migr up, and the command that reports what a run would
+// migrasyon plan and --dry-run share forward with migrasyon up, and the command that reports what a run would
 // do is the only place an operator can find out what to permit. They mark those operations and exit
-// 0, which is the rule migr status already follows over drift while migr up exits 4.
+// 0, which is the rule migrasyon status already follows over drift while migrasyon up exits 4.
 //
 // Two paths reach neither the gate nor forward, and both are deliberate. A rollback undoes what it
-// was asked to undo -- gating it would make the permission mandatory for migr down outright, since
+// was asked to undo -- gating it would make the permission mandatory for migrasyon down outright, since
 // the inverse of CreateTable is DropTable. And a resume finishes what a permitted run started, on a
 // schema that is already half-changed; refusing there would leave a database between states with
 // nothing but the asserted repairs to settle it.
@@ -497,7 +497,7 @@
 // preview marks what a run refuses. Where the two gates differ is direction: permission is asked of
 // the up half alone, because the inverse of CreateTable is DropTable, while an operation the server
 // will not perform is just as unrunnable backwards. A rollback inverts its whole queue before
-// running any of it, so migr down is preflighted whole; an apply cannot be, because migration N may
+// running any of it, so migrasyon down is preflighted whole; an apply cannot be, because migration N may
 // depend on N-1 having been applied and may branch on live query results.
 //
 // A resume is not gated, for the reason the destructive gate is not: the statements it runs are the
@@ -505,7 +505,7 @@
 //
 // What this buys is sharpest on an engine whose DDL commits. Measured on MySQL 8.0 before the gate
 // existed: a migration whose second operation that server refuses applied the first, sent the
-// second, took error 1674, and was recorded dirty -- which then refused both directions until migr
+// second, took error 1674, and was recorded dirty -- which then refused both directions until migrasyon
 // resolve.
 //
 // # A step waits for a later release, and a run stops at it without failing
@@ -529,7 +529,7 @@
 // # What an operation costs against the ceiling
 //
 // Exceeding is the third gate of that shape and the only one no run reads: it reports every step
-// whose plan.Step.Lock is above safety.max_lock_impact, and migr plan and migr validate fail with
+// whose plan.Step.Lock is above safety.max_lock_impact, and migrasyon plan and migrasyon validate fail with
 // LockImpactError on it under --require-safe, which internal/cli resolves to exit 5. It
 // skips an operation the server refuses, which Unsupported already reports, and a step carrying no
 // verdict at all exceeds every ceiling, so a planner never handed the session's capabilities fails

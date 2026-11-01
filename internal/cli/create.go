@@ -11,15 +11,15 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/source/golang"
-	"github.com/emrebdr/migr/internal/source/sql"
-	"github.com/emrebdr/migr/internal/source/typescript"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/source/golang"
+	"github.com/tosunlab/migrasyon/internal/source/sql"
+	"github.com/tosunlab/migrasyon/internal/source/typescript"
 )
 
-// template is the file migr create writes for one language.
+// template is the file migrasyon create writes for one language.
 type template struct {
 	// ext is the extension the file is stored under, which is what names its runtime later.
 	ext string
@@ -27,7 +27,7 @@ type template struct {
 	body string
 }
 
-// templates holds every language migr create can write a migration in, which is every one it knows.
+// templates holds every language migrasyon create can write a migration in, which is every one it knows.
 var templates = map[config.Language]template{
 	config.LanguageSQL:        {ext: sql.Ext, body: sql.Template},
 	config.LanguageGo:         {ext: golang.Ext, body: golang.Template},
@@ -65,10 +65,10 @@ func routable() string {
 	return strings.Join(found, ", ")
 }
 
-// aliases are the short spellings --lang accepts, which migr.yaml itself does not.
+// aliases are the short spellings --lang accepts, which migrasyon.yaml itself does not.
 var aliases = map[string]config.Language{"ts": config.LanguageTypeScript}
 
-// newCreateCmd builds the `migr create` subcommand.
+// newCreateCmd builds the `migrasyon create` subcommand.
 func newCreateCmd(opts *options) *cobra.Command {
 	var lang string
 
@@ -94,7 +94,7 @@ func newCreateCmd(opts *options) *cobra.Command {
 	}
 
 	cmd.Flags().StringVar(&lang, "lang", "",
-		"language to write, defaulting to migrations.language in migr.yaml")
+		"language to write, defaulting to migrations.language in migrasyon.yaml")
 
 	return cmd
 }
@@ -107,7 +107,7 @@ type created struct {
 	Version string `json:"version"`
 	// Name is the snake_case name it was given.
 	Name string `json:"name"`
-	// Language is what it was written in, spelled as migr.yaml spells it.
+	// Language is what it was written in, spelled as migrasyon.yaml spells it.
 	Language config.Language `json:"language"`
 }
 
@@ -163,7 +163,7 @@ func templateFor(lang config.Language) (template, error) {
 		return tmpl, nil
 	}
 
-	return template{}, fmt.Errorf("%q is not a language migr knows (expected: %s)",
+	return template{}, fmt.Errorf("%q is not a language migrasyon knows (expected: %s)",
 		lang, joinLanguages(config.Languages()))
 }
 
@@ -215,10 +215,10 @@ func claimed(version, holder string) error {
 func unwritable(dir string, err error) error {
 	if errors.Is(err, fs.ErrNotExist) {
 		return remedy.With(fmt.Errorf("%s: %w: %w", dir, migration.ErrNoDirectory, err),
-			"create it with migr init, or point migrations.dir in migr.yaml at the directory that "+
+			"create it with migrasyon init, or point migrations.dir in migrasyon.yaml at the directory that "+
 				"holds the migrations")
 	}
 
 	return remedy.With(fmt.Errorf("reading %s: %w", dir, err),
-		"make the migrations directory readable and writable by the user migr runs as")
+		"make the migrations directory readable and writable by the user migrasyon runs as")
 }

@@ -38,7 +38,7 @@ func millisecondsCeil(wait time.Duration) int64 {
 	return int64((wait + time.Millisecond - 1) / time.Millisecond)
 }
 
-// checkLockWait refuses a wait PostgreSQL could not store, naming the migr.yaml key that set it.
+// checkLockWait refuses a wait PostgreSQL could not store, naming the migrasyon.yaml key that set it.
 func checkLockWait(key string, wait time.Duration) error {
 	if wait <= maxLockTimeout {
 		return nil

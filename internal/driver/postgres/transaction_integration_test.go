@@ -12,15 +12,15 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // undefinedTable is the SQLSTATE PostgreSQL raises for a statement naming a table it does not have.
 const undefinedTable = "42P01"
 
 // scratchPrefix opens the name of every schema a test in this package gets to itself.
-const scratchPrefix = "migr_test_"
+const scratchPrefix = "migrasyon_test_"
 
 // scratchSchema gives one test a schema of its own, named after it, and drops it afterwards.
 func scratchSchema(t *testing.T, dsn string) string {

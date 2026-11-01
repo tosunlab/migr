@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // slowOn stages a session whose one statement runs until something stops it.

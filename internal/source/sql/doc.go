@@ -1,5 +1,5 @@
 // Package sql is the SQL migration file format: the extension, the section
-// markers, and the template `migr create` writes.
+// markers, and the template `migrasyon create` writes.
 //
 // It is M5's interim source format, the one a person can use before M6 and M7
 // land the SDKs, and it is a real format rather than a stopgap -- plenty of
@@ -10,7 +10,7 @@
 // M5-T1 wrote the template and M5-T2 the parser that reads it back. They are one
 // package for the reason internal/migration exports Filename beside Parse -- a
 // format whose writer and reader live apart is a format with two definitions,
-// and the second one is discovered when a file migr wrote is a file migr cannot
+// and the second one is discovered when a file migrasyon wrote is a file migrasyon cannot
 // read. A test emits the template and asserts it yields nothing and authors no
 // down, which is that agreement held mechanically.
 //
@@ -18,13 +18,13 @@
 //
 // A migration file is two sections, each opened by a marker on a line of its
 // own: MarkerUp, then MarkerDown. Statements run in the order they appear. The
-// `-- migr:` prefix is the house convention, already carried by the golden
-// files' `-- migr:statement 1` and `-- migr:unsupported` headers.
+// `-- migrasyon:` prefix is the house convention, already carried by the golden
+// files' `-- migrasyon:statement 1` and `-- migrasyon:unsupported` headers.
 //
 // Every rule about those sections is a refusal rather than a guess:
 //
 // MarkerUp is required. A file without one is refused rather than read as
-// all-up, because `-- migr:Up` is then a typo that runs the down section during
+// all-up, because `-- migrasyon:Up` is then a typo that runs the down section during
 // an apply -- creating a table and dropping it again in one migration.
 //
 // SQL above the first marker is refused, naming its line, since it belongs to
@@ -44,7 +44,7 @@
 // so one migration can create a table in a transaction and build its index
 // concurrently outside one. The scanner reads it, so a marker inside a quoted
 // body or a block comment is not one; and it is taken out of the statement it
-// declares, being migr's and not the server's. A marker that declares nothing is
+// declares, being migrasyon's and not the server's. A marker that declares nothing is
 // refused naming its line: inside a statement no semicolon has ended, twice in a
 // row, with no statement after it in its section, above the up marker, and below
 // a declaration -- each a migration whose author believes a statement runs alone
@@ -53,7 +53,7 @@
 // # One operation per statement
 //
 // Statements splits a section on the semicolons no quoting hides, and each one
-// becomes its own ir.Raw. That is what keeps migr's statement model meaningful
+// becomes its own ir.Raw. That is what keeps migrasyon's statement model meaningful
 // for this format: statements are counted, timed, positioned in a dirty run's
 // row, and resumed from in M9-T6. A section handed over as one blob would report
 // "1 statement" forever and could never be resumed inside.
@@ -85,7 +85,7 @@
 //
 // # The template carries no SQL
 //
-// Invariant #3 is "no raw SQL outside a driver package. Ever." The one file migr
+// Invariant #3 is "no raw SQL outside a driver package. Ever." The one file migrasyon
 // authors that is named .sql is therefore markers and guidance comments only --
 // an example CREATE TABLE, however illustrative, would be the exception that
 // makes the invariant a preference. TestTheTemplateCarriesNoSQLOfItsOwn holds

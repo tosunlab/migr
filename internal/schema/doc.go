@@ -213,7 +213,7 @@
 // checksum, and invariant #5 governs exactly those. A snapshot is produced by a driver and read
 // by the engine in one process, is hashed by nothing, and is persisted nowhere. What would
 // force a version: a snapshot sent over the runtime protocol, or one stored in the history
-// table as a baseline for a database whose earlier migrations migr did not run.
+// table as a baseline for a database whose earlier migrations migrasyon did not run.
 //
 // # What M11-T2 did with what this model left it
 //

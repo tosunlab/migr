@@ -7,7 +7,7 @@
    + primary_key authors.<unnamed> (id)
 
 2  20261101T090100_create_books.go
-   ? the schema after this cannot be read from the migrations: it reaches the database, and migr graph opens none
+   ? the schema after this cannot be read from the migrations: it reaches the database, and migrasyon graph opens none
 
 3  20261101T090200_add_books_isbn.ts
    add_column        books.isbn

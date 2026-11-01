@@ -9,22 +9,22 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // usersTable is the referenced side of the fixture's foreign key.
-const usersTable = "migr_probe_users"
+const usersTable = "migrasyon_probe_users"
 
 // ordersTable is the table the fixture alters, constrains, indexes, renames, and finally drops.
-const ordersTable = "migr_probe_orders"
+const ordersTable = "migrasyon_probe_orders"
 
 // archiveTable is where rename_table sends ordersTable, so the rename has somewhere to go.
-const archiveTable = "migr_probe_archive"
+const archiveTable = "migrasyon_probe_archive"
 
 // probeView is the view the fixture creates, replaces, and drops.
-const probeView = "migr_probe_view"
+const probeView = "migrasyon_probe_view"
 
 // addedColumn is the column add_column adds and alter_column then widens.
 const addedColumn = "note"
@@ -33,13 +33,13 @@ const addedColumn = "note"
 const renamedColumn = "order"
 
 // firstViewQuery is what the view selects when it is created.
-const firstViewQuery = "SELECT id FROM migr_probe_orders"
+const firstViewQuery = "SELECT id FROM migrasyon_probe_orders"
 
 // terminatedViewQuery is the same query with the semicolon a migration author may have written.
 const terminatedViewQuery = firstViewQuery + ";"
 
 // secondViewQuery is what create_view narrows it to with or_replace set.
-const secondViewQuery = "SELECT id FROM migr_probe_orders WHERE id > 0"
+const secondViewQuery = "SELECT id FROM migrasyon_probe_orders WHERE id > 0"
 
 // checkExpression is the condition add_check applies to a column everyMappableColumn declares.
 const checkExpression = "total >= 0"
@@ -454,7 +454,7 @@ func TestATeardownIsRebuiltFromWhatItRecorded(t *testing.T) {
 }
 
 // partialIndexSQL creates an index no v1 operation can express, which is what raw is for.
-const partialIndexSQL = `CREATE INDEX "idx_probe_active" ON "migr_probe_users" ("id") WHERE "active"`
+const partialIndexSQL = `CREATE INDEX "idx_probe_active" ON "migrasyon_probe_users" ("id") WHERE "active"`
 
 // dropPartialIndexSQL is the undo a migration author has to write, because nothing derives it.
 const dropPartialIndexSQL = `DROP INDEX "idx_probe_active"`
@@ -532,10 +532,10 @@ func TestAReversedDropRestoresOnlyWhatItRecorded(t *testing.T) {
 	t.Log("Neither of these is a compiler bug, and neither is fixable with a wider from payload:")
 	t.Log("one operation records a column and PostgreSQL destroys more than a column, the other")
 	t.Log("inverts by name and a name says nothing about what the constraint implied. Both still")
-	t.Log("hold, because both are facts about this server rather than about migr -- and both are")
+	t.Log("hold, because both are facts about this server rather than about migrasyon -- and both are")
 	t.Log("why engine.Unrestorable refuses either operation before it runs rather than at rollback")
 	t.Log("time, when the index is already gone and the nullability was never recorded (M11-T2).")
-	t.Log("The refusal itself is asserted in internal/engine and in cmd/migr, which may name a")
+	t.Log("The refusal itself is asserted in internal/engine and in cmd/migrasyon, which may name a")
 	t.Log("driver; this package cannot, since internal/engine imports it.")
 }
 
@@ -546,14 +546,14 @@ func checkTheIndexIsNotRecorded(t *testing.T, session *pgConn, target string) {
 	tagged := ir.Column{Name: "tag", Type: probeType(t, "string(64)"), Nullable: true}
 
 	apply(t, session, ir.Operations{
-		ir.CreateTable{Table: "migr_gap_indexed", Columns: []ir.Column{
+		ir.CreateTable{Table: "migrasyon_gap_indexed", Columns: []ir.Column{
 			{Name: "id", Type: probeType(t, "int64")}, tagged,
 		}},
-		ir.AddIndex{Table: "migr_gap_indexed", Name: "idx_gap_tag", Columns: []string{"tag"}},
+		ir.AddIndex{Table: "migrasyon_gap_indexed", Name: "idx_gap_tag", Columns: []string{"tag"}},
 	})
 
 	before := describeSchema(t, session)
-	drop := ir.DropColumn{Table: "migr_gap_indexed", Column: "tag", From: &tagged}
+	drop := ir.DropColumn{Table: "migrasyon_gap_indexed", Column: "tag", From: &tagged}
 
 	apply(t, session, ir.Operations{drop})
 	apply(t, session, ir.Operations{reverse(t, drop)})
@@ -567,7 +567,7 @@ func checkTheIndexIsNotRecorded(t *testing.T, session *pgConn, target string) {
 		return
 	}
 
-	if !strings.Contains(restored, "migr_gap_indexed.tag ") {
+	if !strings.Contains(restored, "migrasyon_gap_indexed.tag ") {
 		t.Errorf("the column itself did not come back:\n%s", schema.Difference(before, restored))
 	}
 
@@ -581,12 +581,12 @@ func checkTheImpliedNotNullIsNotRestored(t *testing.T, session *pgConn, target s
 	t.Helper()
 
 	apply(t, session, ir.Operations{ir.CreateTable{
-		Table:   "migr_gap_nullable",
+		Table:   "migrasyon_gap_nullable",
 		Columns: []ir.Column{{Name: "id", Type: probeType(t, "int64"), Nullable: true}},
 	}})
 
 	before := describeSchema(t, session)
-	add := ir.AddPrimaryKey{Table: "migr_gap_nullable", Name: "pk_gap", Columns: []string{"id"}}
+	add := ir.AddPrimaryKey{Table: "migrasyon_gap_nullable", Name: "pk_gap", Columns: []string{"id"}}
 
 	apply(t, session, ir.Operations{add})
 	apply(t, session, ir.Operations{reverse(t, add)})
@@ -600,7 +600,7 @@ func checkTheImpliedNotNullIsNotRestored(t *testing.T, session *pgConn, target s
 		return
 	}
 
-	if !strings.Contains(restored, "migr_gap_nullable.id int64 not null") {
+	if !strings.Contains(restored, "migrasyon_gap_nullable.id int64 not null") {
 		t.Errorf("the column is not left NOT NULL, so this reads as something else:\n%s",
 			schema.Difference(before, restored))
 	}

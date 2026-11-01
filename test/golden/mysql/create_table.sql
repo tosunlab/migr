@@ -1,4 +1,4 @@
--- migr:statement 1
+-- migrasyon:statement 1
 CREATE TABLE `users` (
     `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
     `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,

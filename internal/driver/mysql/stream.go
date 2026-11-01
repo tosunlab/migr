@@ -15,7 +15,7 @@ import (
 	gomysql "github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/go-mysql-org/go-mysql/replication"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // batchCap is how many changes one read returns before it stops at the next transaction boundary.
@@ -370,7 +370,7 @@ func (s *binlogStream) startingPoint(ctx context.Context, from capture.Position)
 
 	if (recorded.gtid != nil) != s.gtid {
 		return position{}, fmt.Errorf("the recorded position %s was read from a server that %s GTIDs, "+
-			"and this one %s -- abandon the migration with migr resolve --rolled-back and run it again",
+			"and this one %s -- abandon the migration with migrasyon resolve --rolled-back and run it again",
 			from, recordedOrNot(recorded.gtid != nil), recordedOrNot(s.gtid))
 	}
 
@@ -624,7 +624,7 @@ func (s *binlogStream) readFailure(err error) error {
 	if errors.As(err, &server) && server.Code == errPurged {
 		return fmt.Errorf("the binary log no longer holds %s, where this shadow-table migration's copy "+
 			"was last kept current -- the server purged it (binlog_expire_logs_seconds bounds how long a "+
-			"stopped migration can be carried on), so abandon it with migr resolve --rolled-back and run "+
+			"stopped migration can be carried on), so abandon it with migrasyon resolve --rolled-back and run "+
 			"it again: %w", s.through(), err)
 	}
 

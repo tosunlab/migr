@@ -1,8 +1,8 @@
 package mysql
 
 import (
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // rawImpact is permanent rather than pending: the framework cannot know what a raw statement does.

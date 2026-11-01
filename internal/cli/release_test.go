@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
 // stepping stages two Go migrations, the second a step of one change waiting on the first.
@@ -155,8 +155,8 @@ func TestAPreviewNamingNoReleaseSaysUpWouldRefuse(t *testing.T) {
 		t.Fatalf("plan exited %d, and a preview refuses nothing: %v", ExitCode(err), err)
 	}
 
-	if !strings.Contains(stdout, "migr up would refuse this run") {
-		t.Errorf("the plan does not say migr up needs a release:\n%s", stdout)
+	if !strings.Contains(stdout, "migrasyon up would refuse this run") {
+		t.Errorf("the plan does not say migrasyon up needs a release:\n%s", stdout)
 	}
 }
 
@@ -170,7 +170,7 @@ func TestAStepWaitingOnNothingAnyMigrationDeclaresIsRefused(t *testing.T) {
 		}
 
 		if ExitCode(err) != ExitValidation || !strings.Contains(fmtErr(err), `waits on "nothing"`) {
-			t.Errorf("migr %s exited %d: %v", command, ExitCode(err), err)
+			t.Errorf("migrasyon %s exited %d: %v", command, ExitCode(err), err)
 		}
 	}
 }

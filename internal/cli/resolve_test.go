@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // stoppedPartway is a project a real run left between states, so a resume has a row it can act on.
@@ -27,7 +27,7 @@ func stoppedPartway(t *testing.T) (string, *fake, *driver.Registry) {
 	return dir, f, drivers
 }
 
-// readyToResume is that project with the cause of the failure gone, as fixing a server outside migr is.
+// readyToResume is that project with the cause of the failure gone, as fixing a server outside migrasyon is.
 func readyToResume(t *testing.T) (string, *fake, *driver.Registry) {
 	t.Helper()
 
@@ -55,7 +55,7 @@ func resolved(t *testing.T, dir string, drivers *driver.Registry, args ...string
 
 	stdout, _, err := runWith(t, dir, noon, drivers, append([]string{"resolve"}, args...)...)
 	if err != nil {
-		t.Fatalf("migr resolve %v: %v", args, err)
+		t.Fatalf("migrasyon resolve %v: %v", args, err)
 	}
 
 	return stdout
@@ -90,14 +90,14 @@ func TestResolveRunsWhatTheStoppedRunNeverReachedAndClearsTheState(t *testing.T)
 
 	stdout, _, err := runWith(t, dir, noon, drivers, "up")
 	if err != nil {
-		t.Fatalf("migr up over the resolved database failed: %v", err)
+		t.Fatalf("migrasyon up over the resolved database failed: %v", err)
 	}
 
 	if !strings.Contains(stdout, "nothing to do") {
-		t.Errorf("migr up does not report the migration settled:\n%s", stdout)
+		t.Errorf("migrasyon up does not report the migration settled:\n%s", stdout)
 	}
 
-	t.Log("The whole point of the command: a database nothing could run against is one migr up")
+	t.Log("The whole point of the command: a database nothing could run against is one migrasyon up")
 	t.Log("now reports as having nothing to do.")
 }
 
@@ -190,7 +190,7 @@ func TestAnAssertionsDocumentSaysItWasAssertedRatherThanApplied(t *testing.T) {
 
 	if got.Outcome != history.Resolved {
 		t.Errorf("the document reports outcome %q, want %q", got.Outcome, history.Resolved)
-		t.Log("A consumer reading applied here would believe migr ran the statements, which is")
+		t.Log("A consumer reading applied here would believe migrasyon ran the statements, which is")
 		t.Log("the one thing this repair does not do.")
 	}
 
@@ -223,7 +223,7 @@ func TestADryRunResolvesNothingAndSaysSo(t *testing.T) {
 	}
 
 	if _, _, err := runWith(t, dir, noon, drivers, "up"); !errors.Is(err, engine.ErrDirty) {
-		t.Errorf("migr up after a dry run returned %v, want the database still between states", err)
+		t.Errorf("migrasyon up after a dry run returned %v, want the database still between states", err)
 	}
 }
 
@@ -298,7 +298,7 @@ func TestTheResolutionDocumentCarriesTheRowEveryOtherCommandRenders(t *testing.T
 
 	if got.Run.Batch == 0 || got.Run.AppliedAt.IsZero() || got.Run.Error == "" {
 		t.Errorf("the run document is built rather than read: %+v", got.Run)
-		t.Log("It is the same recordedRun migr status and migr history print, so it carries the")
+		t.Log("It is the same recordedRun migrasyon status and migrasyon history print, so it carries the")
 		t.Log("batch, the instant and the cause the row actually holds.")
 	}
 

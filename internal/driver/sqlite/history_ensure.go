@@ -7,9 +7,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // kindQuery reports what kind of object holds a name, and no row when nothing holds it.
@@ -182,7 +182,7 @@ func (h sqliteHistory) describeLock() string {
 	}
 
 	return ". This session did hold the lock, so the other process locked a different file -- which " +
-		"means the two migr.yaml files point at databases this one reaches by different paths"
+		"means the two migrasyon.yaml files point at databases this one reaches by different paths"
 }
 
 // checkColumns reports a history table missing anything this build writes, extras being fine.

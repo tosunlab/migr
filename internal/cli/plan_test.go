@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // decodePlan reads the document --json promised, failing the test rather than the command.
@@ -22,7 +22,7 @@ func decodePlan(t *testing.T, stdout string) compiledPlan {
 
 	var plan compiledPlan
 	if err := json.Unmarshal([]byte(stdout), &plan); err != nil {
-		t.Fatalf("migr plan --json emitted %v:\n%s", err, stdout)
+		t.Fatalf("migrasyon plan --json emitted %v:\n%s", err, stdout)
 	}
 
 	return plan
@@ -70,7 +70,7 @@ func TestPlanPrintsEveryStatementItWouldSend(t *testing.T) {
 
 	if got := statementsIn(decodePlan(t, stdout)); !slices.Equal(got, want) {
 		t.Errorf("plan would send %q, want %q", got, want)
-		t.Log("These are the same statements migr up runs, off the same pipeline: a preview stops")
+		t.Log("These are the same statements migrasyon up runs, off the same pipeline: a preview stops")
 		t.Log("after compiling, so there is no second implementation to drift out of sync.")
 	}
 }
@@ -165,7 +165,7 @@ func TestPlanDownCoversTheLastBatchRatherThanEverythingApplied(t *testing.T) {
 
 	for _, args := range [][]string{{"up", "--step", "1"}, {"up"}} {
 		if _, _, err := runWith(t, dir, noon, drivers, args...); err != nil {
-			t.Fatalf("migr %v: %v", args, err)
+			t.Fatalf("migrasyon %v: %v", args, err)
 		}
 	}
 
@@ -194,7 +194,7 @@ func TestPlanLabelsAnEmulatedOperationWithTheStrategyItUses(t *testing.T) {
 	if !strings.Contains(stdout, "emulated: table rebuild") {
 		t.Errorf("plan does not say the operation is emulated or how:\n%s", stdout)
 		t.Log("CLAUDE.md §4.2: a capability is never silently degraded -- emulation is surfaced in")
-		t.Log("migr plan output so the operator sees that a table rebuild is about to happen.")
+		t.Log("migrasyon plan output so the operator sees that a table rebuild is about to happen.")
 		t.Log("No driver in this repository emits Emulated yet; SQLite is the first (M8-T6).")
 	}
 }
@@ -329,7 +329,7 @@ func TestPlanOfAnUnauthoredDownRefusesBeforeAnythingRuns(t *testing.T) {
 		t.Errorf("plan --down refused with %v, want the file named", err)
 		t.Log("A .sql migration reaches the database as ir.Raw, which has no inverse, so its")
 		t.Log("derived down is a refusal rather than statements. This is where an operator can")
-		t.Log("learn that before migr down finds it out newest-first.")
+		t.Log("learn that before migrasyon down finds it out newest-first.")
 	}
 }
 
@@ -395,7 +395,7 @@ func TestPlanJSONListsTheStatementsThatRunOutsideAnyTransaction(t *testing.T) {
 func concurrentIndex() stagedMigration {
 	return stagedMigration{
 		name: "add_users",
-		up: "CREATE TABLE users (id bigint);\n-- migr:no-transaction\n" +
+		up: "CREATE TABLE users (id bigint);\n-- migrasyon:no-transaction\n" +
 			"CREATE INDEX CONCURRENTLY idx_users ON users (id);",
 		down: "DROP TABLE users;",
 	}
@@ -410,7 +410,7 @@ func TestPlanOverADatabaseWithNoHistoryTableSaysSo(t *testing.T) {
 
 	if !strings.Contains(stdout, "no migration history table yet") {
 		t.Errorf("plan did not say the history table is absent:\n%s", stdout)
-		t.Log("Planning against a database migr has never touched is the normal first use.")
+		t.Log("Planning against a database migrasyon has never touched is the normal first use.")
 	}
 }
 
@@ -451,8 +451,8 @@ func TestADryRunPointsAtTheCommandThatPrintsTheStatements(t *testing.T) {
 		t.Fatalf("up --dry-run: %v", err)
 	}
 
-	if !strings.Contains(up, "migr plan") || strings.Contains(up, "migr plan --down") {
-		t.Errorf("the dry run does not point at `migr plan`:\n%s", up)
+	if !strings.Contains(up, "migrasyon plan") || strings.Contains(up, "migrasyon plan --down") {
+		t.Errorf("the dry run does not point at `migrasyon plan`:\n%s", up)
 	}
 
 	if _, _, err := runWith(t, dir, noon, drivers, "up"); err != nil {
@@ -464,8 +464,8 @@ func TestADryRunPointsAtTheCommandThatPrintsTheStatements(t *testing.T) {
 		t.Fatalf("down --dry-run: %v", err)
 	}
 
-	if !strings.Contains(down, "migr plan --down") {
-		t.Errorf("the rollback's dry run does not point at `migr plan --down`:\n%s", down)
+	if !strings.Contains(down, "migrasyon plan --down") {
+		t.Errorf("the rollback's dry run does not point at `migrasyon plan --down`:\n%s", down)
 	}
 }
 
@@ -487,7 +487,7 @@ func previewOf(t *testing.T, f *fake, ops ir.Operations, held []driver.Query) en
 	}
 }
 
-// renderedPlan runs the preview through the rendering both migr plan output forms are built from.
+// renderedPlan runs the preview through the rendering both migrasyon plan output forms are built from.
 func renderedPlan(t *testing.T, held []driver.Query) compiledPlan {
 	t.Helper()
 
@@ -516,7 +516,7 @@ func TestPlanPrintsTheStatementsAMigrationRunsItself(t *testing.T) {
 	printed := rendered.String()
 
 	if !strings.Contains(printed, "UPDATE users SET status = 'active'") {
-		t.Errorf("the printed plan omits the statement migr up would run:\n%s", printed)
+		t.Errorf("the printed plan omits the statement migrasyon up would run:\n%s", printed)
 	}
 
 	if !strings.Contains(printed, "outside its transaction") {

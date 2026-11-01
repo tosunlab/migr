@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // nullable returns a column of the named type that accepts nothing, which is the safe shape.
@@ -58,7 +58,7 @@ func TestTheWarningSaysWhatItCouldNotCheckRatherThanClaimingTheTableHasRows(t *t
 
 	if !strings.Contains(found[0].Detail, "count that table's rows") {
 		t.Errorf("detail %q does not say that the row count is the part nothing asked: "+
-			"migr validate holds no connection for the migrations, so this is a "+
+			"migrasyon validate holds no connection for the migrations, so this is a "+
 			"warning about what it cannot know", found[0].Detail)
 	}
 }

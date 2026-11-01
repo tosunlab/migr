@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // This is the one comparison in this repository that is still the engine's own text, and M11-T6 kept
@@ -14,7 +14,7 @@ import (
 // touched is asked for as SQLite recorded it.
 //
 // It lives inside the driver, where invariant #3 permits the SQL outright, and it is a test helper
-// rather than the exported sqlitetest package it used to be. That package existed so cmd/migr could
+// rather than the exported sqlitetest package it used to be. That package existed so cmd/migrasyon could
 // ask, since no test above a driver may compose SQL; Conn.Introspect answers that caller neutrally
 // as of M11-T2, so the package went at M11-T6 and the probe came in here.
 

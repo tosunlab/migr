@@ -8,10 +8,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // errNoRepair marks a resolution that named none of the three things it could do.
@@ -82,7 +82,7 @@ func (r asking) repair() (engine.Repair, error) {
 	}
 
 	if len(chosen) == 0 {
-		return engine.Repair{}, remedy.With(errNoRepair, "pass one of them: migr status shows the "+
+		return engine.Repair{}, remedy.With(errNoRepair, "pass one of them: migrasyon status shows the "+
 			"migration between states, and --dry-run prints what each would do")
 	}
 
@@ -93,7 +93,7 @@ func (r asking) repair() (engine.Repair, error) {
 	return engine.Repair{Mode: chosen[0], Reason: r.reason, DryRun: r.dry}, nil
 }
 
-// newResolveCmd builds the `migr resolve` subcommand.
+// newResolveCmd builds the `migrasyon resolve` subcommand.
 func newResolveCmd(opts *options) *cobra.Command {
 	ask := &asking{}
 
@@ -196,7 +196,7 @@ type resuming struct {
 
 // resolution is what a resolution found and what it did about it, in the form --json reports it.
 type resolution struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Repair is which of the three this invocation was asked for.
 	Repair engine.RepairMode `json:"repair"`

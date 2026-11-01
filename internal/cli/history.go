@@ -11,8 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // leading is the indent every line of a table starts with.
@@ -24,7 +24,7 @@ const gap = "  "
 // headMigration is the column a run's failure is written out under, since a server error is a sentence.
 const headMigration = "migration"
 
-// newHistoryCmd builds the `migr history` subcommand.
+// newHistoryCmd builds the `migrasyon history` subcommand.
 func newHistoryCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "history",
@@ -65,7 +65,7 @@ func runHistory(cmd *cobra.Command, opts *options) (err error) {
 
 // loggedRun is one row of the migration history, in the form --json reports it.
 type loggedRun struct {
-	// Batch is the migr invocation this run belonged to.
+	// Batch is the migrasyon invocation this run belonged to.
 	Batch int64 `json:"batch"`
 	// Ordinal is the run's position within that batch.
 	Ordinal int32 `json:"ordinal"`
@@ -91,7 +91,7 @@ type loggedRun struct {
 	Driver string `json:"driver"`
 	// Runtime is the language the migration was written in.
 	Runtime string `json:"runtime"`
-	// EngineVersion is the migr build that performed the run.
+	// EngineVersion is the migrasyon build that performed the run.
 	EngineVersion string `json:"engine_version"`
 	// IRVersion is the operation IR version that build emitted.
 	IRVersion int32 `json:"ir_version"`
@@ -104,7 +104,7 @@ func (r loggedRun) migration() string {
 
 // executionLog is every run one database has recorded, in the form --json reports it.
 type executionLog struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Recorded reports whether this database has a migration history table at all.
 	Recorded bool `json:"history_table"`
@@ -159,7 +159,7 @@ type logColumn struct {
 	of func(loggedRun) string
 }
 
-// logColumns is the table migr history prints, in the order it prints them.
+// logColumns is the table migrasyon history prints, in the order it prints them.
 var logColumns = []logColumn{
 	{head: "batch", right: true, of: func(r loggedRun) string { return strconv.FormatInt(r.Batch, 10) }},
 	{head: "#", right: true, of: func(r loggedRun) string { return strconv.Itoa(int(r.Ordinal)) }},

@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestACompleteRecordIsAccepted(t *testing.T) {
@@ -123,7 +123,7 @@ func TestOnlyARunThatDidNotCompleteCarriesAnError(t *testing.T) {
 	err := failed.Validate()
 	if !errors.Is(err, ErrIncomplete) {
 		t.Errorf("a failed run carried no error: %v", err)
-		t.Log("migr history prints this column, and a failed row with nothing in it tells an")
+		t.Log("migrasyon history prints this column, and a failed row with nothing in it tells an")
 		t.Log("operator only that something went wrong, which they already knew.")
 	}
 }

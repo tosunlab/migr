@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // indexesOn names the indexes a table carries, which is how a half-built installation is visible.

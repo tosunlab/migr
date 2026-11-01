@@ -5,10 +5,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // mustType parses a logical type by its canonical spelling, failing on a spelling nothing carries.
@@ -79,7 +79,7 @@ func TestEveryLogicalTypeHasAMySQLDeclarationExceptTheOneMySQLHasNoneFor(t *test
 	t.Log("text is longtext and binary is longblob because the logical types mean an unbounded")
 	t.Log("string and unbounded bytes, where MySQL's TEXT and BLOB stop at 65535 bytes.")
 	t.Log("timestamp and timestamptz map to the same declaration, which is a fact about MySQL: its")
-	t.Log("one zone-aware type, TIMESTAMP, spans 1970 to 2038 and so cannot carry a column migr")
+	t.Log("one zone-aware type, TIMESTAMP, spans 1970 to 2038 and so cannot carry a column migrasyon")
 	t.Log("writes forever. Every instant is rendered as UTC and the session's time_zone is +00:00.")
 }
 

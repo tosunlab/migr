@@ -3,8 +3,8 @@ package zerodowntime
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // SeededRows is how many rows the loaded table holds: at it, measured, a rewrite takes several budgets on every engine.

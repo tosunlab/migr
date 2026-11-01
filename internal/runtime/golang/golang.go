@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
-// Name is the language this adapter runs, spelled as migr.yaml spells migrations.language.
+// Name is the language this adapter runs, spelled as migrasyon.yaml spells migrations.language.
 const Name = "go"
 
 // Adapter runs Go migrations by generating a runner in the user's module and building it.

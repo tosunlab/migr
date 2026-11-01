@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // Rollback undoes every applied migration, newest first, under the migration lock.

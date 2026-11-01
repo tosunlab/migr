@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // server is one engine this driver is held to, and the variables that override its connection string.
@@ -27,13 +27,13 @@ type server struct {
 // ever meets one of them has not had that tested at all. The DSNs match test/docker-compose.yml.
 var servers = []server{
 	{
-		name: "mysql80", env: "MIGR_TEST_MYSQL80_DSN",
-		dsn:     "migr:migr@tcp(127.0.0.1:55480)/migr",
+		name: "mysql80", env: "MIGRASYON_TEST_MYSQL80_DSN",
+		dsn:     "migrasyon:migrasyon@tcp(127.0.0.1:55480)/migrasyon",
 		variant: MySQL, major: 8, minor: 0,
 	},
 	{
-		name: "mariadb114", env: "MIGR_TEST_MARIADB114_DSN",
-		dsn:     "migr:migr@tcp(127.0.0.1:55411)/migr",
+		name: "mariadb114", env: "MIGRASYON_TEST_MARIADB114_DSN",
+		dsn:     "migrasyon:migrasyon@tcp(127.0.0.1:55411)/migrasyon",
 		variant: MariaDB, major: 11, minor: 4,
 	},
 }

@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 func TestTheHandshakePicksOneOfTheVersionsTheEngineOffered(t *testing.T) {
@@ -633,7 +633,7 @@ func TestTheEscapeHatchReportsWhetherItRanAtAll(t *testing.T) {
 	})
 
 	t.Log("§6: the SDK sends host.db.exec in both modes and the host decides. An SDK that")
-	t.Log("skipped the call under plan would hide the statement from migr plan entirely.")
+	t.Log("skipped the call under plan would hide the statement from migrasyon plan entirely.")
 
 	if sent != "UPDATE users SET x = 1" {
 		t.Errorf("the escape hatch sent %q under plan mode", sent)
@@ -693,7 +693,7 @@ func TestADataOperationAgainstAnEngineThatReadsOnlyV1IsRefusedBeforeItIsSent(t *
 
 	greeted := e.send(wire.Initialize, wire.InitializeParams{
 		ProtocolVersions: []int{wire.Version}, IRVersion: 1,
-		Client:     wire.Client{Name: "migr", Version: "0.0.9"},
+		Client:     wire.Client{Name: "migrasyon", Version: "0.0.9"},
 		Migrations: wire.MigrationsAt{Dir: "/srv/app/migrations", Language: "go"},
 		Database:   wire.DatabaseAt{Name: "default", Driver: "postgres"},
 	})

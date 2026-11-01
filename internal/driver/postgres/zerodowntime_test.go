@@ -11,15 +11,15 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	zerodowntime "github.com/emrebdr/migr/test/conformance/zerodowntime"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	zerodowntime "github.com/tosunlab/migrasyon/test/conformance/zerodowntime"
 )
 
 // zdServers are the servers the zero-downtime suite holds this driver to; 17 alone permits capture.
 var zdServers = []struct{ name, env, dsn string }{
-	{"postgres16", "MIGR_TEST_PG16_DSN", "postgres://migr:migr@127.0.0.1:55416/migr?sslmode=disable"},
-	{"postgres17", "MIGR_TEST_PG17_DSN", "postgres://migr:migr@127.0.0.1:55417/migr?sslmode=disable"},
+	{"postgres16", "MIGRASYON_TEST_PG16_DSN", "postgres://migrasyon:migrasyon@127.0.0.1:55416/migrasyon?sslmode=disable"},
+	{"postgres17", "MIGRASYON_TEST_PG17_DSN", "postgres://migrasyon:migrasyon@127.0.0.1:55417/migrasyon?sslmode=disable"},
 }
 
 // zdLoad is the suite's load spelled for PostgreSQL, through connections of its own as an application's would be.

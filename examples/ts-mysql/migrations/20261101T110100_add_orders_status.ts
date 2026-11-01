@@ -1,4 +1,4 @@
-import { defineMigration, t } from "@migr/sdk";
+import { defineMigration, t } from "@migrasyon/sdk";
 
 const status = t.enum("pending", "paid", "shipped");
 

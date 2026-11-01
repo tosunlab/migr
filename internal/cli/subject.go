@@ -15,11 +15,11 @@ type subject struct {
 }
 
 // migrationReports is what a report is about unless it says otherwise, so the zero subject means it.
-var migrationReports = subject{noun: "migration", table: "migration history table", creator: "migr up"}
+var migrationReports = subject{noun: "migration", table: "migration history table", creator: "migrasyon up"}
 
-// seedReports is what a `migr seed` subcommand reports on.
+// seedReports is what a `migrasyon seed` subcommand reports on.
 var seedReports = subject{command: "seed ", noun: "seed", table: "seed history table",
-	creator: "migr seed"}
+	creator: "migrasyon seed"}
 
 // or returns this subject, or migrationReports where it was never set.
 func (s subject) or() subject {

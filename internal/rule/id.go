@@ -8,7 +8,7 @@ import (
 // separator joins the words of a rule's id, and is the only punctuation one may carry.
 const separator = "-"
 
-// ID names one rule, and is what migr.yaml configures it by.
+// ID names one rule, and is what migrasyon.yaml configures it by.
 type ID string
 
 // String returns the id as written, which is what a report prints and a config file holds.

@@ -1,7 +1,7 @@
 # Releases (M14-T1). Pushing a tag vX.Y.Z builds the six binaries .goreleaser.yaml names,
 # signs checksums.txt keyless through this job's OIDC token, attests every archive's provenance,
-# publishes a GitHub release, commits the Homebrew cask to emrebdr/homebrew-tap, and publishes
-# @migr/cli and its six platform packages to npm, and pushes and signs the two images on ghcr.io.
+# publishes a GitHub release, commits the Homebrew cask to tosunlab/homebrew-tap, and publishes
+# @migrasyon/cli and its six platform packages to npm, and pushes and signs the two images on ghcr.io.
 # sdk/go's own tags are sdk/go/vX.Y.Z, which `v*` does not match.
 #
 # Run by hand, it builds a snapshot through the same signing and attestation steps and uploads dist/
@@ -88,7 +88,7 @@ jobs:
           args: release --clean ${{ github.event_name == 'workflow_dispatch' && '--snapshot' || '' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # The job's own token cannot push to emrebdr/homebrew-tap; this one is scoped to that repository
+          # The job's own token cannot push to tosunlab/homebrew-tap; this one is scoped to that repository
           # alone. A snapshot pushes nothing and needs none.
           HOMEBREW_TAP_GITHUB_TOKEN: ${{ secrets.HOMEBREW_TAP_GITHUB_TOKEN }}
 
@@ -96,7 +96,7 @@ jobs:
       - name: npm packages
         run: node npm/cli/build.mjs dist dist/npm
 
-      # Platform packages first and @migr/cli last, each skipped where the registry already holds it,
+      # Platform packages first and @migrasyon/cli last, each skipped where the registry already holds it,
       # after this runner's binary has reported the packages' version.
       - name: Publish to npm
         if: github.event_name == 'push'
@@ -127,5 +127,5 @@ jobs:
             dist/*.tar.gz
             dist/*.zip
             dist/checksums.txt*
-            dist/homebrew/Casks/migr.rb
+            dist/homebrew/Casks/migrasyon.rb
             dist/npm/*.tgz

@@ -1,5 +1,5 @@
 /** The name this SDK reports itself as in the handshake, which the engine logs. */
-export const SDK_NAME = "@migr/sdk";
+export const SDK_NAME = "@migrasyon/sdk";
 
 /**
  * This package's own version, which the handshake reports as `sdk.version`.
@@ -23,7 +23,7 @@ export const PROTOCOL_VERSIONS: readonly number[] = [PROTOCOL_VERSION];
 /** The newest Operation IR version this SDK emits; an engine stating an older one still runs it. */
 export const IR_VERSION = 3;
 
-/** What the engine calls this runtime, spelled as migr.yaml spells `migrations.language`. */
+/** What the engine calls this runtime, spelled as migrasyon.yaml spells `migrations.language`. */
 export const LANGUAGE = "typescript";
 
 /** Reports the Node runtime this migration is being executed by, for the handshake. */

@@ -13,12 +13,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // A shadow-table migration is held to the done-when here, on the three servers compose runs with a
@@ -32,14 +32,14 @@ import (
 // shadowServers are the servers a shadow-table migration runs against: a MySQL recording GTIDs, one not, and a MariaDB.
 var shadowServers = []server{
 	servers[0],
-	{name: "mysql80gtid", env: "MIGR_TEST_MYSQL80GTID_DSN", dsn: "migr:migr@tcp(127.0.0.1:55481)/migr",
+	{name: "mysql80gtid", env: "MIGRASYON_TEST_MYSQL80GTID_DSN", dsn: "migrasyon:migrasyon@tcp(127.0.0.1:55481)/migrasyon",
 		variant: MySQL, major: 8, minor: 0},
 	mariadbBinlog,
 }
 
 // mariadbBinlog is the MariaDB writing a row-format binary log, whose positions are domain-server-seq.
-var mariadbBinlog = server{name: "mariadb114binlog", env: "MIGR_TEST_MARIADB114BINLOG_DSN",
-	dsn: "migr:migr@tcp(127.0.0.1:55412)/migr", variant: MariaDB, major: 11, minor: 4}
+var mariadbBinlog = server{name: "mariadb114binlog", env: "MIGRASYON_TEST_MARIADB114BINLOG_DSN",
+	dsn: "migrasyon:migrasyon@tcp(127.0.0.1:55412)/migrasyon", variant: MariaDB, major: 11, minor: 4}
 
 // The staged migration's version, which every derived name carries, and the rows the table starts with.
 const (
@@ -61,7 +61,7 @@ type shadowCase struct {
 	watch *mysqlConn
 	// table is the table the migration changes, and control the one the writers keep equal to it.
 	table, control string
-	// pool is what the writers write through, which is no migr session.
+	// pool is what the writers write through, which is no migrasyon session.
 	pool *sql.DB
 }
 
@@ -552,7 +552,7 @@ func TestAShadowMigrationStoppedMidCopyOrMidHoldCarriesOnFromItsRecordedPosition
 	}
 }
 
-// abandon settles a stopped shadow-table migration as rolled back, as migr resolve --rolled-back does.
+// abandon settles a stopped shadow-table migration as rolled back, as migrasyon resolve --rolled-back does.
 func (sc *shadowCase) abandon(t *testing.T) {
 	t.Helper()
 
@@ -705,9 +705,9 @@ func purgedAfterAStop(t *testing.T, sc *shadowCase) {
 	sc.abandon(t)
 }
 
-// rootOf is a server's root, which flushing and purging its log needs and migr never does.
+// rootOf is a server's root, which flushing and purging its log needs and migrasyon never does.
 func rootOf(s server) string {
-	return strings.Replace(strings.TrimSuffix(s.dsnFor(), "migr"), "migr:migr@", "root:migr@", 1)
+	return strings.Replace(strings.TrimSuffix(s.dsnFor(), "migrasyon"), "migrasyon:migrasyon@", "root:migrasyon@", 1)
 }
 
 // purgeTo purges every log before one file, again until it is gone: MariaDB keeps a file its checkpoint still needs.

@@ -7,10 +7,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // contendedTable is the statement the contended stages make wait for a lock.
@@ -27,7 +27,7 @@ func contending(t *testing.T, times int) (string, *fake, *driver.Registry) {
 
 	body, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("reading migr.yaml: %v", err)
+		t.Fatalf("reading migrasyon.yaml: %v", err)
 	}
 
 	write(t, path, string(body)+"safety:\n  lock_backoff: 1ms\n  lock_retries: 2\n")
@@ -35,7 +35,7 @@ func contending(t *testing.T, times int) (string, *fake, *driver.Registry) {
 	return dir, f, drivers
 }
 
-// stagedContended is a project whose statement outlasts every retry migr.yaml allows.
+// stagedContended is a project whose statement outlasts every retry migrasyon.yaml allows.
 func stagedContended(t *testing.T) (string, *fake, *driver.Registry) {
 	t.Helper()
 
@@ -114,7 +114,7 @@ func TestLockRetriesZeroTriesAStatementOnce(t *testing.T) {
 
 	body, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("reading migr.yaml: %v", err)
+		t.Fatalf("reading migrasyon.yaml: %v", err)
 	}
 
 	write(t, path, strings.Replace(string(body), "lock_retries: 2", "lock_retries: 0", 1))

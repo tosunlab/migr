@@ -3,8 +3,8 @@ package mysql
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
 )
 
 func TestGolden(t *testing.T) {

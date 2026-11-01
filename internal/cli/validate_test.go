@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/source/sql"
-	"github.com/emrebdr/migr/internal/validate"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/source/sql"
+	"github.com/tosunlab/migrasyon/internal/validate"
 )
 
 // decodeValidation reads the document --json promised, failing the test rather than the command.
@@ -19,7 +19,7 @@ func decodeValidation(t *testing.T, stdout string) validation {
 
 	var result validation
 	if err := json.Unmarshal([]byte(stdout), &result); err != nil {
-		t.Fatalf("migr validate --json emitted %v:\n%s", err, stdout)
+		t.Fatalf("migrasyon validate --json emitted %v:\n%s", err, stdout)
 	}
 
 	return result
@@ -205,7 +205,7 @@ func TestValidateStillNeedsAConfigItCanRead(t *testing.T) {
 	if ExitCode(err) != ExitValidation {
 		t.Errorf("validate exited %d over a config with no databases", ExitCode(err))
 		t.Log("Opening no database is not the same as needing no configuration: which engine to")
-		t.Log("compile for comes from migr.yaml, and there is no answer without one.")
+		t.Log("compile for comes from migrasyon.yaml, and there is no answer without one.")
 	}
 }
 
@@ -247,7 +247,7 @@ func TestValidateSaysHowThisFormatAnswersAnIrreversibleMigration(t *testing.T) {
 func TestValidateRefusesAProjectItCannotOrder(t *testing.T) {
 	dir, _, drivers := project(t, twoTables()...)
 
-	write(t, filepath.Join(dir, scaffoldDir, "not-a-migration.sql"), "-- migr:up\nSELECT 1;\n")
+	write(t, filepath.Join(dir, scaffoldDir, "not-a-migration.sql"), "-- migrasyon:up\nSELECT 1;\n")
 
 	_, _, err := runWith(t, dir, noon, drivers, "validate")
 

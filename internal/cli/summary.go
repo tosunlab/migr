@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // stamp renders a recorded instant in a table, in UTC because a history row is read anywhere.
@@ -232,9 +232,9 @@ type planned struct {
 	Parts int `json:"parts,omitempty"`
 	// Rewritten is how many of its operations would run as a safer sequence than they were declared as.
 	Rewritten int `json:"rewritten,omitempty"`
-	// Refused is how many of its operations destroy what nothing permits, which migr up stops at.
+	// Refused is how many of its operations destroy what nothing permits, which migrasyon up stops at.
 	Refused int `json:"refused,omitempty"`
-	// Unsupported is how many this server declares it cannot perform, which migr up also stops at.
+	// Unsupported is how many this server declares it cannot perform, which migrasyon up also stops at.
 	Unsupported int `json:"unsupported,omitempty"`
 }
 
@@ -250,7 +250,7 @@ type left struct {
 
 // runSummary is what one invocation did against one database, in the form --json reports it.
 type runSummary struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Direction is which way the invocation ran.
 	Direction ir.Direction `json:"direction"`
@@ -321,7 +321,7 @@ func (h *heldDoc) write(b *strings.Builder) {
 
 // planSummary is what one invocation would have done, having taken the lock and executed nothing.
 type planSummary struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Direction is which way the invocation would have run.
 	Direction ir.Direction `json:"direction"`
@@ -337,7 +337,7 @@ type planSummary struct {
 	Skipped []left `json:"skipped,omitempty"`
 	// Held is the step the run would stop at because it waits for a later release.
 	Held *heldDoc `json:"held,omitempty"`
-	// Unreleased is why migr up would refuse this run for naming no release, absent where it would not.
+	// Unreleased is why migrasyon up would refuse this run for naming no release, absent where it would not.
 	Unreleased string `json:"unreleased,omitempty"`
 }
 
@@ -350,13 +350,13 @@ func describeUnreleased(err error) string {
 	return err.Error()
 }
 
-// writeUnreleased says that migr up would refuse this run until it names the deploy it belongs to.
+// writeUnreleased says that migrasyon up would refuse this run until it names the deploy it belongs to.
 func writeUnreleased(b *strings.Builder, unreleased string) {
 	if unreleased == "" {
 		return
 	}
 
-	fmt.Fprintf(b, "\nmigr up would refuse this run: %s.\n", unreleased)
+	fmt.Fprintf(b, "\nmigrasyon up would refuse this run: %s.\n", unreleased)
 }
 
 // summaryOf renders what an invocation did, and is built even when the invocation also failed.
@@ -508,7 +508,7 @@ func (s planSummary) String() string {
 	fmt.Fprintf(&b, "%s — database %q (dry run)%s\n", s.Direction, s.Database, describeBatch(s.Batch))
 
 	if !s.Recorded {
-		fmt.Fprintf(&b, "\nthis database has no migration history table yet; migr %s would create it\n",
+		fmt.Fprintf(&b, "\nthis database has no migration history table yet; migrasyon %s would create it\n",
 			s.Direction)
 	}
 
@@ -539,7 +539,7 @@ func (s planSummary) String() string {
 	return b.String()
 }
 
-// writeUnsupported says what this server will not perform, which migr up refuses before sending anything.
+// writeUnsupported says what this server will not perform, which migrasyon up refuses before sending anything.
 func (s planSummary) writeUnsupported(b *strings.Builder) {
 	unsupported := 0
 	for _, step := range s.Steps {
@@ -550,12 +550,12 @@ func (s planSummary) writeUnsupported(b *strings.Builder) {
 		return
 	}
 
-	fmt.Fprintf(b, "\n%s this server declares it cannot perform, so migr %s refuses the migration "+
-		"they are in. `migr plan` names them and gives the driver's reason for each.\n",
+	fmt.Fprintf(b, "\n%s this server declares it cannot perform, so migrasyon %s refuses the migration "+
+		"they are in. `migrasyon plan` names them and gives the driver's reason for each.\n",
 		describeUnpermitted(unsupported), s.Direction)
 }
 
-// writeRefused says what migr up would refuse, since a dry run that said nothing would mislead.
+// writeRefused says what migrasyon up would refuse, since a dry run that said nothing would mislead.
 func (s planSummary) writeRefused(b *strings.Builder) {
 	refused := 0
 	for _, step := range s.Steps {
@@ -566,8 +566,8 @@ func (s planSummary) writeRefused(b *strings.Builder) {
 		return
 	}
 
-	fmt.Fprintf(b, "\n%s that nothing has permitted, so migr %s refuses the migration they are "+
-		"in. `migr plan` names them; --allow-destructive permits them for one run, and "+
+	fmt.Fprintf(b, "\n%s that nothing has permitted, so migrasyon %s refuses the migration they are "+
+		"in. `migrasyon plan` names them; --allow-destructive permits them for one run, and "+
 		"validation.allow_destructive for the project.\n",
 		describeUnpermitted(refused), s.Direction)
 }
@@ -575,10 +575,10 @@ func (s planSummary) writeRefused(b *strings.Builder) {
 // describePlanCommand points at the command that prints the statements this one only counted.
 func describePlanCommand(dir ir.Direction) string {
 	if dir == ir.Down {
-		return "run `migr plan --down` to see the statements themselves."
+		return "run `migrasyon plan --down` to see the statements themselves."
 	}
 
-	return "run `migr plan` to see the statements themselves."
+	return "run `migrasyon plan` to see the statements themselves."
 }
 
 // describeBatch names the batch an invocation used, which one that ran nothing never allocated.

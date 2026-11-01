@@ -3,7 +3,7 @@ package mysql
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestARawStatementCarriesItsTransactionOptOutAndNoOther(t *testing.T) {

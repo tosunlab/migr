@@ -5,15 +5,15 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
-// rebuildStrategy is the strategy the seven emulated operations name, in a refusal and in migr plan.
+// rebuildStrategy is the strategy the seven emulated operations name, in a refusal and in migrasyon plan.
 const rebuildStrategy = "table rebuild"
 
-// RebuildStrategy is what migr plan prints beside an emulated operation, exported so a test can ask.
+// RebuildStrategy is what migrasyon plan prints beside an emulated operation, exported so a test can ask.
 const RebuildStrategy = rebuildStrategy
 
 // rebuildReason names the strategy and what it has to read, and ends every emulated answer.

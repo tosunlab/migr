@@ -12,14 +12,14 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // queueRuntime is what the migrations these tests stage are written in, as a history row records it.
@@ -1023,7 +1023,7 @@ func TestRollingBackTheLastBatchLeavesTheOneBeforeItApplied(t *testing.T) {
 					schema.Difference(afterFirst, after))
 			}
 
-			t.Log("This is migr down with no arguments: one invocation is the unit an operator")
+			t.Log("This is migrasyon down with no arguments: one invocation is the unit an operator")
 			t.Log("undoes, and the migration before it in the same repository stays applied.")
 		})
 	}

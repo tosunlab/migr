@@ -19,7 +19,7 @@ func (k knowing) Error() string { return "knowing" }
 func (k knowing) Next() string { return k.next }
 
 func TestWithKeepsTheMessageAndTheChain(t *testing.T) {
-	err := fmt.Errorf("applying: %w", With(errStopped, "run migr resolve"))
+	err := fmt.Errorf("applying: %w", With(errStopped, "run migrasyon resolve"))
 
 	if err.Error() != "applying: the run stopped" {
 		t.Errorf("the message reads %q, want it unchanged by the remedy", err.Error())
@@ -29,7 +29,7 @@ func TestWithKeepsTheMessageAndTheChain(t *testing.T) {
 		t.Error("errors.Is no longer finds the failure under its remedy")
 	}
 
-	if got := Of(err); got != "run migr resolve" {
+	if got := Of(err); got != "run migrasyon resolve" {
 		t.Errorf("Of = %q, want the attached remedy", got)
 	}
 }

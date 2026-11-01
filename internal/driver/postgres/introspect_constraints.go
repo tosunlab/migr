@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // constrained is everything pg_constraint says about one table, in the shape the model holds it.
@@ -354,7 +354,7 @@ func indexFindings(one *waiting) []string {
 	if one.invalid {
 		findings = append(findings, "PostgreSQL marks it INVALID -- a concurrent build or drop that "+
 			"failed -- so every write maintains it and no query uses it; REINDEX INDEX CONCURRENTLY "+
-			"or DROP INDEX CONCURRENTLY it before migr diff can compare it")
+			"or DROP INDEX CONCURRENTLY it before migrasyon diff can compare it")
 	}
 
 	return findings

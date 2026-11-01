@@ -10,8 +10,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	zerodowntime "github.com/emrebdr/migr/test/conformance/zerodowntime"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	zerodowntime "github.com/tosunlab/migrasyon/test/conformance/zerodowntime"
 )
 
 // zdPragmas are how an application runs SQLite under concurrent clients: WAL, so readers never wait on a

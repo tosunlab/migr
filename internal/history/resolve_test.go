@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // stoppedAt returns a dirty forward run of a file, naming the statement it reached.

@@ -1,4 +1,4 @@
--- migr:statement 1
+-- migrasyon:statement 1
 CREATE TABLE "users" (
     "id" uuid NOT NULL,
     "email" varchar(255) NOT NULL,

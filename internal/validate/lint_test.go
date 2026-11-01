@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/rule"
 )
 
 // lintDetail is what the fake rules below report, which is how a test tells their findings apart.
@@ -122,7 +122,7 @@ func TestAWarningIsNotAProblemHoweverTheReportIsAsked(t *testing.T) {
 	report := linted(t, seen.rules(t, map[rule.ID]rule.Severity{"soft-rule": rule.SeverityWarn}))
 
 	if !report.Clean() {
-		t.Error("a report holding only warnings is not clean, so migr validate would exit 2")
+		t.Error("a report holding only warnings is not clean, so migrasyon validate would exit 2")
 	}
 
 	if report.Migrations() != 0 {

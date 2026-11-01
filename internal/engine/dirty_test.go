@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // stopping stages a session that refuses one statement, on a database with a history table already.
@@ -224,7 +224,7 @@ func TestABookkeepingFailureOnADirtyRunIsJoinedRatherThanReplacing(t *testing.T)
 
 	if !strings.Contains(err.Error(), "the history table is gone") {
 		t.Errorf("the failure does not report that no dirty row was written: %v", err)
-		t.Log("Reporting only the migration's failure hides that migr status will show this")
+		t.Log("Reporting only the migration's failure hides that migrasyon status will show this")
 		t.Log("database as pending while its schema is between states, which is the worse lie.")
 	}
 

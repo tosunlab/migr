@@ -9,8 +9,8 @@ deploy against PostgreSQL 17 and fails if any app query fails.
 One declaration, restated in each phase file, each registering one phase:
 
 ```go
-migr.Register(migr.ReplaceColumn("users", "email", migr.String(255)).
-	With(migr.String(320)).RenameTo("email_address").Expand())
+migrasyon.Register(migrasyon.ReplaceColumn("users", "email", migrasyon.String(255)).
+	With(migrasyon.String(320)).RenameTo("email_address").Expand())
 ```
 
 | Deploy | Migration | The app |
@@ -21,7 +21,7 @@ migr.Register(migr.ReplaceColumn("users", "email", migr.String(255)).
 | 3 | **swap**: `email` becomes nullable, `email_address` NOT NULL | **v3** writes both, reads `email_address` |
 | 4 | the app first: **v4** writes and reads `email_address` only; then **contract** drops `email` | |
 
-In every deploy but the last, migr runs while the previous app version is still serving, then the
+In every deploy but the last, migrasyon runs while the previous app version is still serving, then the
 new version rolls out. [`app/main.go`](app/main.go) is that app, one version per `-version`.
 
 **Why the contract comes after the app:** v3 still writes `email`, so dropping it under v3 fails v3's
@@ -34,7 +34,7 @@ step renames anything.
 
 ## Run it
 
-You need [migr](../../README.md#installing), Go 1.24 or later, and Docker.
+You need [migrasyon](../../README.md#installing), Go 1.24 or later, and Docker.
 
 ```console
 $ docker compose up -d --wait
@@ -76,19 +76,19 @@ To run it again, start from an empty database: `docker compose down -v && docker
 
 ## What to look at
 
-- **`--release` is what keeps two phases out of one deploy.** Each `migr up --release dN` applies the
+- **`--release` is what keeps two phases out of one deploy.** Each `migrasyon up --release dN` applies the
   next phase and **holds** at the one after it, with exit 0, because that phase's prior step belongs
   to this release. The next deploy runs it. Pass your build id, such as `$GITHUB_SHA`.
 - **Deploy 0 uses `--to`.** Every phase file is in the directory from the start, and expand waits on
   no earlier step. In a real project the table predates the change and the phase files arrive later.
-- **The backfill runs in chunks**, each its own short transaction. `migr plan --safety` shows it as
+- **The backfill runs in chunks**, each its own short transaction. `migrasyon plan --safety` shows it as
   `brief_exclusive (declared table_rewrite, one chunk at a time)`, so the lock gate passes it.
 - **The swap's NOT NULL is rewritten** on PostgreSQL 12 and later: a `NOT VALID` check is validated
   without blocking writes, then `SET NOT NULL` uses it.
-- **migr warns at the unsafe steps**, in `migr plan` too: the swap, the contract and undoing the
+- **migrasyon warns at the unsafe steps**, in `migrasyon plan` too: the swap, the contract and undoing the
   expand each depend on which app version is serving.
 - **Permit what the change destroys:** the backfill is a `data_transform` and the contract a
-  `drop_column`, so `migr.yaml` lists both under `validation.allow_destructive`.
+  `drop_column`, so `migrasyon.yaml` lists both under `validation.allow_destructive`.
 
 The [zero-downtime guide](../../docs/zero-downtime.md) covers the rest: lock timeouts, shadow tables
 for large tables, and replica lag.
@@ -96,15 +96,15 @@ for large tables, and replica lag.
 ## CI
 
 [`.github/workflows/migrations.yml`](.github/workflows/migrations.yml) has two jobs:
-- on a pull request, `migr validate --require-safe` against an empty PostgreSQL 17, which fails on
+- on a pull request, `migrasyon validate --require-safe` against an empty PostgreSQL 17, which fails on
   any operation above `brief_exclusive`;
-- on a push to `main`, `migr up --release "$GITHUB_SHA"` against the database in
+- on a push to `main`, `migrasyon up --release "$GITHUB_SHA"` against the database in
   `secrets.DATABASE_URL`, before the app deploys.
 
-Copy it into your own repository. It installs migr from npm as `@migr/cli`, so it needs a published
+Copy it into your own repository. It installs migrasyon from npm as `@migrasyon/cli`, so it needs a published
 release.
 
 ## Using this as a starting point
 
 This project links the Go SDK from this repository, since it isn't published yet. In your own copy,
-delete the `replace` line in `go.mod` and run `go get github.com/emrebdr/migr/sdk/go`.
+delete the `replace` line in `go.mod` and run `go get github.com/tosunlab/migrasyon/sdk/go`.

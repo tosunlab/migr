@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 func TestTheStreamIsAcknowledgedOnlyOnceTheTransactionRecordingThePositionHasCommitted(t *testing.T) {
@@ -114,11 +114,11 @@ func (k *keepingConn) ReleaseCapture(_ context.Context, name string) error {
 func TestOrphansAreToldApartFromLiveCapturesAndFromStrangers(t *testing.T) {
 	ours := migration.Migration{Version: versionAt(0), Name: "index_people", Ext: ".sql"}
 	migrations := []migration.Migration{ours}
-	live := history.ShadowState{Version: "20260101T000000", Capture: "migr_20260101t000000_aaaaaaaa", Stage: history.StageSyncing}
-	cut := history.ShadowState{Version: "20260102T000000", Capture: "migr_20260102t000000_bbbbbbbb", Stage: history.StageCutOver}
+	live := history.ShadowState{Version: "20260101T000000", Capture: "migrasyon_20260101t000000_aaaaaaaa", Stage: history.StageSyncing}
+	cut := history.ShadowState{Version: "20260102T000000", Capture: "migrasyon_20260102t000000_bbbbbbbb", Stage: history.StageCutOver}
 
 	resources := []driver.CaptureResource{
-		{Name: live.Capture}, {Name: cut.Capture}, {Name: shadowCapture}, {Name: "migr_20990101t000000_cccccccc"},
+		{Name: live.Capture}, {Name: cut.Capture}, {Name: shadowCapture}, {Name: "migrasyon_20990101t000000_cccccccc"},
 	}
 
 	orphans := Orphans(resources, []history.ShadowState{live, cut}, migrations)
@@ -128,7 +128,7 @@ func TestOrphansAreToldApartFromLiveCapturesAndFromStrangers(t *testing.T) {
 		got[o.Resource.Name] = o.Ours
 	}
 
-	want := map[string]bool{cut.Capture: true, shadowCapture: true, "migr_20990101t000000_cccccccc": false}
+	want := map[string]bool{cut.Capture: true, shadowCapture: true, "migrasyon_20990101t000000_cccccccc": false}
 	if !maps.Equal(got, want) {
 		t.Errorf("the orphans are %v, want %v", got, want)
 		t.Log("A syncing state owns its slot; a cut-over state's slot and one named for a version of")
@@ -142,7 +142,7 @@ func TestUpReleasesTheSlotsThisProjectLeftAndOnlyThose(t *testing.T) {
 	k := &keepingConn{worldConn: connect(t, w)}
 
 	w.slots[shadowCapture] = true
-	w.slots["migr_20990101t000000_cccccccc"] = true
+	w.slots["migrasyon_20990101t000000_cccccccc"] = true
 
 	opts := shadowRun(t, k.worldConn)
 
@@ -159,7 +159,7 @@ func TestUpReleasesTheSlotsThisProjectLeftAndOnlyThose(t *testing.T) {
 		t.Errorf("the run released %v and reported %v, want only %s", k.released, told, shadowCapture)
 	}
 
-	if !w.slots["migr_20990101t000000_cccccccc"] {
+	if !w.slots["migrasyon_20990101t000000_cccccccc"] {
 		t.Error("the run dropped a slot named for a migration this project does not carry")
 	}
 

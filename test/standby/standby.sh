@@ -7,12 +7,12 @@ set -e
 export PGDATA=/var/lib/postgresql/data
 
 if [ ! -s "$PGDATA/PG_VERSION" ]; then
-	until pg_isready -h postgres16 -U migr -d migr -q; do sleep 1; done
+	until pg_isready -h postgres16 -U migrasyon -d migrasyon -q; do sleep 1; done
 	rm -rf "${PGDATA:?}"/*
-	pg_basebackup -h postgres16 -U migr -D "$PGDATA" -X stream -R
+	pg_basebackup -h postgres16 -U migrasyon -D "$PGDATA" -X stream -R
 	chmod 0700 "$PGDATA"
 	{
-		echo "primary_conninfo = 'host=postgres16 port=5432 user=migr password=$PGPASSWORD application_name=standby16'"
+		echo "primary_conninfo = 'host=postgres16 port=5432 user=migrasyon password=$PGPASSWORD application_name=standby16'"
 		echo "recovery_min_apply_delay = '3s'"
 	} >> "$PGDATA/postgresql.auto.conf"
 fi

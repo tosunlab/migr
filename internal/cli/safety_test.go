@@ -7,13 +7,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/validate"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/validate"
 )
 
 // indexedUsers is the second operation of the first staged migration, which the costly cases declare a rewrite.
@@ -22,7 +22,7 @@ const indexedUsers = "CREATE INDEX idx_users ON users (id);"
 // createdTeams is the only operation of the second staged migration.
 const createdTeams = "CREATE TABLE teams (id bigint);"
 
-// withSafety appends a safety section to a project's migr.yaml.
+// withSafety appends a safety section to a project's migrasyon.yaml.
 func withSafety(t *testing.T, dir, safety string) {
 	t.Helper()
 
@@ -30,11 +30,11 @@ func withSafety(t *testing.T, dir, safety string) {
 
 	body, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("reading migr.yaml: %v", err)
+		t.Fatalf("reading migrasyon.yaml: %v", err)
 	}
 
 	if err := os.WriteFile(path, append(body, []byte(safety)...), 0o600); err != nil {
-		t.Fatalf("writing migr.yaml: %v", err)
+		t.Fatalf("writing migrasyon.yaml: %v", err)
 	}
 }
 
@@ -357,7 +357,7 @@ func TestRequireSafeIsRefusedWhereNothingReadsIt(t *testing.T) {
 
 		_, _, err := runWith(t, dir, noon, drivers, command, "--require-safe")
 		if ExitCode(err) != ExitValidation {
-			t.Errorf("migr %s --require-safe exited %d, want the flag refused", command, ExitCode(err))
+			t.Errorf("migrasyon %s --require-safe exited %d, want the flag refused", command, ExitCode(err))
 		}
 	}
 }

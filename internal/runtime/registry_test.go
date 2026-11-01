@@ -75,7 +75,7 @@ func TestARuntimeMustAnswerToTheNameItWasRegisteredUnder(t *testing.T) {
 
 	if _, err := r.New("go"); err == nil {
 		t.Error("an adapter registered under one name and reporting another was accepted")
-		t.Log("The key is what migr.yaml's migrations.language resolves through and the name is")
+		t.Log("The key is what migrasyon.yaml's migrations.language resolves through and the name is")
 		t.Log("what every message renders. Two answers to one question is one too many.")
 	}
 }

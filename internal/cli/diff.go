@@ -10,31 +10,31 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/source/golang"
-	"github.com/emrebdr/migr/internal/source/typescript"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/source/golang"
+	"github.com/tosunlab/migrasyon/internal/source/typescript"
 )
 
 // defaultDiffName is what a generated migration is called when the invocation names nothing.
 const defaultDiffName = "diff"
 
-// newDiffCmd builds the `migr diff` subcommand.
+// newDiffCmd builds the `migrasyon diff` subcommand.
 func newDiffCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "diff [name]",
 		Short: "Write the migration that closes the gap between this database and the migrations",
 		Long: "Reads the live schema, folds every migration forward into the schema they describe,\n" +
 			"and writes the migration that closes the gap between the two — in the configured\n" +
-			"language, through the same writer `migr create` uses.\n\n" +
+			"language, through the same writer `migrasyon create` uses.\n\n" +
 			"It takes the migration lock to read, releases it before asking anything, and changes\n" +
 			"no database. It requires a settled, fully-migrated database: a diff against a project\n" +
 			"half of whose migrations have not run would propose everything they do.",
@@ -56,7 +56,7 @@ func nameOf(args []string) string {
 
 // The whole command in the order it does it: read under the lock, release, then compute, ask, and
 // write. A rename prompt waits on a person, and holding the migration lock across that would block
-// every other migr run on the database for as long as they took to answer -- so the lock covers
+// every other migrasyon run on the database for as long as they took to answer -- so the lock covers
 // reading and not asking. A report takes no lock at all and this is not a report: it
 // persists its answer into a file, so the answer has to be about a database nobody is changing.
 
@@ -216,7 +216,7 @@ func (s *session) readSchemas(ctx context.Context, opts *options,
 
 // A desired schema folded from every migration is the schema the database should have once they have
 // all run, so a diff over a half-migrated project would propose everything the pending ones do and
-// then duplicate them. Exit 1 rather than 2 throughout: the same command line succeeds once migr up
+// then duplicate them. Exit 1 rather than 2 throughout: the same command line succeeds once migrasyon up
 // has run, so it is the world that is not ready.
 
 // checkSettled refuses a database the migrations do not already describe, naming what is unsettled.
@@ -236,7 +236,7 @@ func checkStates(report history.Report) error {
 		return remedy.With(fmt.Errorf("this database is not the one the migrations describe -- nothing "+
 			"says which of them it already holds, and a diff folds every migration forward: %w",
 			history.ErrNoTable),
-			"run migr up first, which creates the history table and applies every migration")
+			"run migrasyon up first, which creates the history table and applies every migration")
 	}
 
 	unsettled := map[history.State][]string{}
@@ -276,18 +276,18 @@ func unsettledError(state history.State, named []string) error {
 func nextFor(state history.State) string {
 	switch state {
 	case history.StatePending:
-		return "run migr up first"
+		return "run migrasyon up first"
 	case history.StateMissing:
 		return "restore the file of each migration named from version control, then run the command again"
 	case history.StateDrifted:
 		return "restore each file named to the bytes that were applied, and make the change in a new " +
 			"migration"
 	case history.StateDirty:
-		return "settle the migration with migr resolve first: a database between states holds no " +
+		return "settle the migration with migrasyon resolve first: a database between states holds no " +
 			"schema a migration describes"
 	case history.StateWaiting:
-		return "confirm the shadow-table migration with migr cutover --confirm and let migr up swap it " +
-			"in, or abandon it with migr resolve --rolled-back"
+		return "confirm the shadow-table migration with migrasyon cutover --confirm and let migrasyon up swap it " +
+			"in, or abandon it with migrasyon resolve --rolled-back"
 	case history.StateApplied:
 		return ""
 	default:
@@ -319,7 +319,7 @@ func (s *session) project(ctx context.Context, read readable) (schema.Snapshot, 
 
 // A project whose migrations cannot be folded is refused whole rather than diffed against a partial
 // projection, because a desired schema missing whatever a statement built is one whose diff proposes
-// dropping it. That makes migr diff unavailable to the .sql format, by the same property that
+// dropping it. That makes migrasyon diff unavailable to the .sql format, by the same property that
 // already costs that format its derived down and its capability checks: every statement in one is
 // ir.Raw, whose effect on the schema nothing can read.
 
@@ -332,7 +332,7 @@ func unfoldableError(m migration.Migration, refused []fold.Refusal) error {
 
 	return NewExitError(ExitValidation, fmt.Errorf("%s: what the migrations describe cannot be "+
 		"read off them, so there is nothing to compare this database against:\n%s\n\nA migration "+
-		"whose effect migr cannot read leaves every schema after it unknowable, and diffing "+
+		"whose effect migrasyon cannot read leaves every schema after it unknowable, and diffing "+
 		"against a partial reading would propose dropping whatever it built. Every .sql "+
 		"migration is one of these", m.Filename(), strings.Join(lines, "\n")))
 }
@@ -433,7 +433,7 @@ func kindNames(ops ir.Operations) []ir.Kind {
 }
 
 // A generated migration goes through migration.New, checkUnclaimed and writeNew -- the same three
-// migr create uses -- so there is one file format and one writer, and a version another file already
+// migrasyon create uses -- so there is one file format and one writer, and a version another file already
 // claims is refused here exactly as it is there.
 
 // writeGenerated puts the generated body in the migration file this run claimed at the start.
@@ -457,7 +457,7 @@ func unwritableLanguage(lang config.Language) error {
 	reason := fmt.Sprintf("migrations.language: %s: nothing here writes a generated migration in "+
 		"that language (expected one of: %s)", lang, joinLanguages(renderable()))
 
-	next := "set migrations.language in migr.yaml to one of those to generate a migration in it"
+	next := "set migrations.language in migrasyon.yaml to one of those to generate a migration in it"
 
 	if lang != config.LanguageSQL {
 		return remedy.With(errors.New(reason), next)
@@ -465,8 +465,8 @@ func unwritableLanguage(lang config.Language) error {
 
 	return remedy.With(errors.New(reason+". Nor would there be anything to write about: every "+
 		"statement in a .sql migration reaches the database as a raw operation, whose effect on the "+
-		"schema migr cannot read, so the schema those migrations describe cannot be read off them at "+
-		"all"), "write the migration by hand: migr diff reads Go and TypeScript projects only")
+		"schema migrasyon cannot read, so the schema those migrations describe cannot be read off them at "+
+		"all"), "write the migration by hand: migrasyon diff reads Go and TypeScript projects only")
 }
 
 // renderWith writes the operations as the source of one language, refusing one that writes none.
@@ -497,9 +497,9 @@ func renderable() []config.Language {
 type generated struct {
 	// File is the path written, absent where the two schemas already agreed.
 	File string `json:"file,omitempty"`
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
-	// Language is what the migration was written in, spelled as migr.yaml spells it.
+	// Language is what the migration was written in, spelled as migrasyon.yaml spells it.
 	Language config.Language `json:"language"`
 	// Operations are the operations it carries, in the order it carries them.
 	Operations []ir.Kind `json:"operations,omitempty"`

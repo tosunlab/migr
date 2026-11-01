@@ -12,10 +12,10 @@ import (
 	// registers the SQLite driver this package opens through database/sql.
 	_ "modernc.org/sqlite"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Name is the name this driver is registered under, and the name every refusal it gives states.
@@ -30,7 +30,7 @@ const strategy = "file"
 // maxBusyTimeout is the longest wait busy_timeout holds, being a C int of milliseconds.
 const maxBusyTimeout = time.Duration(math.MaxInt32) * time.Millisecond
 
-// New builds the SQLite driver from the settings resolved out of migr.yaml.
+// New builds the SQLite driver from the settings resolved out of migrasyon.yaml.
 func New(opts driver.Options) (driver.Driver, error) {
 	if err := checkSchema(opts.Schema); err != nil {
 		return nil, err
@@ -132,9 +132,9 @@ type sqliteDriver struct {
 	table string
 	// seeds is where seeds are recorded, in the same database file and under the same lock.
 	seeds string
-	// lockWait bounds the wait for the migration lock, and is migr.yaml's lock.timeout.
+	// lockWait bounds the wait for the migration lock, and is migrasyon.yaml's lock.timeout.
 	lockWait time.Duration
-	// statementLockWait bounds each statement, and is migr.yaml's safety.lock_timeout.
+	// statementLockWait bounds each statement, and is migrasyon.yaml's safety.lock_timeout.
 	statementLockWait time.Duration
 }
 

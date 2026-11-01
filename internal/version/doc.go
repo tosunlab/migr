@@ -1,6 +1,6 @@
 // Package version reports the running binary's version, commit, and platform.
 //
-// This is a leaf package with no migr dependencies, deliberately. The migration
+// This is a leaf package with no migrasyon dependencies, deliberately. The migration
 // history store records the framework version alongside every applied migration
 // (M3-T6), and internal/history is core -- it cannot import internal/cli without
 // violating CLAUDE.md invariant #1. Both sides depend on this package instead.

@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // mustType parses a canonical logical type, failing the test rather than compiling a zero one.
@@ -149,7 +149,7 @@ func TestAnEnumDefaultThatIsNotALabelIsRefused(t *testing.T) {
 
 	t.Log("This one is a payload refusal like PostgreSQL's and the ADD COLUMN rules are not:")
 	t.Log("no table contents can make a default that is not a label correct. SQLite does refuse")
-	t.Log("it -- at apply, or at the first insert that relies on the default -- and migr validate")
+	t.Log("it -- at apply, or at the first insert that relies on the default -- and migrasyon validate")
 	t.Log("opens no database, so catching it here is a whole deploy earlier.")
 }
 

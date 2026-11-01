@@ -10,11 +10,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // fixture is the objects one round trip owns, named from the running test so no two cases collide.
@@ -382,7 +382,7 @@ func pointerToColumn(c ir.Column) *ir.Column {
 	return &c
 }
 
-func TestASnapshotDescribesTheFixtureAndNotMigrsOwnBookkeeping(t *testing.T) {
+func TestASnapshotDescribesTheFixtureAndNotMigrasyonsOwnBookkeeping(t *testing.T) {
 	eachServer(t, func(t *testing.T, s server, c *mysqlConn) {
 		f := newFixture(t, c)
 
@@ -399,8 +399,8 @@ func TestASnapshotDescribesTheFixtureAndNotMigrsOwnBookkeeping(t *testing.T) {
 			t.Errorf("the history table is in the snapshot:\n%s", described)
 			t.Log("eachServer names it after the running test, which is the fixture's prefix")
 			t.Log("exactly -- so the prefix scope matches it and only Introspect's own exclusion")
-			t.Log("keeps it out. A comparison carrying migr's bookkeeping describes something other")
-			t.Log("than the schema the migration changed, and every migr diff over this database")
+			t.Log("keeps it out. A comparison carrying migrasyon's bookkeeping describes something other")
+			t.Log("than the schema the migration changed, and every migrasyon diff over this database")
 			t.Log("would propose dropping the migration history.")
 		}
 	})

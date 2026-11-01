@@ -25,7 +25,7 @@ const VERSION = "20260727T153000";
 const HANDSHAKE = {
   protocolVersions: [1],
   irVersion: 1,
-  client: { name: "migr", version: "0.1.0" },
+  client: { name: "migrasyon", version: "0.1.0" },
   migrations: { dir: "/srv/app/migrations", language: "typescript" },
   database: { name: "default", driver: "postgres" },
 };
@@ -152,7 +152,7 @@ test("the handshake answers with the one version this SDK speaks, and what imple
   assert.equal(answer.id, 1);
   assert.equal(result["protocolVersion"], 1);
   assert.equal((result["runtime"] as Record<string, string>)["name"], "typescript");
-  assert.equal((result["sdk"] as Record<string, string>)["name"], "@migr/sdk");
+  assert.equal((result["sdk"] as Record<string, string>)["name"], "@migrasyon/sdk");
   assert.equal(await ended(session), EXIT_OK);
 });
 

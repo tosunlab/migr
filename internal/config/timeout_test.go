@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestAMigrationIsUnboundedUnlessMigrYAMLBoundsIt(t *testing.T) {
+func TestAMigrationIsUnboundedUnlessMigrasyonYAMLBoundsIt(t *testing.T) {
 	cfg, err := loadSeeding(t, "", "")
 	if err != nil {
 		t.Fatalf("a config naming no safety block must load: %v", err)
@@ -50,7 +50,7 @@ func TestAMigrationTimeoutOfNothingIsRefused(t *testing.T) {
 	}
 }
 
-func TestAStatementThatBlocksNoWriteIsUnboundedUnlessMigrYAMLBoundsIt(t *testing.T) {
+func TestAStatementThatBlocksNoWriteIsUnboundedUnlessMigrasyonYAMLBoundsIt(t *testing.T) {
 	cfg, err := loadSeeding(t, "", "")
 	if err != nil || cfg.Safety.Concurrent() != 0 {
 		t.Fatalf("an unset concurrent_timeout resolved to %v (%v), want no bound", cfg, err)

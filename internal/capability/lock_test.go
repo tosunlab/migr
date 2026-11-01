@@ -161,7 +161,7 @@ func TestEveryVerdictRendersAsItsFrozenWireName(t *testing.T) {
 		}
 	}
 
-	t.Log("These reach migr.yaml, host.capability.get, and the published per-driver tables, so")
+	t.Log("These reach migrasyon.yaml, host.capability.get, and the published per-driver tables, so")
 	t.Log("they are a compatibility surface rather than display text. The four lock spellings")
 	t.Log("were already frozen by internal/config and its testdata before this package existed.")
 }

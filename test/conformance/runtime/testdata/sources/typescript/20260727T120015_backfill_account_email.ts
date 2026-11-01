@@ -1,4 +1,4 @@
-import { replaceColumn, t } from "@migr/sdk";
+import { replaceColumn, t } from "@migrasyon/sdk";
 
 /** The backfill of widening accounts.email, whose down has nothing of its own to undo. */
 export default replaceColumn("accounts", "email", t.string(255))

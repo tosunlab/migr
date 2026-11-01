@@ -9,10 +9,10 @@ import (
 
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
-// lockClassID is migr's half of the two-key advisory space, fixed so every migr lock is
+// lockClassID is migrasyon's half of the two-key advisory space, fixed so every migrasyon lock is
 // recognizable in pg_locks and so no namespace can collide with another tool's classid.
 const lockClassID int32 = 0x6D677221
 
@@ -28,7 +28,7 @@ const releaseQuery = `SELECT pg_advisory_unlock($1, $2)`
 // lockTimeoutQuery bounds an acquire server-side, so a wait that gives up leaves the session alive.
 //
 // set_config rather than SET, because SET takes no bound parameters -- the same reason
-// applySearchPath uses it, and the reason migr.yaml's lock.timeout is bound here rather than
+// applySearchPath uses it, and the reason migrasyon.yaml's lock.timeout is bound here rather than
 // concatenated. The value it binds is lockTimeoutSetting's, never Duration.String's.
 const lockTimeoutQuery = `SELECT set_config('lock_timeout', $1, false)`
 
@@ -56,7 +56,7 @@ func (k lockKey) String() string {
 // objIDMask keeps the derived half non-negative, since pg_locks reports int4 as a signed number.
 const objIDMask = 0x7FFFFFFF
 
-// namespaceKey derives the advisory key one migr installation locks on.
+// namespaceKey derives the advisory key one migrasyon installation locks on.
 func namespaceKey(schema, table string) lockKey {
 	digest := sha256.Sum256([]byte(schema + namespaceSeparator + table))
 

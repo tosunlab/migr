@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The fixture's own column names, stated once so the expectation and the operations cannot drift.

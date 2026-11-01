@@ -9,10 +9,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // errNotWaiting marks a confirmation asked of a migration that is not held in sync waiting for one.
@@ -21,7 +21,7 @@ var errNotWaiting = errors.New("this migration is not waiting for a cutover")
 // errUnknownCutover marks a confirmation naming a version no migration here carries.
 var errUnknownCutover = errors.New("no migration carries this version")
 
-// newCutoverCmd builds the `migr cutover` subcommand.
+// newCutoverCmd builds the `migrasyon cutover` subcommand.
 func newCutoverCmd(opts *options) *cobra.Command {
 	var confirm string
 
@@ -67,9 +67,9 @@ type confirmedCutover struct {
 	Shadow *shadowDoc `json:"shadow"`
 }
 
-// cutoverReport is what migr cutover found, and what it confirmed where it was asked to.
+// cutoverReport is what migrasyon cutover found, and what it confirmed where it was asked to.
 type cutoverReport struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Shadows are the shadow-table migrations that have not cut over, waiting ones first.
 	Shadows []cutoverRow `json:"shadows"`
@@ -184,7 +184,7 @@ func (s *session) confirmCutover(ctx context.Context, found []migration.Migratio
 		return nil, NewExitError(ExitRuntime, remedy.With(fmt.Errorf("%w: %s is still copying into "+
 			"the shadow table %s (%d rows so far), and a cutover is confirmable once its copy is held in "+
 			"sync", errNotWaiting, describeCutover(row), row.Shadow.Shadow, row.Shadow.Copied),
-			"let migr up carry the copy on, and confirm once migr cutover lists it as waiting"))
+			"let migrasyon up carry the copy on, and confirm once migrasyon cutover lists it as waiting"))
 	}
 
 	confirmed := &confirmedCutover{Version: row.Version, File: row.File, Shadow: row.Shadow,
@@ -198,12 +198,12 @@ func (s *session) confirmCutover(ctx context.Context, found []migration.Migratio
 	if !remembers {
 		return nil, remedy.With(fmt.Errorf("this session's history cannot record a cutover "+
 			"confirmation for %s", describeCutover(row)), "this is a bug in the driver, whose history "+
-			"store records no confirmations: report it at https://github.com/emrebdr/migr/issues")
+			"store records no confirmations: report it at https://github.com/tosunlab/migrasyon/issues")
 	}
 
 	if err := store.ConfirmShadow(ctx, version); err != nil {
 		return nil, remedy.Fallback(fmt.Errorf("confirming the cutover of %s: %w", describeCutover(row),
-			err), "run migr cutover --confirm again once the database answers")
+			err), "run migrasyon cutover --confirm again once the database answers")
 	}
 
 	return confirmed, s.checkConfirmed(ctx, row)
@@ -223,7 +223,7 @@ func (s *session) checkConfirmed(ctx context.Context, row cutoverRow) error {
 
 	return NewExitError(ExitRuntime, remedy.With(fmt.Errorf("%w: %s was abandoned or cut over while "+
 		"it was being confirmed, so no confirmation is recorded", errNotWaiting, describeCutover(row)),
-		"run migr cutover to list what still waits, and migr status for where this one stands"))
+		"run migrasyon cutover to list what still waits, and migrasyon status for where this one stands"))
 }
 
 // findCutover returns the listed shadow-table migration with this version, where it is listed at all.
@@ -242,13 +242,13 @@ func notWaitingError(found []migration.Migration, version string) error {
 	for _, m := range found {
 		if m.Version == version {
 			return NewExitError(ExitRuntime, remedy.With(fmt.Errorf("%w: %s has no shadow table held "+
-				"in sync", errNotWaiting, m.Filename()), "run migr cutover to list what waits, and migr "+
+				"in sync", errNotWaiting, m.Filename()), "run migrasyon cutover to list what waits, and migrasyon "+
 				"status for the state this one is in"))
 		}
 	}
 
 	return NewExitError(ExitValidation, remedy.With(fmt.Errorf("%w: %q", errUnknownCutover, version),
-		"pass --confirm one of the versions migr cutover lists"))
+		"pass --confirm one of the versions migrasyon cutover lists"))
 }
 
 // confirmedNow returns the confirmed migration's state as read after the confirmation, else as it was before.
@@ -341,6 +341,6 @@ func writeConfirmed(b *strings.Builder, confirmed *confirmedCutover) {
 		return
 	}
 
-	b.WriteString("No run is holding it in sync, so nothing swaps it yet: migr up resumes the hold, " +
+	b.WriteString("No run is holding it in sync, so nothing swaps it yet: migrasyon up resumes the hold, " +
 		"catches up, and cuts it over.\n")
 }

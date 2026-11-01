@@ -1,4 +1,4 @@
-# migr Runtime Protocol — `protocolVersion` 1
+# migrasyon Runtime Protocol — `protocolVersion` 1
 
 How the engine and a language runtime talk. The engine is a Go binary; a migration is a program in
 another language. This document specifies the conversation between them, completely enough to write
@@ -215,7 +215,7 @@ it does.
 Engine → runtime. The handshake.
 
 ```json
-{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersions":[1],"irVersion":1,"client":{"name":"migr","version":"0.1.0"},"migrations":{"dir":"/srv/app/migrations","language":"go"},"database":{"name":"default","driver":"postgres"}}}
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersions":[1],"irVersion":1,"client":{"name":"migrasyon","version":"0.1.0"},"migrations":{"dir":"/srv/app/migrations","language":"go"},"database":{"name":"default","driver":"postgres"}}}
 ```
 
 | Parameter | Meaning |
@@ -224,8 +224,8 @@ Engine → runtime. The handshake.
 | `irVersion` | the newest Operation IR version the engine reads. Stated, not negotiated; every older version is a subset of it ([`ir.md` §2.2](ir.md#22-irversion)). |
 | `client` | the engine's own name and version, for the runtime's diagnostics. |
 | `migrations.dir` | absolute path to the migrations directory. Not relative: a runtime's working directory is the project root and the two are not the same thing. |
-| `migrations.language` | the language **this runtime was started for**, spelled as `migr.yaml` spells it. One directory may hold several, so this is the one the engine will route to this process and not necessarily the one `migrations.language` holds. |
-| `database.name` | the key `migr.yaml` holds the target under. For messages; a runtime never connects. |
+| `migrations.language` | the language **this runtime was started for**, spelled as `migrasyon.yaml` spells it. One directory may hold several, so this is the one the engine will route to this process and not necessarily the one `migrations.language` holds. |
+| `database.name` | the key `migrasyon.yaml` holds the target under. For messages; a runtime never connects. |
 | `database.driver` | the engine that will compile the operations, which a migration may branch on. |
 
 No DSN is sent, ever. A runtime does not connect to anything: every read goes through
@@ -234,7 +234,7 @@ No DSN is sent, ever. A runtime does not connect to anything: every read goes th
 The result names one version and identifies the implementation:
 
 ```json
-{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":1,"runtime":{"name":"node","version":"24.16.0"},"sdk":{"name":"@migr/sdk","version":"0.1.0"}}}
+{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":1,"runtime":{"name":"node","version":"24.16.0"},"sdk":{"name":"@migrasyon/sdk","version":"0.1.0"}}}
 ```
 
 `runtime` is the language runtime — `node`, `go`, `python` — and its version. `sdk` is the library
@@ -337,8 +337,8 @@ Three things this deliberately is not:
   before any migration runs. Ordering therefore settles after every session has been started, which
   is why a command that starts none prints version order and says so.
 - **It is not a computation.** `dependencies` is read from the migration, never derived from a
-  query. A graph that could branch on live data would let `migr plan` and `migr up` order the same
-  migrations differently, and would put `migr status` behind a language toolchain.
+  query. A graph that could branch on live data would let `migrasyon plan` and `migrasyon up` order the same
+  migrations differently, and would put `migrasyon status` behind a language toolchain.
 
 `dependencies` names **versions**, not filenames. The version is the key the engine proved unique,
 and the one `--to` and a history row already use.
@@ -429,7 +429,7 @@ Runs one migration's own `Validate()` and nothing else.
 A migration that considers itself invalid fails the call with
 [`migration_failed`](#73-the-application-band) and a message its author wrote.
 
-This is the migration's self-check, and it is **not** `migr validate`. That command reads every
+This is the migration's self-check, and it is **not** `migrasyon validate`. That command reads every
 migration, compiles both directions for the configured engine, and checks that something can undo
 each one, reporting every problem rather than the first. This call is one of the things it may ask.
 
@@ -611,7 +611,7 @@ response.
 value in `fields` is a string.
 
 This is not the same channel as stderr. stderr is passed through verbatim and is for whatever the
-language prints; `host.log` reaches `migr --json`'s log stream as an object a script can filter.
+language prints; `host.log` reaches `migrasyon --json`'s log stream as an object a script can filter.
 Both exist because a migration has both kinds of thing to say.
 
 ---
@@ -633,7 +633,7 @@ state in one table:
 That `host.schema.apply` is identical in both is the point, not an oversight. The engine never
 executes an operation as it arrives: it collects a migration's whole list, hashes it, compiles it
 through the driver, and runs the statements in one transaction. So there is nothing for plan mode
-to switch off — the recording *is* the behavior, and `migr plan` and `migr up` share it exactly.
+to switch off — the recording *is* the behavior, and `migrasyon plan` and `migrasyon up` share it exactly.
 
 Only the escape hatch differs, because it is the only callback that reaches the database directly.
 
@@ -683,7 +683,7 @@ never sends it, and an engine with a bug that does sends it gets a clear answer 
 
 ### 7.3 The application band
 
-JSON-RPC 2.0 reserves `-32000` to `-32099` for the implementation. Every migr code lives there, and
+JSON-RPC 2.0 reserves `-32000` to `-32099` for the implementation. Every migrasyon code lives there, and
 they are all assigned here.
 
 > LSP's `-32800` for a canceled request is deliberately **not** reused. It sits in `-32768` to
@@ -740,7 +740,7 @@ rather than with a generic one:
 Every SDK owes both. Without `no_down_authored` a migration would have to author an inverse the
 framework could have derived; without `declared_irreversible` a legitimately one-way migration could
 never pass validation, since there would be no way to say so. That second hole was found and closed
-for `.sql` migrations by `-- migr:irreversible:`, and this is the same hole on the wire.
+for `.sql` migrations by `-- migrasyon:irreversible:`, and this is the same hole on the wire.
 
 An SDK that reports a missing `Down` as `migration_failed` is not merely imprecise: it turns every
 derivable rollback into a failed one.
@@ -790,7 +790,7 @@ mid-migration.
 
 ### 8.2 Timeouts
 
-| What | `migr.yaml` | Default | Exceeded |
+| What | `migrasyon.yaml` | Default | Exceeded |
 |---|---|---|---|
 | handshake — spawn to `initialize` result | `runtime.handshake_timeout` | 30s | kill; report that the runtime never started |
 | `migration.discover`, `migration.validate` | `runtime.request_timeout` | 60s | `$/cancel`, then kill |
@@ -800,8 +800,8 @@ mid-migration.
 
 `migration.execute` has no timeout of its own on purpose. A backfill over a large table legitimately
 runs for hours, and a default that killed it would be a data-loss bug wearing a safety flag. It ends
-when the operator's `migr up` ends: `Ctrl-C` cancels the context, which sends `$/cancel`. It has no
-`migr.yaml` key either, so there is nothing for an operator to set to the value that would break it.
+when the operator's `migrasyon up` ends: `Ctrl-C` cancels the context, which sends `$/cancel`. It has no
+`migrasyon.yaml` key either, so there is nothing for an operator to set to the value that would break it.
 
 These defaults are the protocol's, and the middle column is where a project overrides one. An engine
 that read a default from anywhere but this specification would let two installations disagree about
@@ -818,7 +818,7 @@ is not specified here ([§1.2](#12-what-it-deliberately-does-not-specify)).
 
 - stdin, stdout, and stderr are connected as [§2.1](#21-two-streams-two-jobs) describes. All three
   are pipes; none is a terminal.
-- The working directory is the **project root** — the directory holding `migr.yaml`. It is not the
+- The working directory is the **project root** — the directory holding `migrasyon.yaml`. It is not the
   migrations directory, whose absolute path arrives in `initialize`.
 - The environment is the engine's own, plus whatever the adapter adds for its language. No secret is
   passed: a runtime never connects to a database, so it never needs a DSN.
@@ -844,7 +844,7 @@ cannot leave one behind either. There is one edge the engine cannot cover, and a
 covers it: if the engine is itself killed outright, **the child's stdin reaches end of file**,
 because the engine held the only other end of that pipe. A runtime that reads EOF on stdin has lost
 its engine and must exit — that is the last thing this section asks of it, and the only thing
-standing between a killed `migr` and a runtime that runs forever.
+standing between a killed `migrasyon` and a runtime that runs forever.
 
 ---
 
@@ -942,16 +942,16 @@ implementer has to re-read to know whether they are finished.
 
 ### Applying one migration
 
-`migr up` against a project with one Go migration. Engine requests are numbered from the engine's
+`migrasyon up` against a project with one Go migration. Engine requests are numbered from the engine's
 sequence, `host.*` requests from the runtime's; the two sequences are unrelated
 ([§2.5](#25-ordering-and-concurrency)).
 
 ```json
-{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersions":[1],"irVersion":1,"client":{"name":"migr","version":"0.1.0"},"migrations":{"dir":"/srv/app/migrations","language":"go"},"database":{"name":"default","driver":"postgres"}}}
+{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersions":[1],"irVersion":1,"client":{"name":"migrasyon","version":"0.1.0"},"migrations":{"dir":"/srv/app/migrations","language":"go"},"database":{"name":"default","driver":"postgres"}}}
 ```
 
 ```json
-{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":1,"runtime":{"name":"go","version":"1.26.3"},"sdk":{"name":"github.com/emrebdr/migr/sdk/go","version":"0.1.0"}}}
+{"jsonrpc":"2.0","id":1,"result":{"protocolVersion":1,"runtime":{"name":"go","version":"1.26.3"},"sdk":{"name":"github.com/tosunlab/migrasyon/sdk/go","version":"0.1.0"}}}
 ```
 
 ```json

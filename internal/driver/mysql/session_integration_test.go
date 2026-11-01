@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	conformance "github.com/emrebdr/migr/test/conformance/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/driver"
 )
 
 func TestTheVariantAndTheReleaseAreDetectedFromTheServerItself(t *testing.T) {

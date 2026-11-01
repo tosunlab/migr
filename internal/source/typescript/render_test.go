@@ -9,9 +9,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // A renderer whose output does not typecheck is not a renderer, so this runs tsc over what it
@@ -34,7 +34,7 @@ func TestWhatItRendersTypechecksAgainstThePublishedPackage(t *testing.T) {
 			"over what this renders (install it with `make tools`): %v", err)
 	}
 
-	dir, err := os.MkdirTemp(modules, ".migr-rendered-")
+	dir, err := os.MkdirTemp(modules, ".migrasyon-rendered-")
 	if err != nil {
 		t.Fatalf("staging a directory inside node_modules: %v", err)
 	}

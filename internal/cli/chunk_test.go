@@ -8,10 +8,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // chunkedProject is a Go project whose one migration backfills a keyed table, which runs in chunks.
@@ -120,7 +120,7 @@ func TestUpSaysHowManyChunksARunTookAndThatItCarriedOn(t *testing.T) {
 	}
 
 	if !strings.Contains(status, "stopped running in chunks: operation 1, 2 chunks and 2000 rows "+
-		"written, through key (2000) -- the next migr up carries on from there") {
+		"written, through key (2000) -- the next migrasyon up carries on from there") {
 		t.Errorf("status does not say how far the stopped run got:\n%s", status)
 	}
 

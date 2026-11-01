@@ -7,8 +7,8 @@ import (
 	"slices"
 )
 
-// ErrOnline marks a migration declaring a way of running online that migr does not know.
-var ErrOnline = errors.New("these migrations declare an online strategy migr does not know")
+// ErrOnline marks a migration declaring a way of running online that migrasyon does not know.
+var ErrOnline = errors.New("these migrations declare an online strategy migrasyon does not know")
 
 // Strategy is how a migration declares it runs against a live table, rather than as a plain ALTER.
 type Strategy string
@@ -21,7 +21,7 @@ func Strategies() []Strategy {
 	return []Strategy{ShadowTable}
 }
 
-// Valid reports whether s is a strategy migr knows.
+// Valid reports whether s is a strategy migrasyon knows.
 func (s Strategy) Valid() bool {
 	return slices.Contains(Strategies(), s)
 }
@@ -29,7 +29,7 @@ func (s Strategy) Valid() bool {
 // Online is what each migration declares about running online, keyed by version.
 type Online map[string]Strategy
 
-// Check refuses every declaration of a strategy migr does not know, naming the migration and the ones it does.
+// Check refuses every declaration of a strategy migrasyon does not know, naming the migration and the ones it does.
 func (o Online) Check(found []Migration) error {
 	byVersion := make(map[string]Migration, len(found))
 	for _, m := range found {
@@ -41,7 +41,7 @@ func (o Online) Check(found []Migration) error {
 	for _, version := range slices.Sorted(maps.Keys(o)) {
 		if strategy := o[version]; !strategy.Valid() {
 			problems = append(problems, fmt.Errorf("%s: it declares the online strategy %q, and the "+
-				"one migr knows is %q", byVersion[version].Filename(), strategy, ShadowTable))
+				"one migrasyon knows is %q", byVersion[version].Filename(), strategy, ShadowTable))
 		}
 	}
 

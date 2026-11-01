@@ -11,9 +11,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // tree is the fixture set itself, embedded so a caller runs the suite from any directory.

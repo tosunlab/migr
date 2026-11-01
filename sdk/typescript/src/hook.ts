@@ -60,7 +60,7 @@ export async function install(): Promise<void> {
 /** missing reports an installation with no transpiler, which is the one way install fails. */
 export function missing(cause: unknown): Error {
   return new Error(
-    "@migr/sdk could not load esbuild, which is what it transpiles TypeScript migrations with: " +
+    "@migrasyon/sdk could not load esbuild, which is what it transpiles TypeScript migrations with: " +
       "reinstall this package's dependencies",
     { cause },
   );

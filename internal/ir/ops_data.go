@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // TransformFunction names what data_transform applies to its source column, which every driver spells.

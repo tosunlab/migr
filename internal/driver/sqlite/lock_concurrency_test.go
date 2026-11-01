@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // rivals is how many sessions contend, which is enough for an overlap to show and to stay quick.

@@ -3,8 +3,8 @@ package checksum
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // ptrType parses a canonical type string and returns a pointer to it.
@@ -51,7 +51,7 @@ func vectors(t *testing.T) []vector {
 			ops:        ir.Operations{ir.DropTable{Table: "users"}},
 			normalized: asciiSource,
 			encoded:    `[{"op":"drop_table","table":"users"}]`,
-			checksum: "migr1:26722f80c5e09f62322c2209fe39d237a71042ed918c3706b7e6fd5d77a5a801" +
+			checksum: "migrasyon1:26722f80c5e09f62322c2209fe39d237a71042ed918c3706b7e6fd5d77a5a801" +
 				":dd7a56777f2b0905b433555bebccc54265419321280f205980138fde99ce7e24",
 		},
 		{
@@ -65,7 +65,7 @@ func vectors(t *testing.T) []vector {
 			normalized: "CHECK (total >= 0 AND name <> '' AND flags & 1)\n",
 			encoded: `[{"op":"add_check","table":"orders","name":"ck_orders_total",` +
 				`"expression":"total >= 0 AND name <> '' AND flags & 1"}]`,
-			checksum: "migr1:b1bad082faed98f8229cece91214625d2072fea4d5e2d0fb73937b3a6c6e2574" +
+			checksum: "migrasyon1:b1bad082faed98f8229cece91214625d2072fea4d5e2d0fb73937b3a6c6e2574" +
 				":f14f0cab508c8b6e897d1afc8a1e4d081c2bdba5aa7e0083a1da8bc67cb7eaa0",
 		},
 		{
@@ -80,7 +80,7 @@ func vectors(t *testing.T) []vector {
 			encoded: `[{"op":"create_view","view":"active_users",` +
 				`"query":"SELECT id` + lineSeparator + `FROM users` + paragraphSeparator +
 				`WHERE active"}]`,
-			checksum: "migr1:ead95624e0fd5a5230c23451754ec41fbf20bb629b761db6bd924163e4fd5b4c" +
+			checksum: "migrasyon1:ead95624e0fd5a5230c23451754ec41fbf20bb629b761db6bd924163e4fd5b4c" +
 				":6182bc8567542e93bcbcbcc38472bbd024f28b5323931ce3e1faa504ad0a1a9f",
 		},
 		{
@@ -94,7 +94,7 @@ func vectors(t *testing.T) []vector {
 			normalized: "// tablo: müşteriler\n",
 			encoded: `[{"op":"add_check","table":"müşteriler","name":"ck_bakiye",` +
 				`"expression":"bakiye >= 0 -- 🎉"}]`,
-			checksum: "migr1:16cbbfaa26eadd74bdf07bbd11431530710aca3bd699cc0b3f12299e341fc540" +
+			checksum: "migrasyon1:16cbbfaa26eadd74bdf07bbd11431530710aca3bd699cc0b3f12299e341fc540" +
 				":04de986c6c5b42344933b50b2942b3ae2e2d79c02067bd343aba24666536eb78",
 		},
 		{
@@ -103,7 +103,7 @@ func vectors(t *testing.T) []vector {
 			ops:        ir.Operations{ir.DropTable{Table: "users"}},
 			normalized: asciiSource,
 			encoded:    `[{"op":"drop_table","table":"users"}]`,
-			checksum: "migr1:26722f80c5e09f62322c2209fe39d237a71042ed918c3706b7e6fd5d77a5a801" +
+			checksum: "migrasyon1:26722f80c5e09f62322c2209fe39d237a71042ed918c3706b7e6fd5d77a5a801" +
 				":dd7a56777f2b0905b433555bebccc54265419321280f205980138fde99ce7e24",
 		},
 		{
@@ -112,7 +112,7 @@ func vectors(t *testing.T) []vector {
 			ops:        ir.Operations{},
 			normalized: "export function down(s: Schema) {}\n",
 			encoded:    `[]`,
-			checksum: "migr1:748e4382cf90a713ab13e9d8e022d025da8d944feed91bb7b2538df9a511aa76" +
+			checksum: "migrasyon1:748e4382cf90a713ab13e9d8e022d025da8d944feed91bb7b2538df9a511aa76" +
 				":4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
 		},
 		{
@@ -121,7 +121,7 @@ func vectors(t *testing.T) []vector {
 			ops:        everyOperation(t),
 			normalized: "// one instance of every operation in the v1 set\n",
 			encoded:    everyOperationJSON,
-			checksum: "migr1:3dfe478d660be923be277be8362ba8b0ee394b49e564274963542449de6ab042" +
+			checksum: "migrasyon1:3dfe478d660be923be277be8362ba8b0ee394b49e564274963542449de6ab042" +
 				":72fffa276e12aab0165821a8d0e4f813efbfbc125fcc8611217b8e47ce9d1177",
 		},
 	}
@@ -250,7 +250,7 @@ func TestTheCommittedVectorsStillHold(t *testing.T) {
 func explainVector(t *testing.T) {
 	t.Helper()
 
-	t.Log("These values are a committed contract, derived from the migr1 spec by a second")
+	t.Log("These values are a committed contract, derived from the migrasyon1 spec by a second")
 	t.Log("implementation rather than from this package. If one changed, every applied")
 	t.Log("migration in every installation now reads as drifted -- exit code 4, and")
 	t.Log("invariant #6 offers no flag that repairs it.")

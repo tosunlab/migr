@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // fakeDriver compiles to a comment, so no golden file can be generated from it by accident.
@@ -169,7 +169,7 @@ func TestCompilingNeedsNoConnection(t *testing.T) {
 		t.Error("the fake must have no database, so the two paths cannot be confused")
 	}
 
-	t.Log("Compile takes no context and no connection, which is what lets migr plan print")
+	t.Log("Compile takes no context and no connection, which is what lets migrasyon plan print")
 	t.Log("statements without touching a database and lets golden tests run without one.")
 }
 

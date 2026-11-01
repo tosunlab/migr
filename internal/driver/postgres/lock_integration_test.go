@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // waitingQuery counts sessions queued behind this key, which is the block seen from the server.
@@ -101,11 +101,11 @@ func TestASecondConnectionIsBlockedUntilTheFirstReleases(t *testing.T) {
 		t.Run(server.name, func(t *testing.T) {
 			dsn := dsnFor(server.env, server.dsn)
 
-			holder := lockedConn(t, dsn, "migr_lock_probe")
-			waiter := lockedConn(t, dsn, "migr_lock_probe")
+			holder := lockedConn(t, dsn, "migrasyon_lock_probe")
+			waiter := lockedConn(t, dsn, "migrasyon_lock_probe")
 			observer := openSession(t, dsn)
 
-			key := namespaceKey("", "migr_lock_probe")
+			key := namespaceKey("", "migrasyon_lock_probe")
 
 			release, err := holder.Lock(t.Context())
 			if err != nil {
@@ -146,8 +146,8 @@ func TestASecondConnectionIsBlockedUntilTheFirstReleases(t *testing.T) {
 func TestAnUnrelatedNamespaceIsNotBlocked(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 
-	mine := lockedConn(t, dsn, "migr_lock_probe_a")
-	theirs := lockedConn(t, dsn, "migr_lock_probe_b")
+	mine := lockedConn(t, dsn, "migrasyon_lock_probe_a")
+	theirs := lockedConn(t, dsn, "migrasyon_lock_probe_b")
 
 	release, err := mine.Lock(t.Context())
 	if err != nil {
@@ -169,7 +169,7 @@ func TestAnUnrelatedNamespaceIsNotBlocked(t *testing.T) {
 		t.Errorf("releasing the second lock: %v", err)
 	}
 
-	t.Log("Advisory locks are scoped to the database, not the schema, so two migr installations")
+	t.Log("Advisory locks are scoped to the database, not the schema, so two migrasyon installations")
 	t.Log("in one database would serialize against each other if the key did not separate them.")
 	t.Log("This is what the key derivation is for, and nothing else tests it.")
 }
@@ -177,7 +177,7 @@ func TestAnUnrelatedNamespaceIsNotBlocked(t *testing.T) {
 func TestTheLockOutlivesNothingButItsSession(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 
-	d, err := New(driver.Options{HistoryTable: "migr_lock_probe_crash"})
+	d, err := New(driver.Options{HistoryTable: "migrasyon_lock_probe_crash"})
 	if err != nil {
 		t.Fatalf("New: %v", err)
 	}
@@ -195,7 +195,7 @@ func TestTheLockOutlivesNothingButItsSession(t *testing.T) {
 		t.Fatalf("Close: %v", err)
 	}
 
-	successor := lockedConn(t, dsn, "migr_lock_probe_crash")
+	successor := lockedConn(t, dsn, "migrasyon_lock_probe_crash")
 
 	release, err := successor.Lock(t.Context())
 	if err != nil {
@@ -208,13 +208,13 @@ func TestTheLockOutlivesNothingButItsSession(t *testing.T) {
 
 	t.Log("This is invariant #11's stale-lock recovery story, and PostgreSQL is the whole of it:")
 	t.Log("a session-level advisory lock is released by the server when the backend goes away,")
-	t.Log("so a crashed migr cannot wedge a database and there is no recovery code to write.")
-	t.Log("The table and file strategies in migr.yaml will need real machinery here; this one")
+	t.Log("so a crashed migrasyon cannot wedge a database and there is no recovery code to write.")
+	t.Log("The table and file strategies in migrasyon.yaml will need real machinery here; this one")
 	t.Log("does not, and that absence is a property rather than an omission.")
 }
 
 func TestReleasingTwiceIsNotAnError(t *testing.T) {
-	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migr_lock_probe_twice")
+	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migrasyon_lock_probe_twice")
 
 	release, err := conn.Lock(t.Context())
 	if err != nil {
@@ -238,7 +238,7 @@ func TestReleasingTwiceIsNotAnError(t *testing.T) {
 }
 
 func TestASecondAcquireOnOneSessionIsRefused(t *testing.T) {
-	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migr_lock_probe_reentrant")
+	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migrasyon_lock_probe_reentrant")
 
 	release, err := conn.Lock(t.Context())
 	if err != nil {
@@ -267,7 +267,7 @@ func TestASecondAcquireOnOneSessionIsRefused(t *testing.T) {
 }
 
 func TestAnAcquireLeavesTheSessionSettingsAsItFoundThem(t *testing.T) {
-	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migr_lock_probe_settings")
+	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migrasyon_lock_probe_settings")
 
 	session, ok := conn.(*pgConn)
 	if !ok {
@@ -307,7 +307,7 @@ const configuredStatementSetting = "1200ms"
 
 func TestTheAcquireRestoresTheBoundEveryStatementRunsUnder(t *testing.T) {
 	conn := lockedConnWith(t, dsnFor(servers[0].env, servers[0].dsn), driver.Options{
-		HistoryTable:      "migr_lock_probe_restored",
+		HistoryTable:      "migrasyon_lock_probe_restored",
 		LockWait:          5 * time.Second,
 		StatementLockWait: configuredStatementWait,
 	})
@@ -360,7 +360,7 @@ func lockTimeoutOf(t *testing.T, session *pgConn) string {
 }
 
 func TestAReleaseTheServerRefusesIsAnError(t *testing.T) {
-	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migr_lock_probe_stolen")
+	conn := lockedConn(t, dsnFor(servers[0].env, servers[0].dsn), "migrasyon_lock_probe_stolen")
 
 	session, ok := conn.(*pgConn)
 	if !ok {
@@ -394,8 +394,8 @@ func TestAReleaseTheServerRefusesIsAnError(t *testing.T) {
 func TestAWaitThatGivesUpLeavesTheSessionUsable(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 
-	holder := lockedConn(t, dsn, "migr_lock_probe_timeout")
-	waiter := lockedConnWaiting(t, dsn, "migr_lock_probe_timeout", 150*time.Millisecond)
+	holder := lockedConn(t, dsn, "migrasyon_lock_probe_timeout")
+	waiter := lockedConnWaiting(t, dsn, "migrasyon_lock_probe_timeout", 150*time.Millisecond)
 
 	release, err := holder.Lock(t.Context())
 	if err != nil {

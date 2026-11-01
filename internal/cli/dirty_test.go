@@ -7,10 +7,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // threeStatements is the migration this file drives: one statement lands, one fails, one never runs.
@@ -141,11 +141,11 @@ func TestEveryRunAgainstADirtyDatabaseIsRefusedTheSameWay(t *testing.T) {
 
 			_, stderr, err := runWith(t, dir, noon, drivers, args...)
 			if !errors.As(err, new(*engine.DirtyStateError)) {
-				t.Fatalf("migr %v failed with %T, want the refusal a dirty database gets", args, err)
+				t.Fatalf("migrasyon %v failed with %T, want the refusal a dirty database gets", args, err)
 			}
 
 			if !strings.Contains(stderr, "resolved explicitly") {
-				t.Errorf("migr %v does not say the state must be resolved:\n%s", args, stderr)
+				t.Errorf("migrasyon %v does not say the state must be resolved:\n%s", args, stderr)
 			}
 		})
 	}
@@ -164,11 +164,11 @@ func TestAReportOverTheDatabaseARunLeftDirtyStillSucceeds(t *testing.T) {
 	for _, command := range []string{"status", "history"} {
 		stdout, _, err := runWith(t, dir, noon, drivers, command)
 		if err != nil {
-			t.Fatalf("migr %s over a dirty database failed: %v", command, err)
+			t.Fatalf("migrasyon %s over a dirty database failed: %v", command, err)
 		}
 
 		if !strings.Contains(stdout, "dirty") {
-			t.Errorf("migr %s does not report the state:\n%s", command, stdout)
+			t.Errorf("migrasyon %s does not report the state:\n%s", command, stdout)
 		}
 	}
 

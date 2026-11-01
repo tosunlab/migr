@@ -4,18 +4,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
-// historyDDL is what migr's own history table is, in the dialect it is actually created in.
+// historyDDL is what migrasyon's own history table is, in the dialect it is actually created in.
 //
 // The neutral schema is M2-T5's and the compiler is M3-T2's, so nothing here chooses anything --
 // but the product of the two is the one thing an operator inspects and no golden file records.
 // test/golden holds one file per IR operation kind, resolved from ir.Kinds(), so a sixteenth file
-// for this would be a case the harness never asked for. Stating it here puts a change to migr's
+// for this would be a case the harness never asked for. Stating it here puts a change to migrasyon's
 // own table in a diff instead of leaving it to a live server to reveal.
-const historyDDL = `CREATE TABLE "migr_migrations" (
+const historyDDL = `CREATE TABLE "migrasyon_migrations" (
     "batch" bigint NOT NULL,
     "ordinal" integer NOT NULL,
     "version" varchar(64) NOT NULL,
@@ -33,7 +33,7 @@ const historyDDL = `CREATE TABLE "migr_migrations" (
     "ir_version" integer NOT NULL,
     PRIMARY KEY ("batch", "ordinal")
 );
-CREATE INDEX "migr_migrations_version_idx" ON "migr_migrations" ("version");`
+CREATE INDEX "migrasyon_migrations_version_idx" ON "migrasyon_migrations" ("version");`
 
 func TestTheHistoryTableIsCreatedAsThisDialectSpellsIt(t *testing.T) {
 	store := pgHistory{table: driver.DefaultHistoryTable}
@@ -53,11 +53,11 @@ func TestTheHistoryTableIsCreatedAsThisDialectSpellsIt(t *testing.T) {
 	}
 
 	if got := strings.Join(rendered, "\n"); got != historyDDL {
-		t.Errorf("migr's own history table is created as\n%s\n\nwant\n%s", got, historyDDL)
+		t.Errorf("migrasyon's own history table is created as\n%s\n\nwant\n%s", got, historyDDL)
 		t.Log("The column list is M2-T5's and the spellings are M3-T2's, so a change here means")
 		t.Log("one of those moved -- read the diff before accepting it. checksum is varchar(255)")
-		t.Log("rather than the 135 characters migr1 needs, so a scheme bump never has to migrate")
-		t.Log("migr's own history table.")
+		t.Log("rather than the 135 characters migrasyon1 needs, so a scheme bump never has to migrate")
+		t.Log("migrasyon's own history table.")
 	}
 }
 

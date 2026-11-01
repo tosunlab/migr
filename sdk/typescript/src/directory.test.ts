@@ -29,7 +29,7 @@ const sdk = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** project writes one temporary project and returns its migrations directory. */
 function project(t: TestContext, type: string, files: Record<string, string>): string {
-  const root = mkdtempSync(join(tmpdir(), "migr-directory-"));
+  const root = mkdtempSync(join(tmpdir(), "migrasyon-directory-"));
 
   t.after(() => rmSync(root, { recursive: true, force: true }));
 
@@ -37,8 +37,8 @@ function project(t: TestContext, type: string, files: Record<string, string>): s
     join(root, "package.json"),
     `{"name":"fixture","type":${JSON.stringify(type)}}\n`,
   );
-  mkdirSync(join(root, "node_modules", "@migr"), { recursive: true });
-  symlinkSync(sdk, join(root, "node_modules", "@migr", "sdk"));
+  mkdirSync(join(root, "node_modules", "@migrasyon"), { recursive: true });
+  symlinkSync(sdk, join(root, "node_modules", "@migrasyon", "sdk"));
   mkdirSync(join(root, "migrations"), { recursive: true });
 
   for (const [path, contents] of Object.entries(files)) {
@@ -105,7 +105,7 @@ const TABLE =
 
 test("a .ts migration loads, and an enum in it proves esbuild compiled rather than Node stripped", async (t) => {
   const dir = project(t, "module", {
-    "migrations/20260727T153000_add_accounts.ts": `import { defineMigration, t } from "@migr/sdk";
+    "migrations/20260727T153000_add_accounts.ts": `import { defineMigration, t } from "@migrasyon/sdk";
 
 enum Width {
   Email = 255,
@@ -329,7 +329,7 @@ export async function up() {
   });
 
   t.diagnostic("The retry looked for nowhere.ts and did not find it either -- and what the");
-  t.diagnostic("author reads is the specifier they wrote, not the one migr guessed.");
+  t.diagnostic("author reads is the specifier they wrote, not the one migrasyon guessed.");
 
   const [reported] = await refused(dir);
 
@@ -392,7 +392,7 @@ test("an empty directory holds no migrations and is not a problem", async (t) =>
 });
 
 test("a directory that cannot be read is reported with the path that could not be read", async () => {
-  const missingDir = join(tmpdir(), "migr-directory-nothing-here");
+  const missingDir = join(tmpdir(), "migrasyon-directory-nothing-here");
 
   await assert.rejects(fromDirectory(missingDir), {
     message: new RegExp(`${missingDir} could not be read`),

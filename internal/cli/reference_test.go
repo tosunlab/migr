@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // M10-T3's done-when through the command: a column added to a table nothing creates, and a foreign
@@ -17,11 +17,11 @@ func TestValidateConnectCatchesAReferenceNoProjectionSatisfies(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actStrays, drivers, "validate", "--connect")
 	if err == nil {
-		t.Fatalf("migr validate passed a migration naming a table nothing creates:\n%s", stdout)
+		t.Fatalf("migrasyon validate passed a migration naming a table nothing creates:\n%s", stdout)
 	}
 
 	if got := ExitCode(err); got != ExitValidation {
-		t.Errorf("migr validate exited %d, want %d: %v", got, ExitValidation, err)
+		t.Errorf("migrasyon validate exited %d, want %d: %v", got, ExitValidation, err)
 		t.Log("The argument is wrong rather than the world unready: the reference is")
 		t.Log("refused from the project's own beginning too, so it is the migration at fault.")
 	}
@@ -76,7 +76,7 @@ func TestValidateOfflineSaysTheReferencesWereNotCheckedEither(t *testing.T) {
 
 	t.Log("A run with one basis has none, so it judges no references and says so -- which is the")
 	t.Log("shape capability already has. Reporting from the project's own beginning alone would")
-	t.Log("have every migration migr diff writes fail this command.")
+	t.Log("have every migration migrasyon diff writes fail this command.")
 }
 
 func TestValidateConnectIsSilentOnAProjectThatBuildsOnWhatTheDatabaseHolds(t *testing.T) {
@@ -87,7 +87,7 @@ func TestValidateConnectIsSilentOnAProjectThatBuildsOnWhatTheDatabaseHolds(t *te
 
 	if reportsReference(stdout) {
 		t.Errorf("the live schema did not satisfy the reference:\n%s", stdout)
-		t.Log("migr adopted into an existing database is the ordinary case, so the live schema is")
+		t.Log("migrasyon adopted into an existing database is the ordinary case, so the live schema is")
 		t.Log("one of the two bases rather than a cross-check on the project's own.")
 	}
 }

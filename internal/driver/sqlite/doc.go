@@ -77,7 +77,7 @@
 // database that is deleted when the process exits, so every migration would apply to a file nobody
 // can find afterwards -- and report success.
 //
-// mode=ro is not refused. A read-only database fails loudly at the first write, and migr status
+// mode=ro is not refused. A read-only database fails loudly at the first write, and migrasyon status
 // against one is a legitimate thing to run.
 //
 // # A read is read-only because SQLite says so
@@ -194,7 +194,7 @@
 //
 // add_unique is CREATE UNIQUE INDEX and drop_unique is DROP INDEX, because a UNIQUE constraint is a
 // unique index in SQLite and the IR gives create_table no way to declare one inline -- so every
-// unique in a migr-managed database came from add_unique, which is what makes the drop find it.
+// unique in a migrasyon-managed database came from add_unique, which is what makes the drop find it.
 //
 // create_view with or_replace is two statements, DROP VIEW IF EXISTS then CREATE VIEW, since SQLite
 // has no OR REPLACE. Both run inside the migration's one transaction and the DDL is transactional,
@@ -229,13 +229,13 @@
 // So this rebuild renames nothing:
 //
 //	PRAGMA defer_foreign_keys = 1;
-//	CREATE TABLE "migr_rebuild_users" ( the changed definition );
-//	INSERT INTO "migr_rebuild_users" (cols) SELECT cols FROM "users";
+//	CREATE TABLE "migrasyon_rebuild_users" ( the changed definition );
+//	INSERT INTO "migrasyon_rebuild_users" (cols) SELECT cols FROM "users";
 //	DROP TABLE "users";
 //	CREATE TABLE "users" ( the changed definition );
 //	CREATE INDEX ...;    -- every index, before the rows come back
-//	INSERT INTO "users" (cols) SELECT cols FROM "migr_rebuild_users";
-//	DROP TABLE "migr_rebuild_users";
+//	INSERT INTO "users" (cols) SELECT cols FROM "migrasyon_rebuild_users";
+//	DROP TABLE "migrasyon_rebuild_users";
 //	CREATE TRIGGER ...;  -- every trigger, after
 //
 // Nothing re-parses the schema, so views survive untouched and need no dropping and recreating, and
@@ -320,7 +320,7 @@
 // # The migration lock is a file, and the file is not the lock
 //
 // lock.strategy's file half is the only migration lock this engine has, and New refuses any other
-// word rather than substituting one. What holds the lock is an flock on <database file>-migr.lock,
+// word rather than substituting one. What holds the lock is an flock on <database file>-migrasyon.lock,
 // beside the database and named the way SQLite names its own -journal, -wal and -shm. What is written
 // inside it -- pid, host, application, and when the lock was taken -- is what a failed wait reports,
 // and a second opinion where flock cannot be trusted. It is never what decides.
@@ -421,7 +421,7 @@
 //
 // # What a round trip can claim, and the one thing it cannot
 //
-// cmd/migr drives the whole stack against this engine untagged, which is the first end-to-end CLI
+// cmd/migrasyon drives the whole stack against this engine untagged, which is the first end-to-end CLI
 // round trip inside make check. It is two projects because every .sql migration reaches the database
 // as ir.Raw: a .sql project can never produce an emulated operation, so it covers the native path --
 // byte-identically, DROP COLUMN included -- and a Go project covers the rebuild.
@@ -439,7 +439,7 @@
 //
 // Status: complete for M8, plus M11-T2's Introspect. Connection handling, the compiler, the
 // capability declaration, the table rebuild, the file lock, the history store, and reading a
-// snapshot back. migr plan --safety prints this driver's lock verdicts as declared (M13-T6).
+// snapshot back. migrasyon plan --safety prints this driver's lock verdicts as declared (M13-T6).
 //
 // # What only the recorded CREATE TABLE holds
 //

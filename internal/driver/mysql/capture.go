@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/capability"
 )
 
 // binlogQuery reads the two binary-log settings a row-image reader needs beyond log_bin itself.
@@ -66,7 +66,7 @@ func readCapture(ctx context.Context, c *mysqlConn, logBin bool, version serverV
 	a := captureAnswer{logBin: logBin, mariadb: version.Variant() == MariaDB}
 
 	if err := c.runner().QueryRowContext(ctx, binlogQuery).Scan(&a.format, &a.image); err != nil {
-		return capability.Lacks(fmt.Sprintf("an answer migr could read about binlog_format and "+
+		return capability.Lacks(fmt.Sprintf("an answer migrasyon could read about binlog_format and "+
 			"binlog_row_image (%v)", err))
 	}
 
@@ -74,7 +74,7 @@ func readCapture(ctx context.Context, c *mysqlConn, logBin bool, version serverV
 
 	if version.Variant() == MySQL {
 		if err := c.runner().QueryRowContext(ctx, rowValueQuery).Scan(&a.rowValues); err != nil {
-			return capability.Lacks(fmt.Sprintf("an answer migr could read about "+
+			return capability.Lacks(fmt.Sprintf("an answer migrasyon could read about "+
 				"binlog_row_value_options (%v)", err))
 		}
 	}
@@ -85,7 +85,7 @@ func readCapture(ctx context.Context, c *mysqlConn, logBin bool, version serverV
 
 	privileges, err := readPrivileges(ctx, c)
 	if err != nil {
-		return capability.Lacks(fmt.Sprintf("an answer migr could read about this user's "+
+		return capability.Lacks(fmt.Sprintf("an answer migrasyon could read about this user's "+
 			"replication privileges (%v)", err))
 	}
 

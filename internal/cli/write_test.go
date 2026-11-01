@@ -7,7 +7,7 @@ import (
 )
 
 func TestWriteNewRefusesToReplaceAFileThatIsAlreadyThere(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "migr.yaml")
+	path := filepath.Join(t.TempDir(), "migrasyon.yaml")
 
 	if err := writeNew(path, "first\n"); err != nil {
 		t.Fatalf("writeNew: %v", err)
@@ -27,5 +27,5 @@ func TestWriteNewRefusesToReplaceAFileThatIsAlreadyThere(t *testing.T) {
 	}
 
 	t.Log("init and create both check before they write, so this is the guard against the gap")
-	t.Log("between the two -- a second migr, or a person, creating the same file in between.")
+	t.Log("between the two -- a second migrasyon, or a person, creating the same file in between.")
 }

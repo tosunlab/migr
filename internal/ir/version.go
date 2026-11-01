@@ -31,7 +31,7 @@ type VersionError struct {
 
 // Error names both the received version and the ones this build understands.
 func (e *VersionError) Error() string {
-	return fmt.Sprintf("unsupported irVersion %d: this build of migr reads %s",
+	return fmt.Sprintf("unsupported irVersion %d: this build of migrasyon reads %s",
 		e.Received, describeVersions(e.Supported))
 }
 
@@ -120,7 +120,7 @@ type NewerError struct {
 // Error names the operation, the version it needs, and the one that was stated.
 func (e *NewerError) Error() string {
 	return fmt.Sprintf("%s needs irVersion %d, and what carried it states irVersion %d: "+
-		"upgrade migr to read it", e.What, e.Needs, e.Stated)
+		"upgrade migrasyon to read it", e.What, e.Needs, e.Stated)
 }
 
 // CheckCarried reports the first operation a stated irVersion does not carry, and nothing otherwise.

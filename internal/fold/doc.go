@@ -42,7 +42,7 @@
 // constraint, its foreign key and its place in the primary key with it. Both are
 // measured gaps (M3-T7, M9-T7) that engine.Unrestorable's implied half refuses
 // over, so a projection that left them out would describe a schema no server
-// produces -- and would then have migr diff propose tightening columns the engine
+// produces -- and would then have migrasyon diff propose tightening columns the engine
 // had already tightened.
 //
 // # A projected column type

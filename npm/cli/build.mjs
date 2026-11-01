@@ -1,5 +1,5 @@
-// Turns a goreleaser dist/ into the seven npm packages of one release: @migr/cli, and one
-// @migr/cli-<os>-<arch> per binary, every one at the release's version and the wrapper pinning each
+// Turns a goreleaser dist/ into the seven npm packages of one release: @migrasyon/cli, and one
+// @migrasyon/cli-<os>-<arch> per binary, every one at the release's version and the wrapper pinning each
 // exactly. Run as `node npm/cli/build.mjs <dist> <out>`.
 
 import { chmodSync, copyFileSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -42,7 +42,7 @@ export function binaries(artifacts) {
 
   const missing = targets.filter((t) => !found.has(t));
   if (missing.length > 0) {
-    throw new Error(`the release built no binary for ${missing.join(", ")}, so @migr/cli would install nothing there`);
+    throw new Error(`the release built no binary for ${missing.join(", ")}, so @migrasyon/cli would install nothing there`);
   }
 
   return found;
@@ -53,9 +53,9 @@ export function platformManifest(wrapper, target, version) {
   const [os, arch] = target.split("-");
 
   return {
-    name: `@migr/cli-${target}`,
+    name: `@migrasyon/cli-${target}`,
     version,
-    description: `The migr binary for ${os}/${arch}, installed by @migr/cli.`,
+    description: `The migrasyon binary for ${os}/${arch}, installed by @migrasyon/cli.`,
     license: wrapper.license,
     repository: wrapper.repository,
     homepage: wrapper.homepage,
@@ -65,14 +65,14 @@ export function platformManifest(wrapper, target, version) {
   };
 }
 
-// wrapperManifest is @migr/cli's package.json at the release's version, pinning every platform package exactly.
+// wrapperManifest is @migrasyon/cli's package.json at the release's version, pinning every platform package exactly.
 export function wrapperManifest(wrapper, version) {
   const { scripts: _scripts, ...published } = wrapper;
 
   return {
     ...published,
     version,
-    optionalDependencies: Object.fromEntries(targets.map((t) => [`@migr/cli-${t}`, version])),
+    optionalDependencies: Object.fromEntries(targets.map((t) => [`@migrasyon/cli-${t}`, version])),
   };
 }
 
@@ -90,20 +90,20 @@ export function build(dist, out) {
 
   for (const [target, binary] of found) {
     const dir = path.join(out, `cli-${target}`);
-    const name = target.startsWith("windows-") ? "migr.exe" : "migr";
+    const name = target.startsWith("windows-") ? "migrasyon.exe" : "migrasyon";
 
     mkdirSync(path.join(dir, "bin"), { recursive: true });
     copyFileSync(path.resolve(binary), path.join(dir, "bin", name));
     chmodSync(path.join(dir, "bin", name), 0o755);
     copyFileSync(path.join(root, "LICENSE"), path.join(dir, "LICENSE"));
     writeFileSync(path.join(dir, "package.json"), JSON.stringify(platformManifest(wrapper, target, version), null, 2) + "\n");
-    writeFileSync(path.join(dir, "README.md"), `The migr binary for ${target}. Install [@migr/cli](https://www.npmjs.com/package/@migr/cli) instead.\n`);
+    writeFileSync(path.join(dir, "README.md"), `The migrasyon binary for ${target}. Install [@migrasyon/cli](https://www.npmjs.com/package/@migrasyon/cli) instead.\n`);
   }
 
   const dir = path.join(out, "cli");
   mkdirSync(path.join(dir, "bin"), { recursive: true });
-  copyFileSync(path.join(here, "bin", "migr.js"), path.join(dir, "bin", "migr.js"));
-  chmodSync(path.join(dir, "bin", "migr.js"), 0o755);
+  copyFileSync(path.join(here, "bin", "migrasyon.js"), path.join(dir, "bin", "migrasyon.js"));
+  chmodSync(path.join(dir, "bin", "migrasyon.js"), 0o755);
   copyFileSync(path.join(here, "README.md"), path.join(dir, "README.md"));
   copyFileSync(path.join(root, "LICENSE"), path.join(dir, "LICENSE"));
   writeFileSync(path.join(dir, "package.json"), JSON.stringify(wrapperManifest(wrapper, version), null, 2) + "\n");

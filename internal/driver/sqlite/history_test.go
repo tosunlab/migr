@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // historyTable is the name these tests record under, which is the contract's own default.
@@ -54,7 +54,7 @@ func ensured(t *testing.T) (*sqliteConn, sqliteHistory) {
 func run(t *testing.T, batch int64, ordinal int32) history.Record {
 	t.Helper()
 
-	sum, err := checksum.Parse("migr1:" + sourceDigest + ":" + irDigest)
+	sum, err := checksum.Parse("migrasyon1:" + sourceDigest + ":" + irDigest)
 	if err != nil {
 		t.Fatalf("parsing a checksum: %v", err)
 	}
@@ -435,6 +435,6 @@ func TestASeedIsRecordedInTheSeedTableAndNowhereElse(t *testing.T) {
 	if runs, err := held.List(t.Context()); err != nil || len(runs) != 0 {
 		t.Errorf("the migration history holds %d runs (%v) after a seed was recorded", len(runs), err)
 		t.Log("Seeds keep a history of their own, so a seed is never reconciled as a migration and")
-		t.Log("migr status never reports one.")
+		t.Log("migrasyon status never reports one.")
 	}
 }

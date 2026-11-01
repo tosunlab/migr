@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { capture, captureDown, project, reversal } from "@migr/sdk/testing";
+import { capture, captureDown, project, reversal } from "@migrasyon/sdk/testing";
 
 import createOrders from "../migrations/20261101T110000_create_orders.ts";
 import addStatus from "../migrations/20261101T110100_add_orders_status.ts";

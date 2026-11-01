@@ -8,31 +8,31 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
 // The three methods this adapter owes, and the two facts a Command is built out of.
 //
-// Everything here runs against a node this test wrote and an @migr/sdk this test installed, so the
+// Everything here runs against a node this test wrote and an @migrasyon/sdk this test installed, so the
 // failures an operator actually meets -- no node, an old node, no SDK, an SDK that was never built --
 // are all reachable on a machine that has exactly one working toolchain.
 
-// installed writes an @migr/sdk into one project and returns the manifest a probe would resolve.
+// installed writes an @migrasyon/sdk into one project and returns the manifest a probe would resolve.
 func installed(t *testing.T, root string, bin string, build bool) string {
 	t.Helper()
 
-	dir := filepath.Join(root, "node_modules", "@migr", "sdk")
+	dir := filepath.Join(root, "node_modules", "@migrasyon", "sdk")
 
 	if err := os.MkdirAll(filepath.Join(dir, "dist", "esm"), 0o750); err != nil {
 		t.Fatalf("installing the fake SDK: %v", err)
 	}
 
 	write(t, filepath.Join(dir, "package.json"),
-		fmt.Sprintf(`{"name":"@migr/sdk","bin":%s,"engines":{"node":">=24"}}`, bin))
+		fmt.Sprintf(`{"name":"@migrasyon/sdk","bin":%s,"engines":{"node":">=24"}}`, bin))
 
 	if build {
-		write(t, filepath.Join(dir, "dist", "esm", "migr-runtime-node.js"),
+		write(t, filepath.Join(dir, "dist", "esm", "migrasyon-runtime-node.js"),
 			"#!/usr/bin/env node\n")
 	}
 
@@ -59,8 +59,8 @@ func project(root string) runtime.Project {
 	}
 }
 
-// shipped is the bin field @migr/sdk actually declares, in the shape npm reads it from.
-const shipped = `{"migr-runtime-node":"./dist/esm/migr-runtime-node.js"}`
+// shipped is the bin field @migrasyon/sdk actually declares, in the shape npm reads it from.
+const shipped = `{"migrasyon-runtime-node":"./dist/esm/migrasyon-runtime-node.js"}`
 
 func TestTheAdapterReportsTheLanguageItRuns(t *testing.T) {
 	adapter, err := New()
@@ -121,7 +121,7 @@ func TestACommandNamesNodeTheExecutableAndTheProjectRoot(t *testing.T) {
 		t.Errorf("the command starts %q, want the node on PATH %q", built.Path, path)
 	}
 
-	want := filepath.Join(filepath.Dir(manifest), "dist", "esm", "migr-runtime-node.js")
+	want := filepath.Join(filepath.Dir(manifest), "dist", "esm", "migrasyon-runtime-node.js")
 	if len(built.Args) != 1 || built.Args[0] != want {
 		t.Log("The path comes from the package's own bin field, so the built file is named once")
 		t.Log("in the package that builds it rather than twice.")
@@ -165,7 +165,7 @@ func TestAProjectWithNoSDKIsToldHowToInstallOne(t *testing.T) {
 		t.Fatalf("Command returned %v, want %v", err, ErrNoSDK)
 	}
 
-	for _, want := range []string{root, "npm install @migr/sdk"} {
+	for _, want := range []string{root, "npm install @migrasyon/sdk"} {
 		if !strings.Contains(err.Error()+"\n"+remedy.Of(err), want) {
 			t.Errorf("the refusal does not name %q: %v", want, err)
 		}
@@ -209,7 +209,7 @@ func TestAPackageDeclaringNoRuntimeIsRefusedAsThat(t *testing.T) {
 }
 
 func TestAManifestThatCannotBeReadIsReportedWithItsPath(t *testing.T) {
-	missing := filepath.Join(t.TempDir(), "node_modules", "@migr", "sdk", "package.json")
+	missing := filepath.Join(t.TempDir(), "node_modules", "@migrasyon", "sdk", "package.json")
 
 	_, err := executableIn(missing)
 	if err == nil {
@@ -246,10 +246,10 @@ func TestTheVersionFloorIsWhatTheSDKItselfRequires(t *testing.T) {
 	want := fmt.Sprintf(">=%d", MinimumNode)
 
 	if held.Engines.Node != want {
-		t.Log("Two statements of one requirement: @migr/sdk's engines.node and MinimumNode here.")
+		t.Log("Two statements of one requirement: @migrasyon/sdk's engines.node and MinimumNode here.")
 		t.Log("Whichever of them moved, the other has to move with it -- or this check has to")
 		t.Log("become a range parser, which is a decision rather than an edit.")
-		t.Errorf("@migr/sdk requires node %q and this adapter enforces %q",
+		t.Errorf("@migrasyon/sdk requires node %q and this adapter enforces %q",
 			held.Engines.Node, want)
 	}
 }
@@ -264,7 +264,7 @@ func TestTheSDKStatesWhereItsOwnRuntimeIs(t *testing.T) {
 
 	if held.executable() == "" {
 		t.Log("This adapter reads the path out of the package rather than carrying a copy of it,")
-		t.Log("so a package that stops declaring one fails here rather than at a user's migr up.")
-		t.Errorf("@migr/sdk declares no %s in its bin field", executableName)
+		t.Log("so a package that stops declaring one fails here rather than at a user's migrasyon up.")
+		t.Errorf("@migrasyon/sdk declares no %s in its bin field", executableName)
 	}
 }

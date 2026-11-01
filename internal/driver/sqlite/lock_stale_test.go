@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // leave writes a record into the lock file beside a database, which is what a dead holder leaves.
@@ -92,7 +92,7 @@ func TestALockFileLeftByADeadProcessIsTakenOverRatherThanWaitedOn(t *testing.T) 
 	database := filepath.Join(dir, "app.db")
 
 	leave(t, database, recordOf(t, record{PID: deadPID(t), Host: hostname(),
-		Application: "migr dev", Acquired: "2026-09-28T19:00:00.000Z"}))
+		Application: "migrasyon dev", Acquired: "2026-09-28T19:00:00.000Z"}))
 
 	c := open(t, database, driver.Options{LockWait: impatient})
 
@@ -110,7 +110,7 @@ func TestALockFileWhoseRecordNamesALiveProcessIsNotTakenEvenWhenFlockSaysItMayBe
 	rival := longRunning(t)
 
 	leave(t, database, recordOf(t, record{PID: rival, Host: hostname(),
-		Application: "migr dev", Acquired: "2026-09-28T19:00:00.000Z"}))
+		Application: "migrasyon dev", Acquired: "2026-09-28T19:00:00.000Z"}))
 
 	c := open(t, database, driver.Options{LockWait: impatient})
 
@@ -134,7 +134,7 @@ func TestARecordNamingThisProcessIsOursToOverwrite(t *testing.T) {
 	database := filepath.Join(dir, "app.db")
 
 	leave(t, database, recordOf(t, record{PID: os.Getpid(), Host: hostname(),
-		Application: "migr dev", Acquired: "2026-09-28T19:00:00.000Z"}))
+		Application: "migrasyon dev", Acquired: "2026-09-28T19:00:00.000Z"}))
 
 	c := open(t, database, driver.Options{LockWait: impatient})
 
@@ -149,7 +149,7 @@ func TestARecordFromAnotherHostIsTakenRatherThanWaitedOn(t *testing.T) {
 	database := filepath.Join(dir, "app.db")
 
 	leave(t, database, recordOf(t, record{PID: longRunning(t), Host: hostname() + "-elsewhere",
-		Application: "migr dev", Acquired: "2026-09-28T19:00:00.000Z"}))
+		Application: "migrasyon dev", Acquired: "2026-09-28T19:00:00.000Z"}))
 
 	c := open(t, database, driver.Options{LockWait: impatient})
 
@@ -176,7 +176,7 @@ func TestAStampNothingCanSubtractIsNoAgeRatherThanAWrongOne(t *testing.T) {
 			database := filepath.Join(dir, "app.db")
 
 			leave(t, database, recordOf(t, record{PID: longRunning(t), Host: hostname(),
-				Application: "migr dev", Acquired: tt.acquired}))
+				Application: "migrasyon dev", Acquired: tt.acquired}))
 
 			c := open(t, database, driver.Options{LockWait: impatient})
 
@@ -320,7 +320,7 @@ func holder(t *testing.T, database string) *stdexec.Cmd {
 }
 
 // holdEnv is how a parent tells the re-executed test binary which database to hold the lock on.
-const holdEnv = "MIGR_TEST_HOLD_LOCK"
+const holdEnv = "MIGRASYON_TEST_HOLD_LOCK"
 
 // heldMarker is what the child prints once it holds the lock, so the parent waits for the fact.
 const heldMarker = "the child holds the lock"

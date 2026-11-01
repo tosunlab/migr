@@ -1,10 +1,10 @@
 package rule
 
 import (
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
-// MissingDown is the id of the rule that reports a migration whose undo migr had to derive.
+// MissingDown is the id of the rule that reports a migration whose undo migrasyon had to derive.
 const MissingDown ID = "missing-down"
 
 // missingDown reports a migration that authors no down, whose rollback is therefore an inverse.
@@ -12,7 +12,7 @@ func missingDown() Rule {
 	return Rule{
 		ID:      MissingDown,
 		Default: SeverityWarn,
-		Summary: "a migration authors no down, so its rollback runs an inverse migr derived",
+		Summary: "a migration authors no down, so its rollback runs an inverse migrasyon derived",
 		Judge:   judgeMissingDown,
 	}
 }

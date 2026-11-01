@@ -1,4 +1,4 @@
-import { columns, defineMigration, SHADOW_TABLE } from "@migr/sdk";
+import { columns, defineMigration, SHADOW_TABLE } from "@migrasyon/sdk";
 
 /** IndexPeopleOnline is the fixture for the online declaration, which every SDK reports identically. */
 export default defineMigration({

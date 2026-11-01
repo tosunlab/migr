@@ -18,14 +18,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Install migr and the TypeScript SDK
-        run: npm ci && npm install --global @migr/cli
+      - name: Install migrasyon and the TypeScript SDK
+        run: npm ci && npm install --global @migrasyon/cli
       - name: Validate
-        run: migr validate
+        run: migrasyon validate
       - name: Round trip
         env:
           DATABASE_URL: ${{ runner.temp }}/ci.db
         run: |
-          migr up
-          migr down --step 3
-          migr status
+          migrasyon up
+          migrasyon down --step 3
+          migrasyon status

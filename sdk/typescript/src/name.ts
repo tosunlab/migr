@@ -16,7 +16,7 @@ const VERSION_SHAPE = "YYYYMMDDThhmmss";
 /** Divides a migration's version from its name, and its name's own words from each other. */
 const SEPARATOR = "_";
 
-/** EXTENSIONS are the files this SDK loads, which are the ones migr-runtime-node can execute. */
+/** EXTENSIONS are the files this SDK loads, which are the ones migrasyon-runtime-node can execute. */
 export const EXTENSIONS = [".ts", ".js", ".mjs"] as const;
 
 /** The shape of every migration filename, as a diagnostic states it. */

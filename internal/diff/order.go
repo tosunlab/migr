@@ -3,7 +3,7 @@ package diff
 import (
 	"slices"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // One fixed order rather than a topological sort, because no operation carries a foreign key inline:

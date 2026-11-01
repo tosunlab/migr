@@ -10,18 +10,18 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/validate"
-	"github.com/emrebdr/migr/internal/visual"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/validate"
+	"github.com/tosunlab/migrasyon/internal/visual"
 )
 
-// drawing is one of the three things migr graph renders to.
+// drawing is one of the three things migrasyon graph renders to.
 type drawing string
 
-// The renderings migr graph knows, in the order its flag names them.
+// The renderings migrasyon graph knows, in the order its flag names them.
 const (
 	// drawingText is lines for a terminal, and the default.
 	drawingText drawing = "text"
@@ -37,7 +37,7 @@ var drawings = []drawing{drawingText, drawingMermaid, drawingDOT}
 // errBothRenderings refuses --json beside --format, since one of the two would be ignored.
 var errBothRenderings = errors.New("--json and --format each choose what is written, so a graph takes one")
 
-// graphing is what migr graph was asked to draw.
+// graphing is what migrasyon graph was asked to draw.
 type graphing struct {
 	// schema draws the schema each migration builds, rather than the order they run in.
 	schema bool
@@ -47,7 +47,7 @@ type graphing struct {
 	format string
 }
 
-// newGraphCmd builds the `migr graph` subcommand.
+// newGraphCmd builds the `migrasyon graph` subcommand.
 func newGraphCmd(opts *options) *cobra.Command {
 	g := &graphing{}
 
@@ -58,7 +58,7 @@ func newGraphCmd(opts *options) *cobra.Command {
 			"declare. With --schema, draws what each migration changes in the schema instead, folded\n" +
 			"forward from nothing, and --format mermaid or dot draws the schema the last of them\n" +
 			"leaves, or the one at --to, as an entity-relationship diagram. It opens no database and\n" +
-			"takes no lock: everything is read from the migrations, as migr validate reads them.",
+			"takes no lock: everything is read from the migrations, as migrasyon validate reads them.",
 		Args: argsOf(cobra.NoArgs),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runGraph(cmd, opts, *g)
@@ -72,7 +72,7 @@ func newGraphCmd(opts *options) *cobra.Command {
 	return cmd
 }
 
-// drawing checks what migr graph was asked for before anything is read, refusing a combination it cannot draw.
+// drawing checks what migrasyon graph was asked for before anything is read, refusing a combination it cannot draw.
 func (g graphing) drawing(cmd *cobra.Command, opts *options) (drawing, error) {
 	if opts.jsonOut && cmd.Flags().Changed("format") {
 		return "", NewExitError(ExitValidation, remedy.With(errBothRenderings, "pass --json or --format, not both"))
@@ -86,7 +86,7 @@ func (g graphing) drawing(cmd *cobra.Command, opts *options) (drawing, error) {
 
 	chosen := drawing(g.format)
 	if !slices.Contains(drawings, chosen) {
-		return "", NewExitError(ExitValidation, remedy.With(fmt.Errorf("--format %q is not a rendering migr "+
+		return "", NewExitError(ExitValidation, remedy.With(fmt.Errorf("--format %q is not a rendering migrasyon "+
 			"graph knows", g.format), "pass --format text, mermaid or dot"))
 	}
 
@@ -164,7 +164,7 @@ func upTo(ordered []migration.Migration, to string) ([]migration.Migration, erro
 
 		return nil, NewExitError(ExitValidation, remedy.With(fmt.Errorf("--to %q names no migration in this "+
 			"project, which holds %s", to, describeVersionList(versions)),
-			"pass --to one of the versions above, as migr status prints them"))
+			"pass --to one of the versions above, as migrasyon status prints them"))
 	}
 
 	return ordered[:at+1], nil
@@ -189,7 +189,7 @@ func readUps(ctx context.Context, source engine.Source, ordered []migration.Migr
 		switch {
 		case errors.Is(err, validate.ErrNotCheckable):
 			reads = append(reads, visual.Read{Migration: m,
-				Unread: "it reaches the database, and migr graph opens none"})
+				Unread: "it reaches the database, and migrasyon graph opens none"})
 		case err != nil:
 			return nil, fmt.Errorf("%s: asking what it does: %w", m.Filename(), err)
 		default:
@@ -242,10 +242,10 @@ func drawEvolution(w io.Writer, opts *options, chosen drawing, e visual.Evolutio
 func unknowableError(e visual.Evolution) error {
 	last := e.Steps[len(e.Steps)-1].Filename
 
-	next := fmt.Sprintf("pass --to a version before %s, or run migr graph --schema to see each "+
+	next := fmt.Sprintf("pass --to a version before %s, or run migrasyon graph --schema to see each "+
 		"migration's operations as text", e.EndedBy.Filename)
 	if e.EndedBy.Filename == e.Steps[0].Filename {
-		next = "run migr graph --schema to see each migration's operations as text: the first migration " +
+		next = "run migrasyon graph --schema to see each migration's operations as text: the first migration " +
 			"ends the projection, so no moment of this schema can be drawn"
 	}
 

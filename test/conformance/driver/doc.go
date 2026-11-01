@@ -11,7 +11,7 @@
 //
 // A driver says the same thing twice. Compile refuses an operation with driver.UnsupportedError;
 // the capability set refuses it with a Verdict. Those are two statements of one fact and they can
-// disagree, and the capability declaration wins, because it is what migr validate and migr plan
+// disagree, and the capability declaration wins, because it is what migrasyon validate and migrasyon plan
 // read before anything touches a database.
 //
 // So the suite asserts the implication that is a contract: a declaration never promises what the
@@ -27,7 +27,7 @@
 // which is why internal/driver/mysql could only list releases where every gate passes.
 //
 // What the dropped half was standing in for is now structural. It mattered because the declaration
-// was read by migr validate while the run read the compiler, so an operator could be told an
+// was read by migrasyon validate while the run read the compiler, so an operator could be told an
 // operation was impossible and have the driver run it anyway. internal/engine now reads the
 // declaration before anything compiles, in both directions, so nothing executes what a driver has
 // declared it cannot perform. The two changes may not be separated.

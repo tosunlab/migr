@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/runtime"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // marker is written over a built binary, so a rebuild is observable as the marker being gone.
@@ -149,7 +149,7 @@ func discovered(t *testing.T, built runtime.Command) []string {
 
 	child.call(t, protocol.Initialize, protocol.InitializeParams{
 		ProtocolVersions: []int{protocol.Version}, IRVersion: ir.Version,
-		Client:     protocol.Client{Name: "migr", Version: "test"},
+		Client:     protocol.Client{Name: "migrasyon", Version: "test"},
 		Migrations: protocol.MigrationsAt{Dir: built.Dir, Language: Name},
 		Database:   protocol.DatabaseAt{Name: "default", Driver: "postgres"},
 	})
@@ -281,17 +281,17 @@ const addTeams = `package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(AddTeams{}) }
+func init() { migrasyon.Register(AddTeams{}) }
 
 type AddTeams struct{}
 
-func (m AddTeams) Up(ctx context.Context, s *migr.Schema) error {
+func (m AddTeams) Up(ctx context.Context, s *migrasyon.Schema) error {
 	return s.CreateTable("teams").
-		Column("id", migr.Int64()).
-		Column("name", migr.String(255)).
+		Column("id", migrasyon.Int64()).
+		Column("name", migrasyon.String(255)).
 		PrimaryKey("id").
 		Apply(ctx)
 }
@@ -303,14 +303,14 @@ const editedUsers = `package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(AddUsers{}) }
+func init() { migrasyon.Register(AddUsers{}) }
 
 type AddUsers struct{}
 
-func (m AddUsers) Up(ctx context.Context, s *migr.Schema) error {
-	return s.Apply(ctx, migr.Raw{Driver: "postgres", SQL: "CREATE TABLE people (id bigint)"})
+func (m AddUsers) Up(ctx context.Context, s *migrasyon.Schema) error {
+	return s.Apply(ctx, migrasyon.Raw{Driver: "postgres", SQL: "CREATE TABLE people (id bigint)"})
 }
 `

@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // historyTable is the name these tests record under, which is the contract's own default.
@@ -155,8 +155,8 @@ func TestTheInsertAndTheSelectNameEveryColumnOnce(t *testing.T) {
 }
 
 func TestTheStoredNameFollowsHowTheServerFoldsIdentifiers(t *testing.T) {
-	for folding, want := range map[int]string{0: "MigrRuns", 1: "migrruns", 2: "MigrRuns"} {
-		if got := storedName("MigrRuns", folding); got != want {
+	for folding, want := range map[int]string{0: "MigrasyonRuns", 1: "migrasyonruns", 2: "MigrasyonRuns"} {
+		if got := storedName("MigrasyonRuns", folding); got != want {
 			t.Errorf("under lower_case_table_names=%d the catalog is asked for %q, want %q",
 				folding, got, want)
 		}

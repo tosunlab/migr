@@ -3,20 +3,20 @@ package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(CreateUsers{}) }
+func init() { migrasyon.Register(CreateUsers{}) }
 
 // CreateUsers adds the users table the app is serving from before the change begins.
 type CreateUsers struct{}
 
 // Up creates the table with its key inline.
-func (CreateUsers) Up(ctx context.Context, s *migr.Schema) error {
+func (CreateUsers) Up(ctx context.Context, s *migrasyon.Schema) error {
 	return s.CreateTable("users").
-		Column("id", migr.Int64()).
-		Column("name", migr.String(100)).
-		Column("email", migr.String(255)).
+		Column("id", migrasyon.Int64()).
+		Column("name", migrasyon.String(100)).
+		Column("email", migrasyon.String(255)).
 		PrimaryKey("id").
 		Apply(ctx)
 }

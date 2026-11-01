@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // shadowPrefix names the table a rebuild holds its rows in, which exists only inside one transaction.
-const shadowPrefix = "migr_rebuild_"
+const shadowPrefix = "migrasyon_rebuild_"
 
 // deferKeys is the first statement of every rebuild, and the only thing holding the copy together.
 const deferKeys = `PRAGMA defer_foreign_keys = 1;`

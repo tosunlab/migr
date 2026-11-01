@@ -10,11 +10,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // keyedTable is the table every chunked fixture writes, keyed by one integer column.
@@ -359,7 +359,7 @@ func TestAnInterruptedChunkedRunResumesAfterTheLastCommittedChunk(t *testing.T) 
 		t.Errorf("the checkpoint says %+v, want 2 chunks through key 20", *stopped.Checkpoint)
 	}
 
-	if !strings.Contains(remedy.Of(err), "run migr up again to carry on") {
+	if !strings.Contains(remedy.Of(err), "run migrasyon up again to carry on") {
 		t.Errorf("the failure does not say what carries the run on: %q", remedy.Of(err))
 	}
 
@@ -621,6 +621,6 @@ func TestAStoppedChunkedRollbackIsRefusedByTheNextApplyRatherThanCarriedOn(t *te
 	if len(table.slices) != 0 {
 		t.Errorf("the up ran %d chunks of a rollback's work", len(table.slices))
 		t.Log("Only an up carries itself on: a rollback is the operator's own instruction, so one")
-		t.Log("that stopped partway is settled by migr resolve, the command that says what it does.")
+		t.Log("that stopped partway is settled by migrasyon resolve, the command that says what it does.")
 	}
 }

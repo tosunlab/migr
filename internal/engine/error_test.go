@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // applied is when the run a drift fixture reports on started, deliberately not in UTC.
@@ -233,7 +233,7 @@ func TestADriftErrorIsNotACorruptRowOrAnyOtherRefusal(t *testing.T) {
 		if errors.Is(error(drift), other) {
 			t.Errorf("drift also reports %v, and exit code 4 would then cover it", other)
 			t.Log("internal/history's package doc turns on this: an unreadable")
-			t.Log("row needs manual repair and an unknown scheme needs a newer migr. Reporting")
+			t.Log("row needs manual repair and an unknown scheme needs a newer migrasyon. Reporting")
 			t.Log("either as exit code 4 is how operators learn to ignore exit code 4.")
 		}
 	}

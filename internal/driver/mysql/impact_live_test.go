@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // probeRows is enough rows that a rebuild is a real one rather than a metadata shuffle.
@@ -291,8 +291,8 @@ func TestTheAlgorithmTheServerAcceptsIsTheOneTheVerdictAssumes(t *testing.T) {
 	t.Log("metadata-only. That is what brief_exclusive claims, and it is the half the rewrite oracle")
 	t.Log("cannot reach -- add_index is INPLACE and rebuilds nothing and still reads every row, which")
 	t.Log("is why in-place acceptance is logged rather than asserted and only INSTANT counts as proof.")
-	t.Log("ALGORITHM is asked for here and never compiled into a statement migr sends: that would")
-	t.Log("make migr refuse DDL a server would have performed, and is M13-T2's call to make.")
+	t.Log("ALGORITHM is asked for here and never compiled into a statement migrasyon sends: that would")
+	t.Log("make migrasyon refuse DDL a server would have performed, and is M13-T2's call to make.")
 	t.Log("")
 	t.Log("The control is what makes the instrument mean anything, and the sweep is what found it")
 	t.Log("missing: every operation here accepts INPLACE, so asking for INPLACE instead of INSTANT")

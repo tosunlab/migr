@@ -1,14 +1,14 @@
 {
-  "name": "@migr/sdk",
+  "name": "@migrasyon/sdk",
   "version": "1.0.0-alpha.0",
-  "description": "Write database migrations in TypeScript, run them against any engine migr supports.",
+  "description": "Write database migrations in TypeScript, run them against any engine migrasyon supports.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/emrebdr/migr.git",
+    "url": "git+https://github.com/tosunlab/migrasyon.git",
     "directory": "sdk/typescript"
   },
-  "homepage": "https://github.com/emrebdr/migr/tree/main/sdk/typescript#readme",
+  "homepage": "https://github.com/tosunlab/migrasyon/tree/main/sdk/typescript#readme",
   "type": "module",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
@@ -37,7 +37,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "migr-runtime-node": "./dist/esm/migr-runtime-node.js"
+    "migrasyon-runtime-node": "./dist/esm/migrasyon-runtime-node.js"
   },
   "files": [
     "dist",

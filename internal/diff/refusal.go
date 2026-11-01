@@ -3,7 +3,7 @@ package diff
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Refusal is one change this differ will not propose, and what stopped it.

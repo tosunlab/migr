@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-// withReplicas is a MySQL migr.yaml naming the replicas given, one per line.
+// withReplicas is a MySQL migrasyon.yaml naming the replicas given, one per line.
 func withReplicas(lines string) string {
 	return "version: 1\nmigrations:\n  dir: ./migrations\n  language: sql\ndatabases:\n  default:\n" +
 		"    driver: mysql\n    dsn: app:pw@tcp(primary:3306)/app\n    replicas:\n" + lines
@@ -26,7 +26,7 @@ func TestReplicasReachTheDriverWholeAndAreRedactedEverywhereElse(t *testing.T) {
 	}
 
 	if strings.Contains(string(rendered), "s3cret") {
-		t.Errorf("migr config would print the replica's password: %s", rendered)
+		t.Errorf("migrasyon config would print the replica's password: %s", rendered)
 	}
 }
 

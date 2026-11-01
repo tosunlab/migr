@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"context"
@@ -10,7 +10,7 @@ import (
 	"slices"
 	"sync"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // The exit statuses this runtime chooses, of which only the first is not a failure (§9).
@@ -21,7 +21,7 @@ const (
 	exitFailed = 1
 )
 
-// Run serves this program as a migr runtime, on stdin and stdout, until the engine is done with it.
+// Run serves this program as a migrasyon runtime, on stdin and stdout, until the engine is done with it.
 func Run() int {
 	protocol, silenced := silence()
 

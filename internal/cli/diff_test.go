@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // A desired schema is every migration folded forward, so the fixtures here are a Go project a
@@ -36,7 +36,7 @@ func TestADiffOverADatabaseTheMigrationsAlreadyDescribeWritesNothing(t *testing.
 		t.Errorf("it wrote %v over a database that already matches", written)
 	}
 
-	t.Log("An empty migration would record \"nothing to do\" forever, and migr up refuses a")
+	t.Log("An empty migration would record \"nothing to do\" forever, and migrasyon up refuses a")
 	t.Log("migration that compiles to no statements anyway. So the answer is a sentence, not a file.")
 }
 
@@ -63,7 +63,7 @@ func TestADiffWritesTheMigrationThatClosesTheGap(t *testing.T) {
 		t.Fatalf("reading what it wrote: %v", err)
 	}
 
-	for _, want := range []string{`AddColumn("note", migr.Text())`, "Apply(ctx)"} {
+	for _, want := range []string{`AddColumn("note", migrasyon.Text())`, "Apply(ctx)"} {
 		if !strings.Contains(string(body), want) {
 			t.Errorf("what it wrote does not contain %q:\n%s", want, body)
 		}
@@ -74,7 +74,7 @@ func TestADiffWritesTheMigrationThatClosesTheGap(t *testing.T) {
 	}
 }
 
-func TestADiffGoesThroughTheSameWriterMigrCreateDoes(t *testing.T) {
+func TestADiffGoesThroughTheSameWriterMigrasyonCreateDoes(t *testing.T) {
 	dir, f, drivers := appliedGoProject(t)
 	f.live = driftedSchema(t)
 
@@ -92,7 +92,7 @@ func TestADiffGoesThroughTheSameWriterMigrCreateDoes(t *testing.T) {
 	}
 
 	t.Log("One file format and one writer: migration.New names it, checkUnclaimed")
-	t.Log("refuses a version another file holds, and writeNew is O_EXCL -- so nothing migr writes")
+	t.Log("refuses a version another file holds, and writeNew is O_EXCL -- so nothing migrasyon writes")
 	t.Log("can overwrite anything, and this command inherits all three rather than spelling them")
 	t.Log("a second time.")
 	t.Log("A diff is on a clock with second resolution, so one run a second after another over a")
@@ -106,7 +106,7 @@ func TestADiffRefusesADatabaseTheMigrationsDoNotAlreadyDescribe(t *testing.T) {
 		stage func(*testing.T) (string, *fake, *driver.Registry)
 		says  string
 	}{
-		{"a database with migrations still to run", pendingGoProject, "Run `migr up` first"},
+		{"a database with migrations still to run", pendingGoProject, "Run `migrasyon up` first"},
 		{"a database with no history table at all", pendingGoProject, "no migration history"},
 	}
 
@@ -122,7 +122,7 @@ func TestADiffRefusesADatabaseTheMigrationsDoNotAlreadyDescribe(t *testing.T) {
 
 			if got := ExitCode(err); got != ExitRuntime {
 				t.Errorf("it exited %d, want %d (%v)", got, ExitRuntime, err)
-				t.Log("Exit 1, not 2: the same command line succeeds once migr up has run, so")
+				t.Log("Exit 1, not 2: the same command line succeeds once migrasyon up has run, so")
 				t.Log("it is the world that is not ready rather than the argument being wrong.")
 			}
 
@@ -171,7 +171,7 @@ func TestADiffRefusesAMixedProjectOverTheOneMigrationItCannotFold(t *testing.T) 
 	f.live = projectedSchema(t)
 
 	write(t, filepath.Join(dir, scaffoldDir, versionAt(5)+"_by_hand.sql"),
-		"-- migr:up\nCREATE TABLE by_hand (id bigint);\n-- migr:down\nDROP TABLE by_hand;\n")
+		"-- migrasyon:up\nCREATE TABLE by_hand (id bigint);\n-- migrasyon:down\nDROP TABLE by_hand;\n")
 
 	if _, _, err := runDiffing(t, dir, actTypes, drivers, "up"); err != nil {
 		t.Fatalf("applying the mixed project: %v", err)
@@ -224,7 +224,7 @@ func TestADiffTakesTheLockToReadAndReleasesItBeforeAskingAnything(t *testing.T) 
 	}
 
 	t.Log("The lock covers reading and not asking. A rename prompt waits on a person, and holding")
-	t.Log("the migration lock across that would block every other migr run on the database for as")
+	t.Log("the migration lock across that would block every other migrasyon run on the database for as")
 	t.Log("long as they took to answer -- so this is the one command that locks, reads, and lets go")
 	t.Log("before it does the rest of its work.")
 }
@@ -247,7 +247,7 @@ func TestADiffDoesNotProposeReplacingAViewOrACheckThatIsAlreadyThere(t *testing.
 	}
 
 	t.Log("Four of the five engines rewrite a view's body and a check's expression, so comparing")
-	t.Log("them as written would have every migr diff over a database that is exactly up to date")
+	t.Log("them as written would have every migrasyon diff over a database that is exactly up to date")
 	t.Log("propose replacing every one of them. fold.Comparable carries the live text across for")
 	t.Log("every element both schemas hold by name.")
 }

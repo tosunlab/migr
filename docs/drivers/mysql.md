@@ -21,7 +21,7 @@ databases:
 - **DDL commits as it runs.** Neither server can roll a schema change back. A migration is therefore
   a sequence of committed statements. One that fails part way is recorded **dirty**, naming the
   statements that survived, and every later run is refused until it's settled:
-  - `migr resolve --resume` carries it on from the statement that failed;
+  - `migrasyon resolve --resume` carries it on from the statement that failed;
   - `--applied` or `--rolled-back` records what you did by hand.
 - **A lock wait is retried from the statement that waited.** The statements before it already
   committed, and running them again would fail.
@@ -46,9 +46,9 @@ without reading the table.
 Which algorithm a server picks can depend on the table itself. A `COMPRESSED` or `FULLTEXT`-indexed
 table is rebuilt for an `add_column` or `drop_column` that is otherwise instant, and so is a MySQL
 table at 64 instant row versions. Those operations are declared at their worst, `table_rewrite`, and
-`migr plan` reads the first queued migration's table to confirm the cheaper cost, marked
+`migrasyon plan` reads the first queued migration's table to confirm the cheaper cost, marked
 *(read from the table)*. Without the `PROCESS` grant, MySQL 8.0.29 and later can't report row versions,
-so the cost stays at its worst. migr never asks for that grant.
+so the cost stays at its worst. migrasyon never asks for that grant.
 
 ## Shadow tables
 
@@ -58,14 +58,14 @@ by reading the server's **binary log** in row format, and swapped in by rename a
 - as a GTID set where the server records GTIDs, and as a file and offset where it doesn't;
 - on MariaDB, as its own `domain-server-sequence` GTID.
 
-**The server must permit capture**, and `migr plan` names every missing prerequisite at once:
+**The server must permit capture**, and `migrasyon plan` names every missing prerequisite at once:
 - `log_bin` on, `binlog_format = ROW`, `binlog_row_image = FULL`;
 - the grants `REPLICATION SLAVE` and `REPLICATION CLIENT`. On MariaDB these are `BINLOG MONITOR`, plus
   `REPLICATION MASTER ADMIN`;
 - MySQL 8.0.13 or later, or MariaDB 11.4 or later.
 
 A stopped run reads on from its recorded position, as long as the server still keeps the log there.
-`migr plan` prints `binlog_expire_logs_seconds`, because neither server holds the log for a reader
+`migrasyon plan` prints `binlog_expire_logs_seconds`, because neither server holds the log for a reader
 that isn't connected.
 
 **A table is refused** if it has:
@@ -87,7 +87,7 @@ read holds the migration too, rather than letting it run unpaced.
 ## What the catalog can't say
 
 - **`timestamp` and `timestamptz`** are both stored as `datetime(6)`, so a column read back is a guess
-  between them. `migr diff` refuses to act on a guess.
+  between them. `migrasyon diff` refuses to act on a guess.
 - **MariaDB's `json`** is a `longtext` with a `json_valid` check, which is how it is told apart from `text`.
 - **On MariaDB, `RESTRICT` reads back as `no_action`**: the server reports `RESTRICT` for a clause
   that was never written.
@@ -98,8 +98,8 @@ read holds the migration too, rather than letting it run unpaced.
 
 As compose runs it, with the binary log on.
 
-<!-- migr:lock-table mysql 8.0 -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table mysql 8.0 -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `lock_free` | `lock_free` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -135,14 +135,14 @@ As compose runs it, with the binary log on.
 Refused on this server:
 
 - **add_column, default evaluated per row (uuid)**: column "nickname" is added with a uuid default, which MySQL writes into every existing row and therefore refuses outright with error 1674 while it writes a binary log: the value would differ on a replica. This server has log_bin on. A new table may declare the same default, and so may a later alter_column, so adding the column without one and setting it afterwards is two operations that do work -- or generate the value in the application
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->
 
 ### MariaDB 11.4
 
 As compose runs it, with the binary log off.
 
-<!-- migr:lock-table mariadb 11.4 -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table mariadb 11.4 -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `lock_free` | `lock_free` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -174,4 +174,4 @@ As compose runs it, with the binary log off.
 | data_copy | native | `long_exclusive` | `long_exclusive` | **no** |
 | data_backfill | native | `table_rewrite` | `table_rewrite` | **no** |
 | data_transform | native | `table_rewrite` | `table_rewrite` | **no** |
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->

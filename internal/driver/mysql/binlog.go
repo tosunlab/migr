@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-mysql-org/go-mysql/replication"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // A transaction is handed over only once its commit has been read, and the position moves only then.
@@ -133,7 +133,7 @@ func (s *binlogStream) query(e *replication.QueryEvent) ([]capture.Change, error
 
 	if touched := s.changesTable(string(e.Schema), statement); touched {
 		return nil, fmt.Errorf("the table %s was changed under this shadow-table migration by %q, so "+
-			"its copy can no longer be kept current -- abandon the migration with migr resolve "+
+			"its copy can no longer be kept current -- abandon the migration with migrasyon resolve "+
 			"--rolled-back", s.table, statement)
 	}
 
@@ -323,7 +323,7 @@ func (s *binlogStream) checkWidth(row []any) error {
 	if len(row) != len(s.columns) {
 		return fmt.Errorf("a change to %s in the binary log carries %d columns where the table had %d "+
 			"when this stream opened, so the table was changed under this shadow-table migration -- "+
-			"abandon it with migr resolve --rolled-back", s.table, len(row), len(s.columns))
+			"abandon it with migrasyon resolve --rolled-back", s.table, len(row), len(s.columns))
 	}
 
 	return nil

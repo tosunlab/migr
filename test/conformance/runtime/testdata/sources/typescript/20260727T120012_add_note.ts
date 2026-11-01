@@ -1,4 +1,4 @@
-import { defineMigration, t } from "@migr/sdk";
+import { defineMigration, t } from "@migrasyon/sdk";
 
 /** AddNote is the fixture that authors no undo at all, which the engine derives one for. */
 export default defineMigration({

@@ -46,7 +46,7 @@ func TestAnEmulationWithoutAStrategyBecomesARefusal(t *testing.T) {
 
 		if v.Support() != SupportUnsupported {
 			t.Errorf("Emulated(%q, ...) = %q, want a refusal", strategy, v.Support())
-			t.Log("An emulation nobody can name is one migr plan cannot label, so an operator")
+			t.Log("An emulation nobody can name is one migrasyon plan cannot label, so an operator")
 			t.Log("would learn that their table was rebuilt only after it happened. Degrading to")
 			t.Log("a refusal is the safe direction, and it makes the invalid state unbuildable.")
 		}

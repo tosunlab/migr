@@ -9,9 +9,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // errBothSelectors marks a run given two ways of narrowing itself, which name different sets.
@@ -36,7 +36,7 @@ func selected(err error) error {
 	return err
 }
 
-// newUpCmd builds the `migr up` subcommand.
+// newUpCmd builds the `migrasyon up` subcommand.
 func newUpCmd(opts *options) *cobra.Command {
 	cmd := directionCmd(opts, ir.Up, &cobra.Command{
 		Use:   "up",
@@ -54,7 +54,7 @@ func newUpCmd(opts *options) *cobra.Command {
 }
 
 // unattendedVariable is the environment variable a CI job may opt out of confirming a cutover in instead of the flag.
-const unattendedVariable = "MIGR_UNATTENDED"
+const unattendedVariable = "MIGRASYON_UNATTENDED"
 
 // registerUnattended binds the flag that cuts a shadow-table migration over without waiting for a confirmation.
 func registerUnattended(cmd *cobra.Command, opts *options) {
@@ -85,7 +85,7 @@ func unattendedOf(opts *options) (bool, error) {
 }
 
 // releaseVariable is the environment variable a deploy may name its release in instead of the flag.
-const releaseVariable = "MIGR_RELEASE"
+const releaseVariable = "MIGRASYON_RELEASE"
 
 // registerRelease binds the flag naming the deploy a run belongs to, on the commands that judge a step by it.
 func registerRelease(cmd *cobra.Command, opts *options) {
@@ -102,7 +102,7 @@ func releaseOf(opts *options) string {
 	return os.Getenv(releaseVariable)
 }
 
-// newDownCmd builds the `migr down` subcommand.
+// newDownCmd builds the `migrasyon down` subcommand.
 func newDownCmd(opts *options) *cobra.Command {
 	return directionCmd(opts, ir.Down, &cobra.Command{
 		Use:   "down",

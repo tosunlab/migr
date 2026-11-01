@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // restorable refuses a migration the live schema shows cannot be undone as recorded, when running.
@@ -42,7 +42,7 @@ func (e *executor) disagreements(ctx context.Context, ops ir.Operations) ([]Disa
 }
 
 // The source is asked what a migration undoes only once a finding appears, so a migration with none
-// pays no extra round trip. migr guarantees what it derives, and an authored down is the author's
+// pays no extra round trip. migrasyon guarantees what it derives, and an authored down is the author's
 // own instruction -- which is §7's reason for judging only the up half of what a run destroys, and
 // the reason a rollback is judged on its stated half alone.
 
@@ -85,7 +85,7 @@ func (e *executor) authorsDown(ctx context.Context, m migration.Migration) (bool
 		return true, nil
 	case err != nil:
 		return false, fmt.Errorf("asking whether this migration undoes itself, which is what "+
-			"decides whether migr derives its inverse: %w", err)
+			"decides whether migrasyon derives its inverse: %w", err)
 	default:
 		return true, nil
 	}

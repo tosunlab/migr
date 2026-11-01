@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // releaseSuffix is what a history table's name gains to name the table its releases live in.

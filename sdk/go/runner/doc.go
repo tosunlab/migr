@@ -1,4 +1,4 @@
-// Package runner is the entrypoint the migr engine generates a call to.
+// Package runner is the entrypoint the migrasyon engine generates a call to.
 //
 // The Go runtime adapter writes a small main into the user's module, builds it,
 // and executes it. That generated file names exactly two things: a
@@ -7,5 +7,5 @@
 // where the session is implemented.
 //
 // A project that would rather write its own main can skip the generated one and
-// call migr.Run itself, which is the whole of what Main does around os.Exit.
+// call migrasyon.Run itself, which is the whole of what Main does around os.Exit.
 package runner

@@ -11,8 +11,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // A statement outside any transaction is rolled back by nothing, so what it leaves is repaired here.
@@ -62,7 +62,7 @@ const rebuiltQuery = `SELECT i.relname FROM pg_index x JOIN pg_class i ON i.oid 
  WHERE NOT x.indisvalid AND i.relnamespace = current_schema()::regnamespace
    AND i.relname LIKE $1 || '\_ccnew%' ORDER BY i.relname`
 
-// invalidIndexesQuery lists every INVALID index in this namespace, less those on migr's own tables.
+// invalidIndexesQuery lists every INVALID index in this namespace, less those on migrasyon's own tables.
 const invalidIndexesQuery = `SELECT t.relname, i.relname, pg_get_indexdef(x.indexrelid)
   FROM pg_index x
   JOIN pg_class i ON i.oid = x.indexrelid
@@ -302,7 +302,7 @@ func (c *pgConn) dropRebuilt(ctx context.Context, name string) error {
 	return errors.Join(problems...)
 }
 
-// InvalidIndexes lists every INVALID index in this session's namespace, less those on migr's own tables.
+// InvalidIndexes lists every INVALID index in this session's namespace, less those on migrasyon's own tables.
 func (c *pgConn) InvalidIndexes(ctx context.Context) ([]driver.InvalidIndex, error) {
 	var owned []string
 	for _, name := range c.owned() {

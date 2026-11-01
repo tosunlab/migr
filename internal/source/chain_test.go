@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/source"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/source"
 )
 
 func TestEveryOperationIsAChainOrSaysNoSourceExpressesIt(t *testing.T) {
@@ -43,7 +43,7 @@ func TestEveryOperationIsAChainOrSaysNoSourceExpressesIt(t *testing.T) {
 	t.Log("chain exists for it or representative says why one cannot.")
 	t.Log("raw is one: a schema builder has no call for engine SQL, and a generated migration")
 	t.Log("that reached for one would abandon both claims it is supposed to keep. The data")
-	t.Log("operations are the rest: a chain exists to write what migr diff proposes, and a")
+	t.Log("operations are the rest: a chain exists to write what migrasyon diff proposes, and a")
 	t.Log("differ compares two schemas, which hold no rows to propose writing.")
 }
 

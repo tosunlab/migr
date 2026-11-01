@@ -3,7 +3,7 @@ package config
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestALockRetryDefaultsToABackoffAndZeroRetriesTurnsItOff(t *testing.T) {

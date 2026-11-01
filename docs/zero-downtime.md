@@ -1,6 +1,6 @@
 # Zero-downtime migrations
 
-This guide is for anyone running migr against a database that is serving traffic. It covers:
+This guide is for anyone running migrasyon against a database that is serving traffic. It covers:
 
 - what each engine can change without making clients wait, and what it cannot;
 - how to change a column across several deploys;
@@ -9,9 +9,9 @@ This guide is for anyone running migr against a database that is serving traffic
 
 Every claim here comes from a measurement or from the code. The per-engine tables in
 [section 2](#2-what-each-operation-costs) are generated from each driver's own declaration, and a
-test fails when they disagree, so a table you read here is the verdict `migr plan` prints.
+test fails when they disagree, so a table you read here is the verdict `migrasyon plan` prints.
 
-## 1. What migr guarantees, and under which settings
+## 1. What migrasyon guarantees, and under which settings
 
 ### Lock cost
 
@@ -23,14 +23,14 @@ Every operation is declared at one of four lock costs, and `raw` at a fifth:
 | `brief_exclusive` | An exclusive lock for a metadata-only moment. Clients queued behind it wait for that moment, **and for as long as the statement waits to get the lock** (see below). |
 | `long_exclusive` | An exclusive lock held for work that grows with the table. |
 | `table_rewrite` | Every row is written to new storage, with clients blocked for the duration. |
-| `unknown` | `raw` only: migr cannot know what a statement does, and treats it as the worst. |
+| `unknown` | `raw` only: migrasyon cannot know what a statement does, and treats it as the worst. |
 
 The cost names how long the lock is held, not how strong it is. "Instant" DDL — PostgreSQL's stored
 default, MySQL's `ALGORITHM=INSTANT` — is `brief_exclusive`, never `lock_free`. It still asks for an
 exclusive lock and still waits for it.
 
 A verdict is a **safe upper bound**. Where the cost depends on the table, the operation is declared
-at its worst, and `migr plan` reads the table to lower it where it can (see the MySQL notes). An
+at its worst, and `migrasyon plan` reads the table to lower it where it can (see the MySQL notes). An
 operation on a table that the same migration creates costs `lock_free`, because nothing can be
 waiting on a table that did not exist.
 
@@ -63,7 +63,7 @@ So **set `safety.lock_timeout` below the longest wait your clients can tolerate.
 
 ### How this is proven
 
-`make test-zerodowntime` runs every operation, up and down, through the same engine `migr up` runs,
+`make test-zerodowntime` runs every operation, up and down, through the same engine `migrasyon up` runs,
 against every compose server and SQLite. It works a 1M-row table with eight readers and eight
 writers, and fails any operation declared `lock_free` or `brief_exclusive` that makes a client wait
 past the budget (1.5 s). The run that set these numbers
@@ -73,7 +73,7 @@ measured:
 - every shadow-table cutover: 21–74 ms, with no committed write lost;
 - honest rewrites: clients waited 1.4–41 s, which is why they are declared rewrites.
 
-What the suite holds is migr with `lock_timeout` at 1.2 s (1 s on MySQL), not the shipped 3 s
+What the suite holds is migrasyon with `lock_timeout` at 1.2 s (1 s on MySQL), not the shipped 3 s
 default. That is the setting this guide recommends for a busy database.
 
 ## 2. What each operation costs
@@ -81,22 +81,22 @@ default. That is the setting this guide recommends for a busy database.
 Each table lists one row per operation, plus a row per payload that changes the cost. The columns:
 
 - **Declared cost** is the driver's verdict.
-- **Cost as migr runs it** is what the run actually costs once a safer rewrite is applied (PostgreSQL
+- **Cost as migrasyon runs it** is what the run actually costs once a safer rewrite is applied (PostgreSQL
   only), naming the `safety.rewrites.*` key that switches it off.
 - **Zero-downtime** is *yes* when that cost is at most `brief_exclusive`, and *where the table
-  allows* when the declaration names a cheaper cost that `migr plan` confirms by reading the table.
+  allows* when the declaration names a cheaper cost that `migrasyon plan` confirms by reading the table.
 
 The cost of a data operation (`data_copy`, `data_backfill`, `data_transform`) is declared as one
 statement. In a data-only migration it runs in chunks of `safety.chunk_rows`, each its own short
-transaction (measured, clients waited 20–40 ms), so `migr plan`, `migr validate --require-safe` and
+transaction (measured, clients waited 20–40 ms), so `migrasyon plan`, `migrasyon validate --require-safe` and
 the run judge it at `brief_exclusive`, printed as `brief_exclusive (declared table_rewrite, one chunk
 at a time)`. A data operation beside a schema change in one migration runs as the one statement its
 row describes, and is judged at that row.
 
 ### PostgreSQL 16 and 17
 
-<!-- migr:lock-table postgres -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table postgres -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `lock_free` | `lock_free` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -128,7 +128,7 @@ row describes, and is judged at that row.
 | data_copy | native | `long_exclusive` | `long_exclusive` | **no** |
 | data_backfill | native | `table_rewrite` | `table_rewrite` | **no** |
 | data_transform | native | `table_rewrite` | `table_rewrite` | **no** |
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->
 
 - **The rewrites.** `add_index` and `drop_index` run `CONCURRENTLY`. `add_unique` and
   `add_primary_key` build their index concurrently, then attach it. `add_check` and `add_foreign_key`
@@ -138,18 +138,18 @@ row describes, and is judged at that row.
   blocked 34 of 35 writes for its 9.5 s scan, where the rewritten pair blocked none.
 - **The concurrent statements are bounded by `safety.concurrent_timeout`** (unset: no bound) rather
   than the 30 s `statement_timeout`, since a large build takes longer and blocks no write. A failed
-  build leaves an INVALID index; the next run repairs it, and `migr status` lists any that remain.
+  build leaves an INVALID index; the next run repairs it, and `migrasyon status` lists any that remain.
 - An operation on a table the same migration created is never rewritten: nothing waits on it.
 - `drop_table`, `drop_index`, `drop_unique` and `drop_primary_key` are `long_exclusive` because the
   server deletes the files before it releases the lock. The hold grew about ten-fold from kilobytes
   to hundreds of megabytes.
-- PostgreSQL 10 and earlier rewrite the table for any default at all. migr reads the version and
+- PostgreSQL 10 and earlier rewrite the table for any default at all. migrasyon reads the version and
   declares accordingly.
 
 ### MySQL 8.0
 
-<!-- migr:lock-table mysql 8.0 -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table mysql 8.0 -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `lock_free` | `lock_free` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -185,15 +185,15 @@ row describes, and is judged at that row.
 Refused on this server:
 
 - **add_column, default evaluated per row (uuid)**: column "nickname" is added with a uuid default, which MySQL writes into every existing row and therefore refuses outright with error 1674 while it writes a binary log: the value would differ on a replica. This server has log_bin on. A new table may declare the same default, and so may a later alter_column, so adding the column without one and setting it afterwards is two operations that do work -- or generate the value in the application
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->
 
 - **The table decides `add_column` and `drop_column`.** MySQL performs them instantly unless the
   table is `ROW_FORMAT=COMPRESSED`, carries a `FULLTEXT` index, or has reached 64 instant row
-  versions, and it silently rebuilds the table when it is. `migr plan` reads the first queued
+  versions, and it silently rebuilds the table when it is. `migrasyon plan` reads the first queued
   migration's table and prints `(read from the table)` where it lowered the cost. **Reading the row
-  versions needs `PROCESS`**, which migr never asks for: without it, the cost stays `table_rewrite`.
+  versions needs `PROCESS`**, which migrasyon never asks for: without it, the cost stays `table_rewrite`.
 - `alter_column` other than dropping a default is a full column redefinition (`MODIFY COLUMN`),
-  which migr declares a rewrite for every type change, even where the server would widen a
+  which migrasyon declares a rewrite for every type change, even where the server would widen a
   `varchar` in place. That is the safe upper bound: the verdict cannot see the column's current type.
 - MySQL rewrites no operation into a safer sequence. Every table-sized change on a hot MySQL table is
   a job for a [shadow table](#4-shadow-table-migrations).
@@ -202,8 +202,8 @@ Refused on this server:
 
 ### MariaDB 11.4
 
-<!-- migr:lock-table mariadb 11.4 -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table mariadb 11.4 -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `lock_free` | `lock_free` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -235,7 +235,7 @@ Refused on this server:
 | data_copy | native | `long_exclusive` | `long_exclusive` | **no** |
 | data_backfill | native | `table_rewrite` | `table_rewrite` | **no** |
 | data_transform | native | `table_rewrite` | `table_rewrite` | **no** |
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->
 
 - MariaDB has no instant row-version limit, so only `COMPRESSED` and `FULLTEXT` keep `add_column`
   and `drop_column` from being instant.
@@ -244,8 +244,8 @@ Refused on this server:
 
 ### SQLite
 
-<!-- migr:lock-table sqlite -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table sqlite -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `brief_exclusive` | `brief_exclusive` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -281,19 +281,19 @@ Refused on this server:
 Refused on this server:
 
 - **add_column, default evaluated per row (uuid)**: column "nickname" defaults to uuid(), and SQLite links no UUID function: the extension that provides one is not compiled into this library. The hex(randomblob()) idiom would write a generator into the schema rather than name one, so this driver refuses instead -- generate the value in the application, or use string(36)
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->
 
 - SQLite takes one write lock for the whole database file, so even `create_table` is
   `brief_exclusive`: it waits for, and blocks, every other writer.
 - Most changes to an existing table are an emulated **table rebuild**: a new table, every row copied,
-  and a rename, preserving its checks and foreign keys. `migr plan` marks each rebuild with `→`.
+  and a rename, preserving its checks and foreign keys. `migrasyon plan` marks each rebuild with `→`.
 - Run SQLite in WAL mode where other connections read and write while a migration runs. In the
   default rollback journal, eight concurrent writers measured a 2.0 s noise floor of their own.
 
 ## 3. What cannot be made zero-downtime
 
 Every row above marked **no** blocks clients for as long as the work takes, on that engine, however
-migr is configured. Stated plainly:
+migrasyon is configured. Stated plainly:
 
 **PostgreSQL**
 - Changing a column's type rewrites the table under an exclusive lock.
@@ -316,7 +316,7 @@ migr is configured. Stated plainly:
   whole table under the database's one write lock.
 
 **Every engine**
-- `raw` is `unknown`: migr cannot know what your SQL locks.
+- `raw` is `unknown`: migrasyon cannot know what your SQL locks.
 - `drop_table` holds its lock while the storage goes.
 
 What to do instead, in order of preference:
@@ -329,8 +329,8 @@ What to do instead, in order of preference:
 
 ## 4. Shadow-table migrations
 
-A migration that declares `online: shadow_table` (`migr.Online` in Go, `online` in TypeScript) does
-not alter its table in place. migr:
+A migration that declares `online: shadow_table` (`migrasyon.Online` in Go, `online` in TypeScript) does
+not alter its table in place. migrasyon:
 
 1. creates an empty copy with the change applied;
 2. opens a change stream on the server's replication log — PostgreSQL logical decoding, the MySQL or
@@ -345,8 +345,8 @@ synchronous work on production writes.
 
 ### Where it is unavailable
 
-`migr plan` marks a shadow-table migration that cannot run with `×` and the reason, and so does
-`migr validate --connect`. `migr up` refuses it before creating anything. It is refused:
+`migrasyon plan` marks a shadow-table migration that cannot run with `×` and the reason, and so does
+`migrasyon validate --connect`. `migrasyon up` refuses it before creating anything. It is refused:
 
 **On a server:**
 
@@ -357,7 +357,7 @@ synchronous work on production writes.
 | MySQL | Before 8.0.13; `log_bin` is off; `binlog_format` is not `ROW`; `binlog_row_image` is not `FULL`; the user lacks `REPLICATION SLAVE` or `REPLICATION CLIENT`. |
 | MariaDB | Before 11.4; `log_bin` is off; `binlog_format` is not `ROW`; `binlog_row_image` is not `FULL`; the user lacks `REPLICATION SLAVE`, `BINLOG MONITOR` or `REPLICATION MASTER ADMIN`. |
 
-Every missing prerequisite is named at once. migr never sets one.
+Every missing prerequisite is named at once. migrasyon never sets one.
 
 **On a table:**
 
@@ -380,57 +380,57 @@ Every missing prerequisite is named at once. migr never sets one.
 ### What a shadow costs the server
 
 - **PostgreSQL** keeps a replication slot for the migration, and the slot retains WAL until the
-  migration finishes. An abandoned slot fills the disk. `migr status`, `migr plan` and `migr cutover`
-  name every orphaned `migr_` slot with its retained WAL, and `migr up` drops this project's own.
+  migration finishes. An abandoned slot fills the disk. `migrasyon status`, `migrasyon plan` and `migrasyon cutover`
+  name every orphaned `migrasyon_` slot with its retained WAL, and `migrasyon up` drops this project's own.
 - **On PostgreSQL 16 and later, grant `EXECUTE ON FUNCTION pg_log_standby_snapshot()`** to the
-  migr user (a superuser has it already). Each read of the slot decodes WAL from the slot's restart
-  point, which the server moves on only about every 15 s. With the grant, migr moves it on after
+  migrasyon user (a superuser has it already). Each read of the slot decodes WAL from the slot's restart
+  point, which the server moves on only about every 15 s. With the grant, migrasyon moves it on after
   every batch, so a read decodes only what is new. Without it the copy still works, but on a busy
   server each read re-decodes up to 15 s of WAL, and a copy can fall behind writes it would
   otherwise keep up with.
 - **MySQL and MariaDB** keep nothing for a reader. A run stopped for longer than
-  `binlog_expire_logs_seconds` cannot resume, because its position has been purged. `migr plan`
+  `binlog_expire_logs_seconds` cannot resume, because its position has been purged. `migrasyon plan`
   prints that retention.
 
 ## 5. The cutover
 
 ### Holding, and confirming
 
-When the copy has caught up, `migr up` **holds** it in sync and waits. It logs a warning naming the
+When the copy has caught up, `migrasyon up` **holds** it in sync and waits. It logs a warning naming the
 command that confirms it. The rename is the one irreversible moment, so it happens when a person
 says so, not whenever the copy happens to finish.
 
 ```console
-$ migr up
-level=WARN msg="holding the shadow table in sync until its cutover is confirmed -- migr cutover --confirm 20261020T140100 confirms it; Ctrl-C detaches and keeps it, exiting 6, and the next migr up carries the hold on" ...
+$ migrasyon up
+level=WARN msg="holding the shadow table in sync until its cutover is confirmed -- migrasyon cutover --confirm 20261020T140100 confirms it; Ctrl-C detaches and keeps it, exiting 6, and the next migrasyon up carries the hold on" ...
 ```
 
 From anywhere else:
 
 ```console
-$ migr cutover                       # what waits, its lag, and how old that reading is
-$ migr cutover --confirm 20261020T140100
+$ migrasyon cutover                       # what waits, its lag, and how old that reading is
+$ migrasyon cutover --confirm 20261020T140100
 ```
 
-`migr cutover` takes no migration lock, since the holding run holds it. `--confirm` records a flag
+`migrasyon cutover` takes no migration lock, since the holding run holds it. `--confirm` records a flag
 the holder reads, and the holder then cuts over. It exits **2** for a version nothing carries, and
 **1** for one that is not waiting.
 
 ### The ways out
 
-| You | migr |
+| You | migrasyon |
 |---|---|
-| press Ctrl-C, or the job is sent SIGTERM | **detaches**: keeps the copy and its capture, records the stage, and exits **6**. `migr status` shows the migration as `waiting`. |
-| run `migr up` again | carries the hold on from the recorded log position. |
-| run `migr resolve --rolled-back` | abandons it: releases the stream, drops the copy, and says what it drops first. |
-| run `migr down` | refuses while a migration is waiting. |
+| press Ctrl-C, or the job is sent SIGTERM | **detaches**: keeps the copy and its capture, records the stage, and exits **6**. `migrasyon status` shows the migration as `waiting`. |
+| run `migrasyon up` again | carries the hold on from the recorded log position. |
+| run `migrasyon resolve --rolled-back` | abandons it: releases the stream, drops the copy, and says what it drops first. |
+| run `migrasyon down` | refuses while a migration is waiting. |
 
 After the cutover, the original stays under its retired name until a later step drops it, so a
 mistake is recoverable by hand until then.
 
 ### What the lag figure means
 
-`migr cutover` shows each waiting migration's **lag**: how far its change stream trailed the end of
+`migrasyon cutover` shows each waiting migration's **lag**: how far its change stream trailed the end of
 the log at the holder's last read.
 
 - It is **0** whenever a read reached the end of the log as that read began. That is the normal state
@@ -439,14 +439,14 @@ the log at the holder's last read.
   read. On **PostgreSQL**, that is the time since that change committed. On **MySQL and MariaDB** it is
   the same, in **whole seconds**, from the binary log's event timestamps.
 - The holder records it at least every 5 s. A reading older than 30 s is shown as *no run is holding
-  it*, never as current: the holder has died or detached, and the next `migr up` resumes it.
+  it*, never as current: the holder has died or detached, and the next `migrasyon up` resumes it.
 
 A growing lag means the server writes faster than the copy replays. The cutover replays whatever is
 outstanding under its lock, so confirm while the lag is low.
 
 ### Unattended cutover
 
-`migr up --unattended` (or `MIGR_UNATTENDED=1`) confirms nothing and cuts over at the first read
+`migrasyon up --unattended` (or `MIGRASYON_UNATTENDED=1`) confirms nothing and cuts over at the first read
 that is caught up: one that found nothing new, or one whose lag is at most **`safety.cutover_lag`**.
 The run then says *cut over unattended, 0s behind the log*.
 
@@ -458,20 +458,20 @@ The run then says *cut over unattended, 0s behind the log*.
 **When CI should pass `--unattended`:** in a pipeline with nobody to confirm — staging, preview
 environments, a deploy you have decided to trust to the lag. Leave it off for production deploys
 where a person should own the rename: the job then exits 6 with the copy held, and someone runs
-`migr cutover --confirm`.
+`migrasyon cutover --confirm`.
 
 ## 6. Changing a column across deploys
 
 Some changes cannot be made in one deploy without breaking the app that is running: renaming a
 column, changing its type, tightening it to NOT NULL. **Expand and contract** splits one change into
-four migrations, each safe on its own, and migr runs them **a deploy apart**.
+four migrations, each safe on its own, and migrasyon runs them **a deploy apart**.
 
 ```go
 // Go: one file per phase, each registering one migration.
-migr.Register(migr.ReplaceColumn("accounts", "email", migr.String(255)).With(migr.String(320)).Expand())
-migr.Register(migr.ReplaceColumn("accounts", "email", migr.String(255)).With(migr.String(320)).Backfill())
-migr.Register(migr.ReplaceColumn("accounts", "email", migr.String(255)).With(migr.String(320)).Swap())
-migr.Register(migr.ReplaceColumn("accounts", "email", migr.String(255)).With(migr.String(320)).Contract())
+migrasyon.Register(migrasyon.ReplaceColumn("accounts", "email", migrasyon.String(255)).With(migrasyon.String(320)).Expand())
+migrasyon.Register(migrasyon.ReplaceColumn("accounts", "email", migrasyon.String(255)).With(migrasyon.String(320)).Backfill())
+migrasyon.Register(migrasyon.ReplaceColumn("accounts", "email", migrasyon.String(255)).With(migrasyon.String(320)).Swap())
+migrasyon.Register(migrasyon.ReplaceColumn("accounts", "email", migrasyon.String(255)).With(migrasyon.String(320)).Contract())
 ```
 
 ```ts
@@ -491,7 +491,7 @@ change what an applied migration emits without changing its source checksum.
 | 3 | **swap**: the new column becomes the one the app reads; the old is relaxed to nullable | writes both, reads the new |
 | 4 | **contract**: drops the old column | uses only the new |
 
-Each phase declares itself a step of the change. migr runs a step only under a **later release**
+Each phase declares itself a step of the change. migrasyon runs a step only under a **later release**
 than the one that applied the step before it, so two phases never land in one deploy.
 
 [`examples/zero-downtime`](../examples/zero-downtime/README.md) runs this sequence against
@@ -499,10 +499,10 @@ PostgreSQL with an app serving throughout, and fails if any of its queries does.
 
 ### Naming the release
 
-Pass the deploy's identity on every `migr up`, from your build id:
+Pass the deploy's identity on every `migrasyon up`, from your build id:
 
 ```bash
-migr up --release "$GITHUB_SHA"          # or MIGR_RELEASE=$GITHUB_SHA
+migrasyon up --release "$GITHUB_SHA"          # or MIGRASYON_RELEASE=$GITHUB_SHA
 ```
 
 Each batch's release is recorded. A run that reaches a step whose prior step was applied by **this**
@@ -517,25 +517,25 @@ is serving everywhere.
 
 and exits **0**. Everything after it waits too. This is not a failure: the next deploy runs it. A
 queue holding any step with no `--release` is refused before anything runs, exit **2**.
-`migr plan` and `--dry-run` stop at the same step.
+`migrasyon plan` and `--dry-run` stop at the same step.
 
 ### What to permit, and the unsafe steps
 
 - The backfill is a `data_transform` and the contract a `drop_column`, both destructive, so the
   project must permit them: `validation.allow_destructive: [data_transform, drop_column]`.
-- Swap (both ways), contract, and undoing expand warn, even in `migr plan`, because the app must have
+- Swap (both ways), contract, and undoing expand warn, even in `migrasyon plan`, because the app must have
   moved before they run.
 - A contract after a lossy `lower`, `upper` or `trim` is irreversible rather than approximately
   undone.
 - **On MySQL and MariaDB the swap is two commits**, since DDL commits as it goes. Between its two
-  renames the column the app reads is briefly absent. migr says so at the hold.
+  renames the column the app reads is briefly absent. migrasyon says so at the hold.
 
 ## 7. Gating CI on lock cost
 
 ### On every pull request
 
 ```bash
-migr validate --require-safe
+migrasyon validate --require-safe
 ```
 
 `--require-safe` compiles every migration's **up** half as a run would — the session's rewrites
@@ -549,7 +549,7 @@ A `.sql` project passes only at `table_rewrite`, because every `raw` statement i
 ### Before a deploy, against staging
 
 ```bash
-migr plan --require-safe
+migrasyon plan --require-safe
 ```
 
 This prints the plan with each operation's lock cost and exits **5** if any exceeds the ceiling. The
@@ -570,15 +570,15 @@ first queued migration's table-dependent costs are read from the table, so this 
 
 ### A GitHub Actions job
 
-The release images run migr with nothing to install. Use
-`ghcr.io/emrebdr/migr:<version>-node` for a TypeScript project, and the minimal
-`ghcr.io/emrebdr/migr:<version>` for a `.sql` one. Both run `migr` as their entrypoint, as a
+The release images run migrasyon with nothing to install. Use
+`ghcr.io/tosunlab/migrasyon:<version>-node` for a TypeScript project, and the minimal
+`ghcr.io/tosunlab/migrasyon:<version>` for a `.sql` one. Both run `migrasyon` as their entrypoint, as a
 non-root user, in `/work`, so the job mounts the checkout there. The project's own `node_modules`,
-with `@migr/sdk` in it, comes along in the mount.
+with `@migrasyon/sdk` in it, comes along in the mount.
 
 ```yaml
 env:
-  MIGR: ghcr.io/emrebdr/migr:0.1.0-node   # pin the version your migrations were written against
+  MIGRASYON: ghcr.io/tosunlab/migrasyon:0.1.0-node   # pin the version your migrations were written against
 
 jobs:
   migrations:
@@ -598,7 +598,7 @@ jobs:
         run: >-
           docker run --rm --network host -v "$PWD:/work"
           -e DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres
-          "$MIGR" validate --require-safe
+          "$MIGRASYON" validate --require-safe
 
   deploy:
     needs: migrations
@@ -612,15 +612,15 @@ jobs:
       - name: Plan against production, gated
         run: >-
           docker run --rm -v "$PWD:/work" -e DATABASE_URL="${{ secrets.DATABASE_URL }}"
-          "$MIGR" plan --require-safe --release "$GITHUB_SHA"
-      - name: migr up
+          "$MIGRASYON" plan --require-safe --release "$GITHUB_SHA"
+      - name: migrasyon up
         run: |
           set +e
           docker run --rm -v "$PWD:/work" -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-            "$MIGR" up --release "$GITHUB_SHA"
+            "$MIGRASYON" up --release "$GITHUB_SHA"
           code=$?
           if [ "$code" -eq 6 ]; then
-            echo "::warning::a shadow-table cutover is waiting: run migr cutover --confirm"
+            echo "::warning::a shadow-table cutover is waiting: run migrasyon cutover --confirm"
             exit 0
           fi
           exit "$code"
@@ -628,26 +628,26 @@ jobs:
 
 A few things to know about this job:
 - **The exit status is the container's**, so `--require-safe`'s **5** fails the step, and the
-  exit-6 branch reads the same code a bare `migr` would return.
+  exit-6 branch reads the same code a bare `migrasyon` would return.
 - **`--network host`** lets the container reach the service on `localhost`, the way a step on the
   runner does.
-- **`npm ci` runs on the runner**, which is Linux, so esbuild's binary inside `@migr/sdk` matches the
+- **`npm ci` runs on the runner**, which is Linux, so esbuild's binary inside `@migrasyon/sdk` matches the
   container's platform.
 - **The gate needs typed migrations.** A `.sql` project passes `--require-safe` only at
   `table_rewrite`, because every raw statement is `unknown`. For one, use the minimal image, drop
-  both `npm ci` steps, and gate on `migr plan` output in review instead.
+  both `npm ci` steps, and gate on `migrasyon plan` output in review instead.
 - **A Go project** builds a runner with the Go toolchain, so it copies the binary into the image it
   already builds with:
 
   ```dockerfile
-  COPY --from=ghcr.io/emrebdr/migr:0.1.0 /usr/local/bin/migr /usr/local/bin/migr
+  COPY --from=ghcr.io/tosunlab/migrasyon:0.1.0 /usr/local/bin/migrasyon /usr/local/bin/migrasyon
   ```
-- **Where migr writes into the mount**, which is SQLite's database file and a Go project's `.migr/`,
+- **Where migrasyon writes into the mount**, which is SQLite's database file and a Go project's `.migrasyon/`,
   run the container as the runner's user: `--user "$(id -u):$(id -g)"`.
 
-Destructive operations are refused by `migr up` as well as by `migr validate`, exit **2**, unless
+Destructive operations are refused by `migrasyon up` as well as by `migrasyon validate`, exit **2**, unless
 the kind is named in `validation.allow_destructive` or the run passes `--allow-destructive`. Keep
-the list in `migr.yaml`, where a review sees it.
+the list in `migrasyon.yaml`, where a review sees it.
 
 ## 8. Settings that bear on downtime
 
@@ -666,4 +666,4 @@ the list in `migr.yaml`, where a review sees it.
 | `safety.replica_lag_threshold` | 5s | A chunk, and a shadow copy, waits while any replica (or the change stream) trails by more. |
 | `safety.cutover_lag` | 1s, at most half of `lock_timeout` | How far a stream may trail and an unattended cutover still count it caught up. |
 
-`migr config` prints every resolved value.
+`migrasyon config` prints every resolved value.

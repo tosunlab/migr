@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Function names a default-producing function every driver maps to its own spelling.

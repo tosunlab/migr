@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestEveryDocumentedPayloadIsTheTypeThisBuildCarries(t *testing.T) {
@@ -104,7 +104,7 @@ func TestTheWireSpellsModeAsTheEngineDoes(t *testing.T) {
 
 	if !slices.Equal(wire, asked) {
 		t.Errorf("this package spells the modes %q and the engine asks in %q", wire, asked)
-		t.Log("The engine owns the distinction -- migr plan over .sql migrations is plan mode")
+		t.Log("The engine owns the distinction -- migrasyon plan over .sql migrations is plan mode")
 		t.Log("with no protocol in sight -- and this package owns how it crosses the wire. Two")
 		t.Log("spellings are one definition only for as long as something holds them level.")
 	}

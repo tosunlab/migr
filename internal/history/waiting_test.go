@@ -9,7 +9,7 @@ import (
 // heldAt returns the state of a shadow-table migration of a file, at one stage.
 func heldAt(f File, stage Stage) ShadowState {
 	return ShadowState{Version: f.migration.Version, Table: "users", Shadow: "_users_new",
-		Retired: "_users_old", Capture: "migr_slot", Stage: stage, UpdatedAt: ran}
+		Retired: "_users_old", Capture: "migrasyon_slot", Stage: stage, UpdatedAt: ran}
 }
 
 // resolveHeld folds runs against one file through a log that knows where its shadow tables stand.
@@ -30,7 +30,7 @@ func TestADirtyUpWhoseShadowTableIsHeldInSyncIsWaiting(t *testing.T) {
 	got := resolveHeld(t, users, []ShadowState{heldAt(users, StageSyncing)}, up(users, 1, Dirty))
 	if got != StateWaiting {
 		t.Errorf("a dirty up held in sync resolved to %s, want %s", got, StateWaiting)
-		t.Log("migr status has to print something true for a migration waiting on a person, and")
+		t.Log("migrasyon status has to print something true for a migration waiting on a person, and")
 		t.Log("dirty says the schema is between states, which a held copy is not (M13-T14).")
 	}
 }

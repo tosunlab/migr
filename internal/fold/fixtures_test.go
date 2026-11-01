@@ -3,8 +3,8 @@ package fold_test
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // comparison is one pair of schemas the round trip holds over, and what it is about.

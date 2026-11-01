@@ -18,7 +18,7 @@
 //     measured. A cheap operation declared at its worst is logged as an over-report and passes,
 //     because over-reporting costs a flag and under-reporting costs an outage.
 //
-// The budget is 1.5s, or MIGR_ZERODOWNTIME_BUDGET where it is set to a Go duration; a value that does
+// The budget is 1.5s, or MIGRASYON_ZERODOWNTIME_BUDGET where it is set to a Go duration; a value that does
 // not parse fails the run rather than falling back. It is 1.5s rather than tighter because MySQL's
 // lock_wait_timeout takes whole seconds: a brief_exclusive statement there may hold a client for one,
 // by design, and a budget under it would fail an honest verdict -- measured, a rename held a write for
@@ -28,8 +28,8 @@
 //
 // # Every operation, both ways, through the engine
 //
-// The operations run through engine.Apply and engine.Rollback, with the options migr up builds from
-// a default migr.yaml -- every rewrite on, chunking, retries, assessment -- so what is measured is
+// The operations run through engine.Apply and engine.Rollback, with the options migrasyon up builds from
+// a default migrasyon.yaml -- every rewrite on, chunking, retries, assessment -- so what is measured is
 // what an operator's run would do. Each case applies its setup, runs its change up, and rolls it
 // back, both under load; a drop is measured as the down of the create it undoes, so twenty-three
 // kinds need twenty cases. A kind no case reached fails the run, which is how a new operation is
@@ -69,7 +69,7 @@
 // asked to, and the run stopped after six. MySQL's lock_wait_timeout takes
 // whole seconds, so it runs at one. SQLite keeps the default: it has no lock queue, its busy handler
 // retrying rather than lining clients up behind a waiting statement, and measured, a 250ms busy_timeout
-// let the load's own writes starve migr's BEGIN IMMEDIATE on the history table.
+// let the load's own writes starve migrasyon's BEGIN IMMEDIATE on the history table.
 //
 // # Two cases are sized by what an engine can finish
 //

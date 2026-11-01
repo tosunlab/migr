@@ -8,11 +8,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/rule"
 )
 
 // FieldError is one problem, located by its path within the YAML document.
@@ -48,7 +48,7 @@ func (e *ValidationError) Error() string {
 
 // Next says to fix each key listed, and where the resolved result can be read.
 func (e *ValidationError) Next() string {
-	return fmt.Sprintf("fix each key listed in %s; migr config prints the file as resolved, defaults "+
+	return fmt.Sprintf("fix each key listed in %s; migrasyon config prints the file as resolved, defaults "+
 		"included", e.Source)
 }
 
@@ -204,7 +204,7 @@ func validateSeeds(v *validator, cfg *Config, source string) {
 	}
 }
 
-// validateProgressNames refuses a history or seed table named as a table migr keeps beside the other.
+// validateProgressNames refuses a history or seed table named as a table migrasyon keeps beside the other.
 func validateProgressNames(v *validator, migrations, seeds string) {
 	for _, beside := range besides {
 		if seeds != "" && seeds == beside.name(migrations) {
@@ -217,7 +217,7 @@ func validateProgressNames(v *validator, migrations, seeds string) {
 	}
 }
 
-// beside is one table migr keeps next to a history table, and what it holds.
+// beside is one table migrasyon keeps next to a history table, and what it holds.
 type beside struct {
 	// name derives the table's name from the history table's.
 	name func(table string) string
@@ -225,7 +225,7 @@ type beside struct {
 	holds string
 }
 
-// besides are the tables migr keeps next to every history table.
+// besides are the tables migrasyon keeps next to every history table.
 var besides = []beside{
 	{name: history.ProgressTable, holds: "checkpoints"},
 	{name: history.ReleaseTable, holds: "releases"},

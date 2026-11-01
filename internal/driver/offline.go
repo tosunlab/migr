@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // ErrNoDatabase marks a database call made by a check that deliberately opened none.
@@ -40,7 +40,7 @@ func offlineRules(driverName string) map[ir.Kind]capability.Rule {
 
 // OfflineConn is a session with nothing behind it: everything needing a server refuses by name.
 type OfflineConn struct {
-	// caps refuses every operation, naming the driver migr.yaml chose and why it cannot answer.
+	// caps refuses every operation, naming the driver migrasyon.yaml chose and why it cannot answer.
 	caps capability.Set
 
 	// mu guards what this session remembers, since callbacks arrive on the session's read loop.

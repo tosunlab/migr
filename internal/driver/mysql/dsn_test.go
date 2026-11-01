@@ -7,7 +7,7 @@ import (
 )
 
 // goodDSN is a connection string this driver accepts, which every refusal below is a variation on.
-const goodDSN = "migr:secret@tcp(127.0.0.1:3306)/appdb"
+const goodDSN = "migrasyon:secret@tcp(127.0.0.1:3306)/appdb"
 
 func TestAConnectionStringThisDriverAcceptsIsReadIntoADatabaseAndAName(t *testing.T) {
 	source, err := parseDSN(goodDSN, "")
@@ -80,7 +80,7 @@ func TestAnOwnedVariableIsRefusedHoweverTheConnectionStringCasedIt(t *testing.T)
 }
 
 func TestAConnectionStringWithNoDatabaseIsRefusedBeforeTheLockIsTaken(t *testing.T) {
-	_, err := parseDSN("migr:secret@tcp(127.0.0.1:3306)/", "")
+	_, err := parseDSN("migrasyon:secret@tcp(127.0.0.1:3306)/", "")
 	if !errors.Is(err, ErrDSN) {
 		t.Fatalf("parseDSN returned %v, want %v", err, ErrDSN)
 	}
@@ -112,7 +112,7 @@ func TestAConnectionStringTheLibraryCannotReadIsRefusedWithoutBeingRendered(t *t
 func TestARefusalNeverRendersTheConnectionString(t *testing.T) {
 	for _, dsn := range []string{
 		goodDSN + "?parseTime=true",
-		"migr:secret@tcp(127.0.0.1:3306)/",
+		"migrasyon:secret@tcp(127.0.0.1:3306)/",
 		goodDSN + "?sql_mode=ANSI",
 	} {
 		_, err := parseDSN(dsn, "")
@@ -142,7 +142,7 @@ func TestAConfiguredSchemaMustBeTheDatabaseTheConnectionStringNames(t *testing.T
 		}
 	}
 
-	t.Log("MySQL's SCHEMA is a synonym for its DATABASE, so migr.yaml's schema and the connection")
+	t.Log("MySQL's SCHEMA is a synonym for its DATABASE, so migrasyon.yaml's schema and the connection")
 	t.Log("string name the same thing -- and two sources for one namespace can only disagree.")
 }
 
@@ -153,7 +153,7 @@ func TestTheSessionNameCarriesNeitherSeparatorAnAttributeListIsParsedOn(t *testi
 		}
 	}
 
-	if got := attributeSafe("migr 1.2,3:4"); got != "migr 1.2-3-4" {
+	if got := attributeSafe("migrasyon 1.2,3:4"); got != "migrasyon 1.2-3-4" {
 		t.Errorf("attributeSafe returned %q", got)
 	}
 }

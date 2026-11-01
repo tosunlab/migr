@@ -10,11 +10,11 @@ import (
 const (
 	sourceHex = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
 	irHex     = "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210"
-	aValid    = "migr1:" + sourceHex + ":" + irHex
+	aValid    = "migrasyon1:" + sourceHex + ":" + irHex
 )
 
 func TestARecordedChecksumRoundTripsThroughItsString(t *testing.T) {
-	const source = "func Up(s *migr.Schema) error { return nil }\n"
+	const source = "func Up(s *migrasyon.Schema) error { return nil }\n"
 
 	original := mustOf(t, []byte(source), sampleOps(t))
 
@@ -43,18 +43,18 @@ func TestARecordedChecksumRoundTripsThroughItsString(t *testing.T) {
 }
 
 func TestAnUnknownSchemeNamesBothSides(t *testing.T) {
-	_, err := Parse(strings.Replace(aValid, "migr1:", "migr2:", 1))
+	_, err := Parse(strings.Replace(aValid, "migrasyon1:", "migrasyon2:", 1))
 
 	var schemeErr *SchemeError
 	if !errors.As(err, &schemeErr) {
-		t.Fatalf("Parse of a migr2 value = %v, want a *SchemeError", err)
+		t.Fatalf("Parse of a migrasyon2 value = %v, want a *SchemeError", err)
 	}
 
-	if schemeErr.Received != "migr2" {
-		t.Errorf("Received = %q, want %q", schemeErr.Received, "migr2")
+	if schemeErr.Received != "migrasyon2" {
+		t.Errorf("Received = %q, want %q", schemeErr.Received, "migrasyon2")
 	}
 
-	for _, want := range []string{"migr2", Scheme} {
+	for _, want := range []string{"migrasyon2", Scheme} {
 		if !strings.Contains(err.Error(), want) {
 			t.Errorf("message %q does not name %q", err, want)
 			t.Log("An operator has to know both what was recorded and what this build can")
@@ -64,12 +64,12 @@ func TestAnUnknownSchemeNamesBothSides(t *testing.T) {
 }
 
 func TestAMalformedChecksumIsADifferentFailureFromAnUnknownScheme(t *testing.T) {
-	_, malformed := Parse("migr1:nothex")
+	_, malformed := Parse("migrasyon1:nothex")
 	if !errors.Is(malformed, ErrMalformed) {
 		t.Errorf("Parse of a short digest = %v, want ErrMalformed", malformed)
 	}
 
-	_, unknown := Parse(strings.Replace(aValid, "migr1:", "migr2:", 1))
+	_, unknown := Parse(strings.Replace(aValid, "migrasyon1:", "migrasyon2:", 1))
 	if errors.Is(unknown, ErrMalformed) {
 		t.Error("an unrecognized scheme reported as a malformed value")
 		t.Log("They call for opposite actions: a malformed value means this history row is")
@@ -85,20 +85,20 @@ func TestParseRefusesAnySpellingButTheCanonicalOne(t *testing.T) {
 	}{
 		{name: "empty", in: ""},
 		{name: "bare hex with no scheme", in: sourceHex},
-		{name: "uppercase source digest", in: "migr1:" + strings.ToUpper(sourceHex) + ":" + irHex},
-		{name: "uppercase ir digest", in: "migr1:" + sourceHex + ":" + strings.ToUpper(irHex)},
-		{name: "one uppercase hex character", in: "migr1:" + sourceHex + ":F" + irHex[1:]},
+		{name: "uppercase source digest", in: "migrasyon1:" + strings.ToUpper(sourceHex) + ":" + irHex},
+		{name: "uppercase ir digest", in: "migrasyon1:" + sourceHex + ":" + strings.ToUpper(irHex)},
+		{name: "one uppercase hex character", in: "migrasyon1:" + sourceHex + ":F" + irHex[1:]},
 		{name: "everything uppercased", in: strings.ToUpper(aValid)},
-		{name: "uppercase scheme", in: "MIGR1:" + sourceHex + ":" + irHex},
+		{name: "uppercase scheme", in: "MIGRASYON1:" + sourceHex + ":" + irHex},
 		{name: "leading space", in: " " + aValid},
 		{name: "trailing newline", in: aValid + "\n"},
 		{name: "one digest short", in: aValid[:len(aValid)-1]},
 		{name: "one digest long", in: aValid + "0"},
-		{name: "only one digest", in: "migr1:" + sourceHex},
+		{name: "only one digest", in: "migrasyon1:" + sourceHex},
 		{name: "an extra separator", in: aValid + ":" + irHex},
-		{name: "scheme only", in: "migr1:"},
+		{name: "scheme only", in: "migrasyon1:"},
 		{name: "sha256 prefix", in: "sha256:" + sourceHex + ":" + irHex},
-		{name: "non-hex character in a digest", in: "migr1:" + sourceHex + ":g" + irHex[1:]},
+		{name: "non-hex character in a digest", in: "migrasyon1:" + sourceHex + ":g" + irHex[1:]},
 	}
 
 	for _, tt := range tests {
@@ -121,7 +121,7 @@ func TestTheZeroChecksumRefusesToRender(t *testing.T) {
 
 	if _, err := zero.MarshalText(); !errors.Is(err, ErrNotComputed) {
 		t.Errorf("MarshalText on a zero checksum = %v, want ErrNotComputed", err)
-		t.Log("Rendering it would write migr1:0000...:0000... into a history row, a value")
+		t.Log("Rendering it would write migrasyon1:0000...:0000... into a history row, a value")
 		t.Log("that looks recorded and matches nothing.")
 	}
 }

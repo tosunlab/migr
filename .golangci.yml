@@ -1,4 +1,4 @@
-# golangci-lint configuration for migr. Pinned version lives in the Makefile.
+# golangci-lint configuration for migrasyon. Pinned version lives in the Makefile.
 #
 # Shared by both Go modules (root and sdk/go); the Makefile passes --config with an
 # absolute path so the nested module cannot silently get a different one.
@@ -80,9 +80,9 @@ linters:
         - pkg: runtime
           alias: stdruntime
 
-    # Invariant #1: only cmd/migr may import a concrete driver or runtime.
+    # Invariant #1: only cmd/migrasyon may import a concrete driver or runtime.
     #
-    # Stated as a blanket deny with cmd/migr carved out, rather than as a list of
+    # Stated as a blanket deny with cmd/migrasyon carved out, rather than as a list of
     # core packages. depguard sees only direct imports, so covering everything
     # except the wiring layer is what closes the transitive path -- a route from
     # core to a driver through some intermediate package is caught at that
@@ -110,7 +110,7 @@ linters:
     # its own child, so that driver needs a negated files entry here and a rule set of
     # its own to be held by instead. postgres is the only one: pgtest holds Drop, which
     # removes a table a migration committed through host.db.exec and then failed after,
-    # and which invariant #3 will not let cmd/migr compose for itself (M7-T10).
+    # and which invariant #3 will not let cmd/migrasyon compose for itself (M7-T10).
     #
     # sqlite had the same pair from M8-T6 until M11-T6, for sqlitetest -- the catalog
     # digest the end-to-end round trip compared schemas with. Conn.Introspect answers
@@ -122,21 +122,21 @@ linters:
           list-mode: lax
           files:
             - "**/*.go"
-            - "!**/cmd/migr/**"
+            - "!**/cmd/migrasyon/**"
             - "!**/internal/driver/postgres/**"
           allow:
-            - github.com/emrebdr/migr/internal/runtime/protocol
-            - github.com/emrebdr/migr/internal/runtime/host
-            - github.com/emrebdr/migr/internal/driver/drivertest
+            - github.com/tosunlab/migrasyon/internal/runtime/protocol
+            - github.com/tosunlab/migrasyon/internal/runtime/host
+            - github.com/tosunlab/migrasyon/internal/driver/drivertest
           deny:
-            - pkg: github.com/emrebdr/migr/internal/driver/
+            - pkg: github.com/tosunlab/migrasyon/internal/driver/
               desc: >-
-                only cmd/migr may import a concrete driver; core reaches drivers
+                only cmd/migrasyon may import a concrete driver; core reaches drivers
                 through the registry (CLAUDE.md invariant #1). Drivers must not
                 import one another (invariant #2)
-            - pkg: github.com/emrebdr/migr/internal/runtime/
+            - pkg: github.com/tosunlab/migrasyon/internal/runtime/
               desc: >-
-                only cmd/migr may import a concrete language runtime; core reaches
+                only cmd/migrasyon may import a concrete language runtime; core reaches
                 runtimes through the registry (CLAUDE.md invariant #1)
 
         # What the postgres subtree is held to instead of the blanket deny above. It
@@ -149,13 +149,13 @@ linters:
           files:
             - "**/internal/driver/postgres/**"
           deny:
-            - pkg: github.com/emrebdr/migr/internal/driver/mysql
+            - pkg: github.com/tosunlab/migrasyon/internal/driver/mysql
               desc: drivers must not import one another (CLAUDE.md invariant #2)
-            - pkg: github.com/emrebdr/migr/internal/driver/sqlite
+            - pkg: github.com/tosunlab/migrasyon/internal/driver/sqlite
               desc: drivers must not import one another (CLAUDE.md invariant #2)
-            - pkg: github.com/emrebdr/migr/internal/runtime/
+            - pkg: github.com/tosunlab/migrasyon/internal/runtime/
               desc: >-
-                only cmd/migr may import a concrete language runtime; a driver reaches
+                only cmd/migrasyon may import a concrete language runtime; a driver reaches
                 none at all (CLAUDE.md invariant #1)
 
 
@@ -163,26 +163,26 @@ linters:
         # is a concrete implementation of engine.Source, so core must not name it --
         # but unlike a driver, it is not registry-wired: internal/cli builds it and
         # hands it to the engine (M5-T1 writes the template, M5-T2 the parser). The
-        # carve-out is therefore cli as well as cmd/migr, and it is a separate rule
+        # carve-out is therefore cli as well as cmd/migrasyon, and it is a separate rule
         # set precisely so that widening it here does not widen the driver deny
         # above, which cli is still held to.
         sources:
           list-mode: lax
           files:
             - "**/*.go"
-            - "!**/cmd/migr/**"
+            - "!**/cmd/migrasyon/**"
             - "!**/internal/cli/**"
           deny:
-            - pkg: github.com/emrebdr/migr/internal/source/
+            - pkg: github.com/tosunlab/migrasyon/internal/source/
               desc: >-
-                only cmd/migr and internal/cli may name a concrete migration source;
+                only cmd/migrasyon and internal/cli may name a concrete migration source;
                 the engine reaches one through engine.Source (CLAUDE.md invariant #1)
 
     # Listing rules REPLACES revive's defaults rather than extending them, so this
     # set is complete rather than incremental.
     #
     # package-comments is deliberately absent: it demands "Package main ...", but
-    # Go's convention for a command is "Command migr ...", which cmd/migr/main.go
+    # Go's convention for a command is "Command migrasyon ...", which cmd/migrasyon/main.go
     # correctly uses. Enabling it would force a violation of the standard to
     # satisfy the linter.
     revive:
@@ -303,7 +303,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/emrebdr/migr
+        - github.com/tosunlab/migrasyon
 
 issues:
   max-issues-per-linter: 0

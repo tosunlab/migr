@@ -148,7 +148,7 @@ func TestACommentOnlyChunkIsNotAStatement(t *testing.T) {
 
 	if len(got) != 1 {
 		t.Errorf("Statements() = %q, want only the statement that runs", got)
-		t.Log("A trailing comment compiled to a raw operation would be a statement migr counts,")
+		t.Log("A trailing comment compiled to a raw operation would be a statement migrasyon counts,")
 		t.Log("records a position for, and offers to resume from, having changed nothing.")
 	}
 }

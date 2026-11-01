@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // noDeclaredType is SQLite's own name for the affinity of a column declared with no type at all.
@@ -149,7 +149,7 @@ func unquoteLiteral(text string) (string, bool) {
 func referentialAction(recorded string) (schema.ReferentialAction, error) {
 	action, known := recordedActions[strings.ToUpper(strings.TrimSpace(recorded))]
 	if !known {
-		return "", fmt.Errorf("%w: this database reports the referential action %q, which migr has "+
+		return "", fmt.Errorf("%w: this database reports the referential action %q, which migrasyon has "+
 			"no name for", ErrIntrospect, recorded)
 	}
 

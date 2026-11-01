@@ -8,10 +8,10 @@ import (
 	gomysql "github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/go-mysql-org/go-mysql/replication"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 func TestARecordedPositionReadsBackAsTheOneSpelled(t *testing.T) {
@@ -54,12 +54,12 @@ func TestAFileAndOffsetIsReachedAcrossARotation(t *testing.T) {
 }
 
 func TestAReaderIdIsDerivedHighAndNeverOneAlreadyTaken(t *testing.T) {
-	first := freeID("migr_v1_abc", nil)
-	if first < replicaIDBase || freeID("migr_v1_abc", nil) != first {
+	first := freeID("migrasyon_v1_abc", nil)
+	if first < replicaIDBase || freeID("migrasyon_v1_abc", nil) != first {
 		t.Fatalf("the id %d is not stable in the high range", first)
 	}
 
-	next := freeID("migr_v1_abc", map[uint32]bool{first: true})
+	next := freeID("migrasyon_v1_abc", map[uint32]bool{first: true})
 	if next == first || next < replicaIDBase {
 		t.Errorf("an id already taken (%d) was handed out again as %d", first, next)
 	}
@@ -163,24 +163,24 @@ func TestEnumLabelsAreReadWithTheirCommasAndQuotes(t *testing.T) {
 }
 
 func TestAStatementChangingTheStreamsTableIsTold(t *testing.T) {
-	s := &binlogStream{database: "migr", table: "people"}
+	s := &binlogStream{database: "migrasyon", table: "people"}
 
 	for statement, want := range map[string]bool{
 		"ALTER TABLE people ADD COLUMN x int":                      true,
 		"alter table `people` drop column x":                       true,
-		"ALTER TABLE `migr`.`people` ENGINE=InnoDB":                true,
+		"ALTER TABLE `migrasyon`.`people` ENGINE=InnoDB":           true,
 		"ALTER TABLE other.people ADD COLUMN x int":                false,
 		"ALTER TABLE pets ADD COLUMN people int, ADD COLUMN y int": false,
 		"RENAME TABLE pets TO p2, people TO p3":                    true,
 		"RENAME TABLE pets TO people":                              false,
 		"DROP TABLE IF EXISTS `pets`, `people`":                    true,
-		"DROP TABLE IF EXISTS `_people_migr_x_new`":                false,
+		"DROP TABLE IF EXISTS `_people_migrasyon_x_new`":           false,
 		"TRUNCATE people":                                          true,
 		"TRUNCATE TABLE `people`":                                  true,
-		"CREATE TABLE `_people_migr_x_new` LIKE `people`":          false,
+		"CREATE TABLE `_people_migrasyon_x_new` LIKE `people`":     false,
 		"CREATE INDEX i ON people (x)":                             false,
 	} {
-		if got := s.changesTable("migr", statement); got != want {
+		if got := s.changesTable("migrasyon", statement); got != want {
 			t.Errorf("%q changes people: %v, want %v", statement, got, want)
 		}
 	}
@@ -188,7 +188,7 @@ func TestAStatementChangingTheStreamsTableIsTold(t *testing.T) {
 
 // streamOver returns a stream of people(id, name, total generated) in file mode, at a known point.
 func streamOver() *binlogStream {
-	return &binlogStream{database: "migr", table: "people", key: []int{0},
+	return &binlogStream{database: "migrasyon", table: "people", key: []int{0},
 		columns: []sourceColumn{
 			{name: "id", data: "int", class: classInteger},
 			{name: "name", data: "varchar", class: classText},
@@ -204,7 +204,7 @@ func event(kind replication.EventType, at uint32, e replication.Event) *replicat
 
 // rowsOf builds a row event on a table.
 func rowsOf(table string, rows ...[]any) *replication.RowsEvent {
-	return &replication.RowsEvent{Table: &replication.TableMapEvent{Schema: []byte("migr"), Table: []byte(table)}, Rows: rows}
+	return &replication.RowsEvent{Table: &replication.TableMapEvent{Schema: []byte("migrasyon"), Table: []byte(table)}, Rows: rows}
 }
 
 func TestAChangeIsHandedOverOnlyOnceItsTransactionCommits(t *testing.T) {
@@ -212,9 +212,9 @@ func TestAChangeIsHandedOverOnlyOnceItsTransactionCommits(t *testing.T) {
 
 	feed := []*replication.BinlogEvent{
 		event(replication.QUERY_EVENT, 150, &replication.QueryEvent{Query: []byte("BEGIN")}),
-		event(replication.TABLE_MAP_EVENT, 175, &replication.TableMapEvent{Schema: []byte("migr"), Table: []byte("people")}),
+		event(replication.TABLE_MAP_EVENT, 175, &replication.TableMapEvent{Schema: []byte("migrasyon"), Table: []byte("people")}),
 		event(replication.WRITE_ROWS_EVENTv2, 200, rowsOf("people", []any{int32(1), "ada", int32(9)})),
-		event(replication.WRITE_ROWS_EVENTv2, 250, rowsOf("_people_migr_x_new", []any{int32(1), "ada"})),
+		event(replication.WRITE_ROWS_EVENTv2, 250, rowsOf("_people_migrasyon_x_new", []any{int32(1), "ada"})),
 		event(replication.UPDATE_ROWS_EVENTv2, 300, rowsOf("people",
 			[]any{int32(1), "ada", int32(9)}, []any{int32(2), "ada", int32(9)},
 			[]any{int32(2), "ada", int32(9)}, []any{int32(2), "grace", int32(9)})),
@@ -321,7 +321,7 @@ func TestAGTIDPositionGrowsByEachCommittedTransaction(t *testing.T) {
 func TestTheStreamStopsWhereTheTableChangesUnderIt(t *testing.T) {
 	s := streamOver()
 
-	if _, err := s.consume(event(replication.QUERY_EVENT, 200, &replication.QueryEvent{Schema: []byte("migr"),
+	if _, err := s.consume(event(replication.QUERY_EVENT, 200, &replication.QueryEvent{Schema: []byte("migrasyon"),
 		Query: []byte("ALTER TABLE people ADD COLUMN x int")})); err == nil || !strings.Contains(err.Error(), "changed under") {
 		t.Errorf("an ALTER of the stream's table returned %v", err)
 	}
@@ -331,8 +331,8 @@ func TestTheStreamStopsWhereTheTableChangesUnderIt(t *testing.T) {
 		t.Errorf("a row of the wrong width returned %v", err)
 	}
 
-	committed, err := streamOver().consume(event(replication.QUERY_EVENT, 200, &replication.QueryEvent{Schema: []byte("migr"),
-		Query: []byte("CREATE TABLE `_people_migr_x_new` LIKE `people`")}))
+	committed, err := streamOver().consume(event(replication.QUERY_EVENT, 200, &replication.QueryEvent{Schema: []byte("migrasyon"),
+		Query: []byte("CREATE TABLE `_people_migrasyon_x_new` LIKE `people`")}))
 	if err != nil || len(committed) != 0 {
 		t.Errorf("the shadow's own CREATE stopped the stream: %v, %v", committed, err)
 	}

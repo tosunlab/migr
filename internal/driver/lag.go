@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Lag is how far one replica trails the server migr writes to, or why that could not be read.
+// Lag is how far one replica trails the server migrasyon writes to, or why that could not be read.
 type Lag struct {
 	// Replica names the replica as an operator recognizes it, and never carries a credential.
 	Replica string

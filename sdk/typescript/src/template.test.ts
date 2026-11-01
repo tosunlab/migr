@@ -5,12 +5,12 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-// The template `migr create --lang ts` writes is held by the CLI, in Go, and typechecking it is the
+// The template `migrasyon create --lang ts` writes is held by the CLI, in Go, and typechecking it is the
 // only way to know it is what it claims to be. The Go side asserts what the template says; this
 // asserts that what it says compiles, which is the TypeScript half of "what create writes is what
-// the rest of migr reads".
+// the rest of migrasyon reads".
 //
-// It compiles in a directory inside node_modules so that `@migr/sdk` resolves to this package by
+// It compiles in a directory inside node_modules so that `@migrasyon/sdk` resolves to this package by
 // self-reference, through the same exports map a consumer resolves -- which means the check runs
 // against what is published rather than against the sources.
 
@@ -18,7 +18,7 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = join(here, "..");
 const declaring = join(root, "..", "..", "internal", "source", "typescript", "template.go");
 
-/** Reads the template migr create writes, which the CLI holds as a Go constant. */
+/** Reads the template migrasyon create writes, which the CLI holds as a Go constant. */
 function template(): string {
   const source = readFileSync(declaring, "utf8");
   const sdk = /const SDK = "([^"]+)"/.exec(source);
@@ -40,7 +40,7 @@ function typecheck(directory: string): void {
       { stdio: "pipe" },
     );
   } catch (thrown) {
-    assert.fail(`the template migr create writes does not typecheck:\n${said(thrown)}`);
+    assert.fail(`the template migrasyon create writes does not typecheck:\n${said(thrown)}`);
   }
 }
 
@@ -51,8 +51,8 @@ function said(thrown: unknown): string {
   return `${failure.stdout?.toString() ?? ""}${failure.stderr?.toString() ?? ""}`;
 }
 
-test("the template migr create writes typechecks against the published contract", () => {
-  const written = mkdtempSync(join(root, "node_modules", ".migr-template-"));
+test("the template migrasyon create writes typechecks against the published contract", () => {
+  const written = mkdtempSync(join(root, "node_modules", ".migrasyon-template-"));
 
   try {
     writeFileSync(join(written, "20260727T153000_add_users.ts"), template());
@@ -68,5 +68,5 @@ test("the template migr create writes typechecks against the published contract"
 });
 
 test("the template imports this package by the name it is published under", () => {
-  assert.match(template(), /from "@migr\/sdk"/);
+  assert.match(template(), /from "@migrasyon\/sdk"/);
 });

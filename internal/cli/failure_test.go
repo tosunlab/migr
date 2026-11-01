@@ -10,14 +10,14 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
 // coded is one way a command ends, and the exit code CLAUDE.md §5 documents for that ending.
@@ -216,7 +216,7 @@ var codes = []coded{
 		scripted: true},
 	{name: "a diagram of a schema the migrations cannot say", command: "graph",
 		args: []string{"--schema", "--format", "dot"}, stage: staged, want: ExitRuntime},
-	{name: "a rendering migr graph does not know", command: "graph", args: []string{"--format", "svg"},
+	{name: "a rendering migrasyon graph does not know", command: "graph", args: []string{"--format", "svg"},
 		stage: staged, want: ExitValidation},
 	{name: "--json beside --format", command: "graph", args: []string{"--json", "--format", "dot"},
 		stage: staged, want: ExitValidation},
@@ -238,7 +238,7 @@ var codes = []coded{
 }
 
 // A row says whether a runtime answers for its migrations, because two rows turn on the answer:
-// migr diff's desired schema is every migration folded forward, so its rows are Go projects a
+// migrasyon diff's desired schema is every migration folded forward, so its rows are Go projects a
 // runtime has to answer for, while "a runtime that will not start" is about an adapter that exists
 // and does not.
 
@@ -252,7 +252,7 @@ func TestEveryCommandEndsWithTheCodeSection5Documents(t *testing.T) {
 				append(strings.Fields(c.command), c.args...)...)
 
 			if got := ExitCode(err); got != c.want {
-				t.Errorf("migr %s %v exited %d, want %d (%v)", c.command, c.args, got, c.want, err)
+				t.Errorf("migrasyon %s %v exited %d, want %d (%v)", c.command, c.args, got, c.want, err)
 			}
 		})
 	}
@@ -280,7 +280,7 @@ func TestEveryCommandIsInTheExitCodeMatrix(t *testing.T) {
 
 	for _, path := range commandPaths(newRootCmd(), "") {
 		if _, found := covered[path]; !found {
-			t.Errorf("migr %s produces no documented exit code in this matrix", path)
+			t.Errorf("migrasyon %s produces no documented exit code in this matrix", path)
 			t.Log("An eleventh command is where a code stops meaning one thing across the CLI, so")
 			t.Log("adding one costs saying which of the seven endings it can reach -- and a")
 			t.Log("subcommand is a command, which a check reading only the top level would miss.")
@@ -305,14 +305,14 @@ func TestAReportOverABrokenDatabaseStillSucceeds(t *testing.T) {
 
 	for _, command := range []string{"status", "history"} {
 		if _, _, err := runWith(t, dir, noon, drivers, command); err != nil {
-			t.Errorf("migr %s over a drifted and dirty database failed: %v", command, err)
+			t.Errorf("migrasyon %s over a drifted and dirty database failed: %v", command, err)
 		}
 	}
 
 	_, _, err := runWith(t, dir, noon, drivers, "up")
 	if got := ExitCode(err); got != ExitDrift {
-		t.Errorf("migr up over that same database exited %d, want %d", got, ExitDrift)
-		t.Log("The five states are a report's output rather than its failure, and migr up is the")
+		t.Errorf("migrasyon up over that same database exited %d, want %d", got, ExitDrift)
+		t.Log("The five states are a report's output rather than its failure, and migrasyon up is the")
 		t.Log("gate. Two commands answering different questions is not an inconsistency between")
 		t.Log("them.")
 	}
@@ -324,11 +324,11 @@ func TestAReportNeverReachesTheCodeForTheMigrationLock(t *testing.T) {
 		f.lockErr = driver.ErrLockTimeout
 
 		if _, _, err := runWith(t, dir, noon, drivers, command); err != nil {
-			t.Errorf("migr %s failed against a database whose lock is held: %v", command, err)
+			t.Errorf("migrasyon %s failed against a database whose lock is held: %v", command, err)
 		}
 
 		if f.asked("lock") {
-			t.Errorf("migr %s took the migration lock, which no report may", command)
+			t.Errorf("migrasyon %s took the migration lock, which no report may", command)
 		}
 	}
 }
@@ -338,12 +338,12 @@ func TestABareInvocationPrintsHelpAndSucceeds(t *testing.T) {
 
 	stdout, _, err := runWith(t, dir, noon, drivers)
 	if err != nil {
-		t.Fatalf("migr with no arguments: %v", err)
+		t.Fatalf("migrasyon with no arguments: %v", err)
 	}
 
 	if !strings.Contains(stdout, "Available Commands") {
-		t.Errorf("migr with no arguments printed no help:\n%s", stdout)
-		t.Log("The root carries an Args check so that `migr nonsense` is refused rather than")
+		t.Errorf("migrasyon with no arguments printed no help:\n%s", stdout)
+		t.Log("The root carries an Args check so that `migrasyon nonsense` is refused rather than")
 		t.Log("answered with help, and cobra runs no Args check on a command with nothing to run.")
 	}
 }
@@ -356,11 +356,11 @@ func TestAFailureIsWrittenToStderrAndNothingElse(t *testing.T) {
 		t.Fatal("down succeeded over a migration nothing can undo")
 	}
 
-	if !strings.Contains(stderr, "migr: ") {
+	if !strings.Contains(stderr, "migrasyon: ") {
 		t.Errorf("the failure did not reach stderr:\n%s", stderr)
 	}
 
-	if strings.Contains(stdout, "migr: ") {
+	if strings.Contains(stdout, "migrasyon: ") {
 		t.Errorf("the failure reached stdout, where a result belongs:\n%s", stdout)
 	}
 }
@@ -529,7 +529,7 @@ func TestEveryFailureNamesTheMigrationItHappenedIn(t *testing.T) {
 
 			_, _, err := runWith(t, dir, noon, drivers, c.args...)
 			if err == nil {
-				t.Fatalf("migr %v succeeded", c.args)
+				t.Fatalf("migrasyon %v succeeded", c.args)
 			}
 
 			if !strings.Contains(err.Error(), c.file) {
@@ -614,7 +614,7 @@ func stagedUnknownRule(t *testing.T) (string, *fake, *driver.Registry) {
 	return dir, f, drivers
 }
 
-// stagedUndecodable is a project whose migr.yaml carries a value of the wrong shape for its key.
+// stagedUndecodable is a project whose migrasyon.yaml carries a value of the wrong shape for its key.
 func stagedUndecodable(t *testing.T) (string, *fake, *driver.Registry) {
 	t.Helper()
 
@@ -634,7 +634,7 @@ func stagedUnreachable(t *testing.T) (string, *fake, *driver.Registry) {
 	return dir, f, drivers
 }
 
-// stagedFresh is the project migr init writes: a config, a migrations directory, and no migrations.
+// stagedFresh is the project migrasyon init writes: a config, a migrations directory, and no migrations.
 func stagedFresh(t *testing.T) (string, *fake, *driver.Registry) {
 	t.Helper()
 
@@ -793,7 +793,7 @@ func stagedUnnamed(t *testing.T) (string, *fake, *driver.Registry) {
 	t.Helper()
 
 	dir, f, drivers := project(t, twoTables()...)
-	write(t, filepath.Join(dir, scaffoldDir, "not-a-migration.sql"), "-- migr:up\nSELECT 1;\n")
+	write(t, filepath.Join(dir, scaffoldDir, "not-a-migration.sql"), "-- migrasyon:up\nSELECT 1;\n")
 
 	return dir, f, drivers
 }
@@ -825,7 +825,7 @@ func stagedUnreadable(t *testing.T) (string, *fake, *driver.Registry) {
 	return dir, f, drivers
 }
 
-// stagedGo is a project whose language migr runs, over an adapter that will not start a process.
+// stagedGo is a project whose language migrasyon runs, over an adapter that will not start a process.
 func stagedGo(t *testing.T) (string, *fake, *driver.Registry) {
 	t.Helper()
 

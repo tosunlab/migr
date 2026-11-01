@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Statement is one compiled unit of work, ready to run against the engine that produced it.
@@ -77,7 +77,7 @@ type Assessor interface {
 type Driver interface {
 	Compiler
 
-	// Name returns the driver's registered name, as it appears in migr.yaml.
+	// Name returns the driver's registered name, as it appears in migrasyon.yaml.
 	Name() string
 	// Open connects to a database and returns a session that owns the connection.
 	Open(ctx context.Context, dsn string) (Conn, error)
@@ -91,22 +91,22 @@ type Unlock func(ctx context.Context) error
 // Work is what runs inside a transaction: the statements of one group, and nothing that ends it.
 type Work func(ctx context.Context) error
 
-// DefaultHistoryTable is where migrations are recorded when migr.yaml names no other table.
-const DefaultHistoryTable = "migr_migrations"
+// DefaultHistoryTable is where migrations are recorded when migrasyon.yaml names no other table.
+const DefaultHistoryTable = "migrasyon_migrations"
 
-// DefaultSeedTable is where seeds are recorded when migr.yaml names no other table.
-const DefaultSeedTable = "migr_seeds"
+// DefaultSeedTable is where seeds are recorded when migrasyon.yaml names no other table.
+const DefaultSeedTable = "migrasyon_seeds"
 
-// DefaultLockWait is how long migr waits for the migration lock when migr.yaml names no timeout.
+// DefaultLockWait is how long migrasyon waits for the migration lock when migrasyon.yaml names no timeout.
 const DefaultLockWait = 30 * time.Second
 
-// DefaultStatementLockWait bounds one statement's wait for a lock when migr.yaml names none.
+// DefaultStatementLockWait bounds one statement's wait for a lock when migrasyon.yaml names none.
 const DefaultStatementLockWait = 3 * time.Second
 
 // DefaultLockRetries is how many times a statement that gave up on a lock is tried again by default.
 const DefaultLockRetries = 5
 
-// DefaultLockBackoff is the first retry's delay when migr.yaml names none, doubled for each one after.
+// DefaultLockBackoff is the first retry's delay when migrasyon.yaml names none, doubled for each one after.
 const DefaultLockBackoff = 500 * time.Millisecond
 
 // MaxLockBackoff is the longest one retry's delay grows to, however many retries came before it.
@@ -118,7 +118,7 @@ type Conn interface {
 	Exec(ctx context.Context, stmt Statement) error
 	// Query runs a migration's own read, which the server enforces read-only, and returns text.
 	Query(ctx context.Context, q Query) (Rows, error)
-	// Introspect reads this session's own namespace as a snapshot, less migr's own history table.
+	// Introspect reads this session's own namespace as a snapshot, less migrasyon's own history table.
 	Introspect(ctx context.Context) (*schema.Snapshot, error)
 	// Perform runs a migration's own statement and reports how many rows it changed.
 	Perform(ctx context.Context, q Query) (int64, error)

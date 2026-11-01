@@ -20,7 +20,7 @@ import { fileURLToPath } from "node:url";
 // for free from `go build`. Without this, a fixture could be wrong in a way that only showed up as a
 // failure under the conformance tag, on a machine that has Node.
 //
-// It compiles in a directory inside node_modules so that `@migr/sdk` resolves to this package by
+// It compiles in a directory inside node_modules so that `@migrasyon/sdk` resolves to this package by
 // self-reference, through the same exports map a consumer resolves -- template.test.ts's trick, for
 // the same reason: the check runs against what is published rather than against the sources.
 
@@ -82,7 +82,7 @@ function said(thrown: unknown): string {
 }
 
 test("every conformance fixture typechecks against the published contract", () => {
-  const written = mkdtempSync(join(root, "node_modules", ".migr-fixtures-"));
+  const written = mkdtempSync(join(root, "node_modules", ".migrasyon-fixtures-"));
 
   try {
     for (const name of sources()) {
@@ -108,12 +108,12 @@ test("the fixtures import this package by the name it is published under", () =>
   for (const name of sources()) {
     const source = readFileSync(join(FIXTURES, name), "utf8");
 
-    assert.match(source, /from "@migr\/sdk"/, `${name} does not import @migr/sdk`);
+    assert.match(source, /from "@migrasyon\/sdk"/, `${name} does not import @migrasyon/sdk`);
   }
 });
 
 test("a fixture tree that has moved or gained a stray file fails rather than checking nothing", () => {
-  const empty = mkdtempSync(join(tmpdir(), "migr-fixtures-"));
+  const empty = mkdtempSync(join(tmpdir(), "migrasyon-fixtures-"));
 
   try {
     assert.throws(() => sources(empty), /holds no fixtures/);

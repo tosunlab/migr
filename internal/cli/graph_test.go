@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/visual"
+	"github.com/tosunlab/migrasyon/internal/visual"
 )
 
 func TestGraphDrawsEachStepOfAChangeADeployAfterTheOneBefore(t *testing.T) {
@@ -13,20 +13,20 @@ func TestGraphDrawsEachStepOfAChangeADeployAfterTheOneBefore(t *testing.T) {
 
 	stdout, _, err := runDeclaring(t, dir, actEmits, declaresSteps, drivers, "graph")
 	if err != nil {
-		t.Fatalf("migr graph: %v", err)
+		t.Fatalf("migrasyon graph: %v", err)
 	}
 
 	if want := "step        users.email: step1, a deploy after 20260727T153000_swap_email.go"; !strings.Contains(stdout, want) {
-		t.Errorf("migr graph printed\n%s\nwant a line %q", stdout, want)
+		t.Errorf("migrasyon graph printed\n%s\nwant a line %q", stdout, want)
 	}
 
 	mermaid, _, err := runDeclaring(t, dir, actEmits, declaresSteps, drivers, "graph", "--format", "mermaid")
 	if err != nil {
-		t.Fatalf("migr graph --format mermaid: %v", err)
+		t.Fatalf("migrasyon graph --format mermaid: %v", err)
 	}
 
 	if want := "m20260727T153000 -.->|next deploy| m20260727T153001"; !strings.Contains(mermaid, want) {
-		t.Errorf("migr graph --format mermaid printed\n%s\nwant an edge %q", mermaid, want)
+		t.Errorf("migrasyon graph --format mermaid printed\n%s\nwant an edge %q", mermaid, want)
 	}
 }
 
@@ -35,7 +35,7 @@ func TestGraphJSONCarriesEveryMigrationAndEveryEdge(t *testing.T) {
 
 	stdout, _, err := runDeclaring(t, dir, actEmits, declaresNext, drivers, "--json", "graph")
 	if err != nil {
-		t.Fatalf("migr --json graph: %v", err)
+		t.Fatalf("migrasyon --json graph: %v", err)
 	}
 
 	var got visual.Graph
@@ -58,12 +58,12 @@ func TestGraphDrawsTheSchemaAGoProjectBuildsAsADiagram(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "graph", "--schema", "--format", "mermaid")
 	if err != nil {
-		t.Fatalf("migr graph --schema --format mermaid: %v", err)
+		t.Fatalf("migrasyon graph --schema --format mermaid: %v", err)
 	}
 
 	for _, want := range []string{"erDiagram", "  " + scriptedTable + " {", "    int64 id", "    text note"} {
 		if !strings.Contains(stdout, want) {
-			t.Errorf("migr graph --schema --format mermaid printed\n%s\nwant %q", stdout, want)
+			t.Errorf("migrasyon graph --schema --format mermaid printed\n%s\nwant %q", stdout, want)
 		}
 	}
 }
@@ -73,7 +73,7 @@ func TestGraphStopsTheSchemaAtTheVersionToNames(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "--json", "graph", "--schema", "--to", versionAt(0))
 	if err != nil {
-		t.Fatalf("migr --json graph --schema --to: %v", err)
+		t.Fatalf("migrasyon --json graph --schema --to: %v", err)
 	}
 
 	var got struct {
@@ -94,7 +94,7 @@ func TestGraphSaysWhereASQLProjectsSchemaStopsBeingKnown(t *testing.T) {
 
 	stdout, _, err := runWith(t, dir, noon, drivers, "graph", "--schema")
 	if err != nil {
-		t.Fatalf("migr graph --schema: %v", err)
+		t.Fatalf("migrasyon graph --schema: %v", err)
 	}
 
 	for _, want := range []string{
@@ -103,7 +103,7 @@ func TestGraphSaysWhereASQLProjectsSchemaStopsBeingKnown(t *testing.T) {
 		"ended the projection.",
 	} {
 		if !strings.Contains(stdout, want) {
-			t.Errorf("migr graph --schema printed\n%s\nwant %q", stdout, want)
+			t.Errorf("migrasyon graph --schema printed\n%s\nwant %q", stdout, want)
 		}
 	}
 }

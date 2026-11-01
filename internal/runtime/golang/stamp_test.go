@@ -68,7 +68,7 @@ func TestTheToolchainsIdentityIsInTheStamp(t *testing.T) {
 	elsewhere.goarch = "amd64"
 
 	if stamped(t, hostChain, dir, runner) == stamped(t, elsewhere, dir, runner) {
-		t.Error("two architectures stamped the same, so a mounted .migr would run the wrong binary")
+		t.Error("two architectures stamped the same, so a mounted .migrasyon would run the wrong binary")
 	}
 }
 

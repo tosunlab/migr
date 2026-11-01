@@ -11,9 +11,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // applied returns the versions a fake database holds a completed run for, in the order they ran.
@@ -120,7 +120,7 @@ func TestDownWithNoFlagsRollsBackTheLastBatch(t *testing.T) {
 
 	if !strings.Contains(stdout, "rolled back 2 migrations") {
 		t.Errorf("the summary does not report the whole batch:\n%s", stdout)
-		t.Log("A bare `migr down` rolls back the last batch, not the last single migration. Latest")
+		t.Log("A bare `migrasyon down` rolls back the last batch, not the last single migration. Latest")
 		t.Log("is direction-blind, so the batch a rollback acts on cannot come from it.")
 	}
 }
@@ -379,7 +379,7 @@ var staging = map[config.Language]func(*testing.T, ...string) (string, *fake, *d
 	config.LanguageTypeScript: tsProject,
 }
 
-func TestEveryLanguageMigrRegistersReachesItsRuntime(t *testing.T) {
+func TestEveryLanguageMigrasyonRegistersReachesItsRuntime(t *testing.T) {
 	t.Log("Both SDK languages were refused by name while their adapters already existed -- go")
 	t.Log("between M6-T8 and M6-T10, typescript between M7-T6 and M7-T8. Nothing is waiting now,")
 	t.Log("so the gate that named a task is gone and this is what took its place.")
@@ -407,7 +407,7 @@ func TestEveryLanguageMigrRegistersReachesItsRuntime(t *testing.T) {
 func TestADirectoryHoldingTwoLanguagesRunsBothInTimestampOrder(t *testing.T) {
 	dir, f, drivers := goProject(t, "add_scripted")
 	write(t, filepath.Join(dir, scaffoldDir, versionAt(1)+"_add_other.sql"),
-		"-- migr:up\nCREATE TABLE other (id bigint);\n\n-- migr:down\nDROP TABLE other;\n")
+		"-- migrasyon:up\nCREATE TABLE other (id bigint);\n\n-- migrasyon:down\nDROP TABLE other;\n")
 
 	if _, _, err := runScripted(t, dir, actEmits, drivers, "up"); err != nil {
 		t.Fatalf("up over a directory holding two languages: %v", err)
@@ -443,7 +443,7 @@ func TestAJavaScriptMigrationRunsInATypeScriptProject(t *testing.T) {
 		t.Fatalf("up over a project holding a .js migration: %v", err)
 	}
 
-	t.Log("migr-runtime-node loads .ts, .js and .mjs, and M7-T8's one-extension-per-language check")
+	t.Log("migrasyon-runtime-node loads .ts, .js and .mjs, and M7-T8's one-extension-per-language check")
 	t.Log("refused the last two in a project that was already TypeScript. A language owns a set.")
 
 	if len(f.runs) != 2 {
@@ -482,10 +482,10 @@ func TestEveryCommandThatRunsOrChecksMigrationsReadsTwoLanguages(t *testing.T) {
 	for _, command := range []string{"up", "down", "plan", "validate", "status"} {
 		dir, _, drivers := goProject(t, "add_scripted")
 		write(t, filepath.Join(dir, scaffoldDir, versionAt(1)+"_add_other.sql"),
-			"-- migr:up\nCREATE TABLE other (id bigint);\n\n-- migr:down\nDROP TABLE other;\n")
+			"-- migrasyon:up\nCREATE TABLE other (id bigint);\n\n-- migrasyon:down\nDROP TABLE other;\n")
 
 		if _, _, err := runScripted(t, dir, actEmits, drivers, command); err != nil {
-			t.Errorf("migr %s over a mixed directory: %v", command, err)
+			t.Errorf("migrasyon %s over a mixed directory: %v", command, err)
 		}
 	}
 }
@@ -501,13 +501,13 @@ func TestEveryCommandRefusesAMigrationNothingHereReads(t *testing.T) {
 
 		_, _, err := runScripted(t, dir, actEmits, drivers, command)
 		if got := ExitCode(err); got != ExitValidation {
-			t.Errorf("migr %s over an unroutable file exited %d, want %d (%v)", command, got,
+			t.Errorf("migrasyon %s over an unroutable file exited %d, want %d (%v)", command, got,
 				ExitValidation, err)
 		}
 
 		for _, want := range []string{"_add_other.py", ".py", ".go", ".sql", ".ts"} {
 			if err == nil || !strings.Contains(err.Error(), want) {
-				t.Errorf("migr %s: the refusal does not name %q: %v", command, want, err)
+				t.Errorf("migrasyon %s: the refusal does not name %q: %v", command, want, err)
 			}
 		}
 	}
@@ -698,7 +698,7 @@ func TestDownRollsBackOnlyTheLastBatchWhenSeveralExist(t *testing.T) {
 
 	if !slices.Equal(f.statements, []string{"DROP TABLE teams;"}) {
 		t.Errorf("the rollback ran %q, want only the batch the second up recorded", f.statements)
-		t.Log("Two invocations mean two batches, and a bare `migr down` reverses the last one.")
+		t.Log("Two invocations mean two batches, and a bare `migrasyon down` reverses the last one.")
 		t.Log("Passing All() here would undo every applied migration instead, which agrees with")
 		t.Log("LastBatch only while the whole project fits in one batch.")
 	}

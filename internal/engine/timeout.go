@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
-// Bound names which limit a run ran past, by the migr.yaml key an operator raises.
+// Bound names which limit a run ran past, by the migrasyon.yaml key an operator raises.
 type Bound string
 
 // The two bounds a run is held to.
@@ -49,7 +49,7 @@ func (e *TimeoutError) Error() string {
 
 // Next names the key that raises the bound.
 func (e *TimeoutError) Next() string {
-	return fmt.Sprintf("raise %s in migr.yaml if the work needs longer, then run the command again", e.Bound)
+	return fmt.Sprintf("raise %s in migrasyon.yaml if the work needs longer, then run the command again", e.Bound)
 }
 
 // Unwrap reports what was stopped, so the statement and the migration stay reachable.

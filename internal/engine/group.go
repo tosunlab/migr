@@ -1,6 +1,6 @@
 package engine
 
-import "github.com/emrebdr/migr/internal/driver"
+import "github.com/tosunlab/migrasyon/internal/driver"
 
 // Group is a run of consecutive statements that agree on whether they can share a transaction.
 type Group struct {

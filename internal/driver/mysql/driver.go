@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Name is the name this driver is registered under, and the name every refusal it gives states.
@@ -20,7 +20,7 @@ const Name = "mysql"
 // strategy is the one migration lock this driver will implement, and lock.strategy's advisory half.
 const strategy = "advisory"
 
-// New builds the MySQL driver from the settings resolved out of migr.yaml.
+// New builds the MySQL driver from the settings resolved out of migrasyon.yaml.
 func New(opts driver.Options) (driver.Driver, error) {
 	_, table := opts.Namespace()
 	if err := checkHistoryTable(table); err != nil {
@@ -102,15 +102,15 @@ func checkStatementWait(wait time.Duration) error {
 
 // mysqlDriver is the MySQL driver: what it is called, what it compiles, how to reach a server.
 type mysqlDriver struct {
-	// schema is what migr.yaml named, which for this engine must be the connection string's database.
+	// schema is what migrasyon.yaml named, which for this engine must be the connection string's database.
 	schema string
 	// table is where migrations are recorded, resolved by Options.Namespace rather than assumed.
 	table string
 	// seeds is where seeds are recorded, a second table that names no lock of its own.
 	seeds string
-	// lockWait bounds the wait for the migration lock, and is migr.yaml's lock.timeout.
+	// lockWait bounds the wait for the migration lock, and is migrasyon.yaml's lock.timeout.
 	lockWait time.Duration
-	// statementLockWait bounds each statement, and is migr.yaml's safety.lock_timeout.
+	// statementLockWait bounds each statement, and is migrasyon.yaml's safety.lock_timeout.
 	statementLockWait time.Duration
 	// replicas are the connection strings of the servers whose lag this engine reports only there.
 	replicas []string

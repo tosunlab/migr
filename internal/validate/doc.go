@@ -14,13 +14,13 @@
 // then be zero and exceed it. It judges the up half alone, for the destructive check's reason, and
 // compiles that half as a run would -- with the session's rewrites, an operation on a table the
 // migration creates costing nothing, and an emulated operation judged on its verdict and never
-// expanded -- so an operation is judged at the cost migr up would pay. It runs no driver.Assessor,
+// expanded -- so an operation is judged at the cost migrasyon up would pay. It runs no driver.Assessor,
 // because this package reads no table state. A half that does not compile is left to the compile
 // check, which has already reported it.
 //
 // # The destructive check is the one that reads something other than the migrations
 //
-// Options.Allow is what a run would be permitted to destroy — migr.yaml's list of operation kinds,
+// Options.Allow is what a run would be permitted to destroy — migrasyon.yaml's list of operation kinds,
 // plus --allow-destructive — and engine.Destructive is the policy both this package and the
 // executor read, so a report and a run cannot disagree about one operation. It judges the up half
 // alone: ir.CreateTable inverts to DropTable, so judging a down would report every project that
@@ -29,7 +29,7 @@
 // It stops nothing. Being unpermitted is no reason to skip compiling the same operation, and the
 // rule below is that a check stops only the checks that depend on it. One problem is reported per
 // operation, carrying the object it destroys, because this is the command a project runs to find
-// out which kinds it has to permit before migr up refuses one of them.
+// out which kinds it has to permit before migrasyon up refuses one of them.
 //
 // # The reference check judges against two projections, or it does not run
 //
@@ -41,9 +41,9 @@
 //
 //   - the live schema alone refuses every operation of every migration that has already run, since
 //     the schema is what they built. That is the live-catalog problem reached from the other side;
-//   - the project's own beginning alone refuses every operation of a migration migr diff wrote. A
+//   - the project's own beginning alone refuses every operation of a migration migrasyon diff wrote. A
 //     drift correction re-adds an index the project already created and drops a column the project
-//     never had, so replaying it from nothing cannot work -- and reporting that would have migr
+//     never had, so replaying it from nothing cannot work -- and reporting that would have migrasyon
 //     diff's own output fail this command.
 //
 // Both were measured. So the check folds each half through every projection it has and reports what
@@ -63,12 +63,12 @@
 //
 // # It never opens a database
 //
-// A driver is built from migr.yaml and asked to compile; nothing here calls Open. That is what
+// A driver is built from migrasyon.yaml and asked to compile; nothing here calls Open. That is what
 // makes this the one command CI can run on a pull request with no secret at all, and it is a
 // property of the package rather than of the caller — Options carries a plan.Planner, which holds
 // a driver.Compiler, and there is nowhere to put a session.
 //
-// That survived M10-T2 and M10-T3, the two tasks that made migr validate able to connect. What
+// That survived M10-T2 and M10-T3, the two tasks that made migrasyon validate able to connect. What
 // Options gained is a *capability.Set and a *schema.Snapshot: two values the caller read, one
 // answering with no I/O by contract and the other a plain description, so the command
 // opens a database and this package still cannot. Nil means the run
@@ -104,11 +104,11 @@
 // half alone does not apply — an operation no server will perform is just as unrunnable backwards.
 //
 // Opening no database is not the same as needing no configuration. Which engine to compile for
-// comes from migr.yaml, and there is no answer without one.
+// comes from migrasyon.yaml, and there is no answer without one.
 //
 // # The sixth check is the only one with a severity, and the only one that can warn
 //
-// Options.Rules holds what internal/rule resolved against migr.yaml's validation.rules, and the
+// Options.Rules holds what internal/rule resolved against migrasyon.yaml's validation.rules, and the
 // lint pass runs once per migration *after* the five checks -- which is what lets a rule read where
 // the migration's down came from. A rule at error lands in Problems and one at warn lands in
 // Warnings, a third list beside Unchecked: judged-and-failed, judged-and-noted, not-judged. So

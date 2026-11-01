@@ -11,22 +11,22 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
 // The adapter composed with the thing that actually starts it.
 //
 // Nothing else proves Path, Args and Dir are right together: a unit test can assert each field and
 // still describe a process that will not run. So this writes a project the way an install leaves one
-// -- a package.json, a node_modules/@migr/sdk, and a .ts migration on disk -- and drives a real
+// -- a package.json, a node_modules/@migrasyon/sdk, and a .ts migration on disk -- and drives a real
 // runtime.Session through it.
 //
 // It needs no database. host.schema.apply is recorded by the host rather than executed, which is why
-// migr validate already runs over driver.Offline, and it is what lets the whole path be exercised
+// migrasyon validate already runs over driver.Offline, and it is what lets the whole path be exercised
 // here rather than waiting for M7-T8's PostgreSQL.
 //
 // Two skips, both announced, because these are the tests in the package that need the real toolchain
@@ -35,7 +35,7 @@ import (
 // conformance_test.go, where asking for the run is itself a statement that the toolchain is there.
 
 // fixture is the one migration this project holds, whose enum is what proves esbuild ran.
-const fixture = `import { defineMigration, t } from "@migr/sdk";
+const fixture = `import { defineMigration, t } from "@migrasyon/sdk";
 
 enum Width {
   Email = 255,
@@ -55,7 +55,7 @@ const filename = "20260727T153000_add_users.ts"
 const emitted = `[{"op":"create_table","table":"users","columns":` +
 	`[{"name":"email","type":"string(255)","nullable":false}]}]`
 
-// sdkDir is this repository's own @migr/sdk, which stands in for an installed one.
+// sdkDir is this repository's own @migrasyon/sdk, which stands in for an installed one.
 var sdkDir = filepath.Join("..", "..", "..", "sdk", "typescript")
 
 // started opens a session over one prepared project, and closes it when the test is done.
@@ -133,7 +133,7 @@ func prepared(t *testing.T) string {
 func linked(t *testing.T, at string) {
 	t.Helper()
 
-	scope := filepath.Join(at, "node_modules", "@migr")
+	scope := filepath.Join(at, "node_modules", "@migrasyon")
 
 	if err := os.MkdirAll(scope, 0o750); err != nil {
 		t.Fatalf("making node_modules: %v", err)
@@ -240,7 +240,7 @@ func TestTheSDKIsResolvedFromAWorkspaceRootAboveTheProject(t *testing.T) {
 	written(t, root)
 
 	t.Log("npm, pnpm and yarn all hoist a workspace's dependencies to its root, so the project")
-	t.Log("migr is pointed at often has no node_modules of its own. Asking node rather than")
+	t.Log("migrasyon is pointed at often has no node_modules of its own. Asking node rather than")
 	t.Log("walking the tree here is what makes that work rather than something to implement.")
 
 	found, err := started(t, root).Discovered(t.Context())

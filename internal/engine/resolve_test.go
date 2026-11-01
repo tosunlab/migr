@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // resumable stages a session a run left between states, with the statements it ran already behind it.
@@ -88,7 +88,7 @@ func TestAResumeRecordsTheMigrationAsAppliedRatherThanAsAnAssertion(t *testing.T
 	if rows[1].Outcome != history.Applied || rows[1].LastStatement != 0 {
 		t.Errorf("the resume was recorded %q at statement %d, want applied at none",
 			rows[1].Outcome, rows[1].LastStatement)
-		t.Log("migr ran those statements, so the row is not an assertion -- and the dirty row")
+		t.Log("migrasyon ran those statements, so the row is not an assertion -- and the dirty row")
 		t.Log("above it is what records where this one picked up.")
 	}
 
@@ -390,7 +390,7 @@ func TestADatabaseWithNoHistoryTableIsNotResolvedIntoHavingOne(t *testing.T) {
 	if slices.Contains(conn.calls, "ensure") {
 		t.Error("a resolution created the history table it was asked to repair a row in")
 		t.Log("A command whose whole job is repair may not be the one that invents the record")
-		t.Log("it repairs. migr up is what makes a history table.")
+		t.Log("it repairs. migrasyon up is what makes a history table.")
 	}
 }
 

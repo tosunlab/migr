@@ -5,16 +5,16 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
-// withSafety is a minimal migr.yaml whose safety section a test supplies.
+// withSafety is a minimal migrasyon.yaml whose safety section a test supplies.
 func withSafety(safety string) string {
 	return "version: 1\nmigrations:\n  dir: ./migrations\n  language: sql\ndatabases:\n  default:\n" +
 		"    driver: postgres\n    dsn: postgres://localhost/db\n" + safety
 }
 
-// loadString parses a whole migr.yaml held as a string, failing where it does not load.
+// loadString parses a whole migrasyon.yaml held as a string, failing where it does not load.
 func loadString(t *testing.T, src string) *Config {
 	t.Helper()
 
@@ -26,9 +26,9 @@ func loadString(t *testing.T, src string) *Config {
 	return cfg
 }
 
-// parseString parses a whole migr.yaml held as a string, with no environment at all.
+// parseString parses a whole migrasyon.yaml held as a string, with no environment at all.
 func parseString(src string) (*Config, error) {
-	return parse([]byte(src), "migr.yaml", func(string) (string, bool) { return "", false })
+	return parse([]byte(src), "migrasyon.yaml", func(string) (string, bool) { return "", false })
 }
 
 func TestEveryRewriteIsOnUnlessTheDocumentSaysOtherwise(t *testing.T) {
@@ -41,13 +41,13 @@ func TestEveryRewriteIsOnUnlessTheDocumentSaysOtherwise(t *testing.T) {
 
 	for _, name := range driver.RewriteNames() {
 		if cfg.Safety.Rewrites[name] != SwitchOn {
-			t.Errorf("safety.rewrites.%s resolves to %q, want on, so migr config lists it", name,
+			t.Errorf("safety.rewrites.%s resolves to %q, want on, so migrasyon config lists it", name,
 				cfg.Safety.Rewrites[name])
 		}
 	}
 
 	t.Log("CREATE INDEX CONCURRENTLY is the PostgreSQL default the task names, so a project that")
-	t.Log("never mentions rewrites gets all three -- and migr plan shows each one it applies.")
+	t.Log("never mentions rewrites gets all three -- and migrasyon plan shows each one it applies.")
 }
 
 func TestOneRewriteCanBeSwitchedOffAndTheRestStayOn(t *testing.T) {

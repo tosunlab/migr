@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // sameQueries compares two statement lists, since a driver.Query holds a slice and is not comparable.
@@ -42,7 +42,7 @@ func TestAPreviewCarriesOutTheStatementsAMigrationRunsItself(t *testing.T) {
 	}
 
 	t.Log("host.Call.Statements() is what a preview held rather than ran, and a plan that omits")
-	t.Log("it is a preview that lies by omission about a statement migr up commits on its own.")
+	t.Log("it is a preview that lies by omission about a statement migrasyon up commits on its own.")
 
 	if got := previewed.Steps[0].Direct; !sameQueries(got, []driver.Query{backfill}) {
 		t.Errorf("the preview carried out %v, want the statement the migration would send", got)

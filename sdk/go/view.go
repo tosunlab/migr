@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import "context"
 

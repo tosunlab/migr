@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
-	conformance "github.com/emrebdr/migr/test/conformance/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/driver"
 )
 
 // introspect reads the snapshot back, failing the test rather than returning a reason.
@@ -541,7 +541,7 @@ func TestEverythingTheOperationSetCannotExpressIsMarkedRatherThanOmitted(t *test
 	}
 }
 
-func TestTheSnapshotHoldsNeitherMigrsOwnHistoryNorSQLitesOwnTables(t *testing.T) {
+func TestTheSnapshotHoldsNeitherMigrasyonsOwnHistoryNorSQLitesOwnTables(t *testing.T) {
 	c := openFile(t)
 
 	if err := c.History().Ensure(t.Context()); err != nil {
@@ -647,7 +647,7 @@ func TestTheSnapshotConformanceSuitePasses(t *testing.T) {
 		t.Fatalf("New: %v", err)
 	}
 
-	conformance.Snapshot{Driver: d, Conn: openFile(t), Prefix: "migr_snap"}.Run(t)
+	conformance.Snapshot{Driver: d, Conn: openFile(t), Prefix: "migrasyon_snap"}.Run(t)
 
 	t.Log("Untagged, because a tag names a requirement and this engine's is a t.TempDir() and a few")
 	t.Log("milliseconds, so one third of the cross-engine claim is inside make check.")
@@ -659,7 +659,7 @@ func TestTheDiffConformanceSuitePasses(t *testing.T) {
 		t.Fatalf("New: %v", err)
 	}
 
-	conformance.Diff{Driver: d, Conn: openFile(t), Prefix: "migr_diff"}.Run(t)
+	conformance.Diff{Driver: d, Conn: openFile(t), Prefix: "migrasyon_diff"}.Run(t)
 
 	t.Log("Untagged for the same reason the snapshot suite is, which puts one third of M11-T3's")
 	t.Log("done-when -- a correct, ordered list an engine actually ran -- inside make check.")

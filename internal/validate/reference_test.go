@@ -4,11 +4,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // columnOn builds the add_column M10-T3's done-when names, which a table may or may not hold.
@@ -196,7 +196,7 @@ func TestAReferenceOnlyTheDatabaseSatisfiesIsNotAProblem(t *testing.T) {
 
 	if found := referenced(runLive(t, live, staging, only)); len(found) > 0 {
 		t.Errorf("a table the database holds was reported as missing:\n%v", found)
-		t.Log("A project may legitimately build on a table no migration of its own creates -- migr")
+		t.Log("A project may legitimately build on a table no migration of its own creates -- migrasyon")
 		t.Log("adopted into an existing database is the ordinary case -- so the live schema is one")
 		t.Log("of the two bases rather than a cross-check on the project's own.")
 	}
@@ -217,7 +217,7 @@ func TestTheCheckDoesNotRunWithoutTheDatabaseAndTheReportSaysSo(t *testing.T) {
 	}
 
 	t.Log("Neither basis alone is sound, so a run with one of them has none. The project's own")
-	t.Log("beginning refuses every operation of a migration migr diff wrote -- a drift correction")
+	t.Log("beginning refuses every operation of a migration migrasyon diff wrote -- a drift correction")
 	t.Log("re-adds what the project already created -- and the live schema alone refuses every")
 	t.Log("operation of every migration that has already run. Both measured.")
 }

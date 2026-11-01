@@ -8,9 +8,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // The two key refusals a pure Compile cannot prevent, because they are about a column's type.
@@ -51,7 +51,7 @@ type mysqlConn struct {
 	seedStored string
 	// folding is that setting itself, so any table name a catalog lookup needs can be folded too.
 	folding int
-	// lockWait bounds the wait for the migration lock, and is migr.yaml's lock.timeout.
+	// lockWait bounds the wait for the migration lock, and is migrasyon.yaml's lock.timeout.
 	lockWait time.Duration
 	// lock is the user-level lock name this installation takes, derived from the database and table.
 	lock lockName
@@ -63,7 +63,7 @@ type mysqlConn struct {
 	killer killer
 	// connector opens the connections a MariaDB cutover locks, renames and probes from, beside this session.
 	connector sqldriver.Connector
-	// replicas are the servers migr.yaml names as this one's replicas, whose lag paces a backfill.
+	// replicas are the servers migrasyon.yaml names as this one's replicas, whose lag paces a backfill.
 	replicas []*replica
 	// statementWait is safety.lock_timeout, which also bounds how long a cutover keeps writers waiting.
 	statementWait time.Duration

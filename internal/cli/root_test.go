@@ -50,8 +50,8 @@ func TestVersionPrintsHumanReadableLine(t *testing.T) {
 		t.Fatalf("version returned error: %v", err)
 	}
 
-	if !strings.HasPrefix(stdout, "migr ") {
-		t.Errorf("version output should start with %q, got %q", "migr ", stdout)
+	if !strings.HasPrefix(stdout, "migrasyon ") {
+		t.Errorf("version output should start with %q, got %q", "migrasyon ", stdout)
 	}
 }
 
@@ -171,11 +171,11 @@ func TestACommandLineNobodyCanTypeIsAValidationFailure(t *testing.T) {
 	} {
 		_, _, err := runCLI(t, args...)
 		if err == nil {
-			t.Fatalf("migr %v succeeded", args)
+			t.Fatalf("migrasyon %v succeeded", args)
 		}
 
 		if got := ExitCode(err); got != ExitValidation {
-			t.Errorf("migr %v exited %d, want %d", args, got, ExitValidation)
+			t.Errorf("migrasyon %v exited %d, want %d", args, got, ExitValidation)
 			t.Log("A flag that does not exist, a command that does not exist, and the wrong number")
 			t.Log("of arguments are the plainest cases of the rule in doc.go: the argument is wrong,")
 			t.Log("and the operator retypes it. Cobra reports all three, and an untagged error")
@@ -206,14 +206,14 @@ func visitFlags(fn func(cmd *cobra.Command, f *pflag.Flag)) {
 	}
 }
 
-func TestNoFlagOverwritesAFileMigrDidNotWrite(t *testing.T) {
+func TestNoFlagOverwritesAFileMigrasyonDidNotWrite(t *testing.T) {
 	visitFlags(func(cmd *cobra.Command, f *pflag.Flag) {
 		if !slices.Contains(clobbering, f.Name) {
 			return
 		}
 
-		t.Errorf("migr %s registers --%s", cmd.Name(), f.Name)
-		t.Log("Every file migr writes is created with O_EXCL, and init refuses a config that is")
+		t.Errorf("migrasyon %s registers --%s", cmd.Name(), f.Name)
+		t.Log("Every file migrasyon writes is created with O_EXCL, and init refuses a config that is")
 		t.Log("already there. A flag that turns that off replaces a file naming somebody's")
 		t.Log("databases, or a migration whose checksum is already recorded, and neither is")
 		t.Log("recoverable from the tool that did it.")
@@ -226,7 +226,7 @@ func TestNoFlagRepairsARecordedChecksum(t *testing.T) {
 			return
 		}
 
-		t.Errorf("migr %s registers --%s", cmd.Name(), f.Name)
+		t.Errorf("migrasyon %s registers --%s", cmd.Name(), f.Name)
 		t.Log("Invariant #6: applied migrations are immutable, a checksum mismatch is a")
 		t.Log("hard error, and any repair path must be an explicit, separately-named")
 		t.Log("command that says exactly what it is changing -- never a flag on up or")

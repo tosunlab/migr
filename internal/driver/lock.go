@@ -63,8 +63,8 @@ const snapshotCaveat = "That holder was read after the wait had already failed, 
 	"holds the lock now rather than provably who blocked this run."
 
 // LockWaitNext is what to do about a migration lock another run holds, whichever driver reported it.
-const LockWaitNext = "another migr run holds the migration lock: let it finish and run the command " +
-	"again, or wait longer with lock.timeout in migr.yaml or --lock-timeout"
+const LockWaitNext = "another migrasyon run holds the migration lock: let it finish and run the command " +
+	"again, or wait longer with lock.timeout in migrasyon.yaml or --lock-timeout"
 
 // LockBusyError reports a wait that gave up, naming whoever held the lock when the driver looked.
 type LockBusyError struct {

@@ -5,7 +5,7 @@
 //
 // The engine has all of this already, in internal/runtime/protocol. This SDK
 // cannot import it. The Go internal rule would permit it — sdk/go sits under
-// github.com/emrebdr/migr — but the import would make this module require the
+// github.com/tosunlab/migrasyon — but the import would make this module require the
 // CLI module, dragging pgx, cobra, and a YAML parser into every program that
 // writes a migration. Not doing that is the whole reason sdk/go is its own
 // module.

@@ -7,14 +7,14 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The reads one snapshot is built from, each over the database this session's DSN named.
 //
 // DATABASE() rather than a stored name, since that is the one namespace a session has. The bound
-// parameters are the tables migr records its own runs, seeds and checkpoints in, folded the way the
+// parameters are the tables migrasyon records its own runs, seeds and checkpoints in, folded the way the
 // catalog holds them -- a differ would otherwise propose dropping them.
 const (
 	tableQuery = "SELECT TABLE_NAME, TABLE_TYPE, coalesce(TABLE_COLLATION, '') " +
@@ -80,7 +80,7 @@ const (
 	notEnforced      = "NO"
 )
 
-// Introspect reads this session's own database back, less the table migr records its own runs in.
+// Introspect reads this session's own database back, less the table migrasyon records its own runs in.
 func (c *mysqlConn) Introspect(ctx context.Context) (*schema.Snapshot, error) {
 	read, err := c.readCatalog(ctx)
 	if err != nil {
@@ -374,7 +374,7 @@ func (c *mysqlConn) failedProbe(what string, err error) error {
 	return fmt.Errorf("%w: reading %s of database %q: %w", ErrIntrospect, what, c.database, err)
 }
 
-// owned is every table migr keeps for this session's migrations and seeds, as this server stores the names.
+// owned is every table migrasyon keeps for this session's migrations and seeds, as this server stores the names.
 func (c *mysqlConn) owned() []any {
 	var names []any
 	for _, name := range slices.Concat(history.Owned(c.table), history.Owned(c.seeds)) {

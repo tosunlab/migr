@@ -4,13 +4,13 @@ import (
 	"context"
 	"time"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
-// DefaultChunkRows is how many rows one chunk of a data operation covers when migr.yaml names none.
+// DefaultChunkRows is how many rows one chunk of a data operation covers when migrasyon.yaml names none.
 const DefaultChunkRows = 1000
 
-// DefaultChunkPause is how long a chunked data operation waits between chunks when migr.yaml names none.
+// DefaultChunkPause is how long a chunked data operation waits between chunks when migrasyon.yaml names none.
 const DefaultChunkPause = 100 * time.Millisecond
 
 // Slice is one keyed chunk of a data operation: the rows after a cursor, at most so many of them.

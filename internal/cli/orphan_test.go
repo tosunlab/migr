@@ -6,8 +6,8 @@ import (
 	"testing"
 )
 
-// strangerSlot is a slot named like migr's for a migration this project does not carry.
-const strangerSlot = "migr_20990101t000000_cccccccc"
+// strangerSlot is a slot named like migrasyon's for a migration this project does not carry.
+const strangerSlot = "migrasyon_20990101t000000_cccccccc"
 
 func TestStatusNamesEveryOrphanedSlotWithWhatItHoldsAndWhatDropsIt(t *testing.T) {
 	dir, f, drivers := shadowedProject(t)
@@ -20,7 +20,7 @@ func TestStatusNamesEveryOrphanedSlotWithWhatItHoldsAndWhatDropsIt(t *testing.T)
 	}
 
 	for _, want := range []string{"Replication slots no shadow-table migration owns", usersCapture,
-		"holding 3.0 MB of WAL (wal_status reserved)", "the next migr up drops it", strangerSlot,
+		"holding 3.0 MB of WAL (wal_status reserved)", "the next migrasyon up drops it", strangerSlot,
 		"SELECT pg_drop_replication_slot('" + strangerSlot + "')"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("status does not say %q:\n%s", want, stdout)

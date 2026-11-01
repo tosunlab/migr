@@ -5,7 +5,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestAnApplyAsksEveryMigrationAsARun(t *testing.T) {
@@ -37,7 +37,7 @@ func TestAPreviewAsksEveryMigrationAsAQuestion(t *testing.T) {
 		if slices.Contains(src.modes, ModeApply) {
 			t.Errorf("previewing %s asked in %v, and a preview runs nothing", dir, src.modes)
 			t.Log("A migration reached through a language runtime can write directly, through")
-			t.Log("host.db.exec. Asking it as a run is how migr plan performs the side effects it")
+			t.Log("host.db.exec. Asking it as a run is how migrasyon plan performs the side effects it")
 			t.Log("was invoked to avoid -- against a production database, silently.")
 		}
 	}

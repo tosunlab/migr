@@ -14,7 +14,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/emrebdr/migr/internal/lint"
+	"github.com/tosunlab/migrasyon/internal/lint"
 )
 
 const (

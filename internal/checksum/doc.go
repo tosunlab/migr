@@ -5,11 +5,11 @@
 //
 // Status: complete (M1-T6), with verification and drift reporting wired up in M4-T7.
 //
-// # The migr1 scheme
+// # The migrasyon1 scheme
 //
 // A checksum is a scheme tag and two SHA-256 digests:
 //
-//	migr1:<64 hex of the normalized source>:<64 hex of the emitted IR>
+//	migrasyon1:<64 hex of the normalized source>:<64 hex of the emitted IR>
 //
 // The source is the migration file's raw bytes with every \r\n and every lone \r rewritten
 // to \n, and nothing else changed. The IR is the bare operations array, ir.Marshal of
@@ -21,7 +21,7 @@
 // They are kept separable because they answer different questions, and only one of them can
 // answer it offline.
 //
-// The source digest decides drift. Recomputing it needs the file and nothing else, so migr
+// The source digest decides drift. Recomputing it needs the file and nothing else, so migrasyon
 // status can resolve every migration without a language toolchain or a database.
 //
 // The IR digest is provenance: what one run actually emitted. It cannot decide drift, because
@@ -73,13 +73,13 @@
 // create fields that can disagree with their own container — the same reasoning that kept them
 // out of the IR envelope.
 //
-// # Why migr1 and not sha256
+// # Why migrasyon1 and not sha256
 //
 // The prefix has exactly one job: answer whether this build can compare against a recorded
 // value at all. Naming the primitive answers a question nobody asked. Adding a third input,
 // changing the normalization rule, or reordering the halves would each keep SHA-256 while
 // changing every digest, so a sha256 tag would assert a compatibility that does not exist —
-// worse than no tag, because it invites the comparison. migr1 versions the whole construction.
+// worse than no tag, because it invites the comparison. migrasyon1 versions the whole construction.
 // Go's h1: is the precedent, and it also declines to say sha256 despite being sha256.
 //
 // A build that computes two schemes verifies old rows under the scheme they were written with

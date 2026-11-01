@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // Cleanup is one repair a run made of what a statement outside any transaction left behind.
@@ -42,7 +42,7 @@ func (e *repairedError) Error() string {
 		return e.err.Error()
 	}
 
-	return fmt.Sprintf("%v -- migr cleaned up what it left behind: %s", e.err, e.repaired.Action)
+	return fmt.Sprintf("%v -- migrasyon cleaned up what it left behind: %s", e.err, e.repaired.Action)
 }
 
 // Unwrap reports what the statement failed with.

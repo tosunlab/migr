@@ -9,16 +9,16 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/runtime"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
-// fakeName is the driver name a staged project's migr.yaml points at.
+// fakeName is the driver name a staged project's migrasyon.yaml points at.
 const fakeName = "fake"
 
 // errRefused is what a fake database reports for the statement a test told it to refuse.
@@ -134,7 +134,7 @@ func (f *fake) overlapping() bool {
 	return f.overlapped
 }
 
-// registry returns a registry holding this fake under the name a staged migr.yaml names.
+// registry returns a registry holding this fake under the name a staged migrasyon.yaml names.
 func (f *fake) registry(t *testing.T) *driver.Registry {
 	t.Helper()
 
@@ -152,7 +152,7 @@ func (f *fake) registry(t *testing.T) *driver.Registry {
 
 // fakeAdapter stands in for a language adapter, so cli tests need not name a concrete runtime.
 type fakeAdapter struct {
-	// name is the language migr.yaml would spell, and the key the registry holds it under.
+	// name is the language migrasyon.yaml would spell, and the key the registry holds it under.
 	name string
 }
 

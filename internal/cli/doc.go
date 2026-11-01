@@ -1,12 +1,12 @@
-// Package cli implements the individual migr commands: create, up, down,
+// Package cli implements the individual migrasyon commands: create, up, down,
 // status, plan, validate, diff, history, and seed.
 //
-// Command wiring and global flags live here; cmd/migr stays a thin entrypoint.
+// Command wiring and global flags live here; cmd/migrasyon stays a thin entrypoint.
 //
 // # Streams
 //
 // Results are written to cmd.OutOrStdout, logs to cmd.ErrOrStderr, and the two
-// never mix -- `migr status --json | jq` must not find a log line inside the
+// never mix -- `migrasyon status --json | jq` must not find a log line inside the
 // document it is parsing. Taking both writers from the cobra command rather than
 // from os also makes every command's output capturable in tests.
 //
@@ -28,11 +28,11 @@
 // Nothing else resolves itself, and that boundary is what keeps exit code 4 worth
 // reading. A history row this build cannot decode reports history.ErrCorrupt and
 // one written under a future scheme reports checksum.SchemeError; the first needs
-// manual repair, the second needs a newer migr, and neither is someone editing an
+// manual repair, the second needs a newer migrasyon, and neither is someone editing an
 // applied migration.
 //
 // A command classifies its own failures by one rule: the argument is wrong ->
-// ExitValidation, and the world is not ready -> ExitRuntime. `migr create
+// ExitValidation, and the world is not ready -> ExitRuntime. `migrasyon create
 // add-users` is the first; a config already there, a migrations directory that
 // is not, and a version another file already claims are the second. Both are
 // knowable with no database, so "needs no connection" is not what separates them
@@ -45,7 +45,7 @@
 // argsOf wraps every Args check and SetFlagErrorFunc catches the rest. --step
 // and --to values that name no migration are 2 rather than 1, tagged by the
 // commands that register those flags. And a migrations directory that is not
-// there, or a migration file that will not open, are 1 rather than 2 -- migr
+// there, or a migration file that will not open, are 1 rather than 2 -- migrasyon
 // create already exited 1 for the first of those, and neither is fixed by
 // retyping anything. engine.ErrNotApplied stayed at 1 on purpose: the same
 // command line succeeds against a database that does carry the version.
@@ -53,14 +53,14 @@
 // The root command carries both an Args check and a RunE that prints help, and
 // each is load-bearing. Cobra applies its own unknown-command check only to a
 // command whose Args is nil, and returns flag.ErrHelp before validating the
-// arguments of one that has nothing to run -- so without both, `migr nonsense`
+// arguments of one that has nothing to run -- so without both, `migrasyon nonsense`
 // is answered with the help text instead of refused.
 //
 // # A failure is a document too
 //
-// The failure is written by this package rather than by cmd/migr, because
-// cmd/migr never sees --json and this is the only place opts.jsonOut exists.
-// Without it, `migr up --json` against a drifted database put fourteen lines of
+// The failure is written by this package rather than by cmd/migrasyon, because
+// cmd/migrasyon never sees --json and this is the only place opts.jsonOut exists.
+// Without it, `migrasyon up --json` against a drifted database put fourteen lines of
 // English on the stream that promises JSON.
 //
 // It goes to stderr, as one object on one line, so stdout keeps holding exactly
@@ -83,12 +83,12 @@
 //
 // # The one command that repairs, and the two ways it reaches a database
 //
-// migr resolve settles the migration a stopped run left between states, and
+// migrasyon resolve settles the migration a stopped run left between states, and
 // it is the only command invariant #6 permits to exist: a repair path that is
 // explicit, separately named, and says exactly what it is changing. The mode
 // is required -- naming none of the three is exit 2, as any mistyped
 // invocation is -- and --dry-run prints without acting, which is the spelling
-// migr up already uses.
+// migrasyon up already uses.
 //
 // --resume follows open's path, because it asks the migration what it does and
 // therefore needs every runtime the directory holds. --applied and
@@ -100,18 +100,18 @@
 // reason that has nothing to do with the repair.
 //
 // What it prints is a third rendering of one history row. recordedRun is the
-// shape migr status and migr history already print, and the statements a
-// resume will run are laid out the way migr plan lays out a compiled
+// shape migrasyon status and migrasyon history already print, and the statements a
+// resume will run are laid out the way migrasyon plan lays out a compiled
 // operation -- so an operator reads shapes three commands have already taught
 // them.
 //
-// # Nothing migr writes replaces anything
+// # Nothing migrasyon writes replaces anything
 //
 // Every file this package creates goes through writeNew, which opens with
-// O_EXCL, and init refuses an existing migr.yaml before it writes or creates
+// O_EXCL, and init refuses an existing migrasyon.yaml before it writes or creates
 // anything at all. There is no --force: the config names somebody's databases
 // and a migration's checksum may already be recorded, so neither is recoverable
-// from the tool that replaced it. TestNoFlagOverwritesAFileMigrDidNotWrite
+// from the tool that replaced it. TestNoFlagOverwritesAFileMigrasyonDidNotWrite
 // holds that against every command's flags rather than against a convention.
 //
 // # Command construction
@@ -128,15 +128,15 @@
 // # Which database a command reaches
 //
 // The driver registry is a parameter of Execute rather than something this
-// package builds: cmd/migr is the only place that may name a concrete driver
+// package builds: cmd/migrasyon is the only place that may name a concrete driver
 // (invariant #1), and registration is explicit so a duplicate name is reportable.
 // Passing it in is also what lets the untagged suite drive every
 // command against a fake database with no Docker at all.
 //
 // config.Target resolves --database, else the "default" key, else the only
 // database defined, else it refuses naming them all. It never fans out. A
-// migr.yaml holding a development target and a production one is an ordinary
-// file, and `migr up` reaching production because nobody typed a flag is not a
+// migrasyon.yaml holding a development target and a production one is an ordinary
+// file, and `migrasyon up` reaching production because nobody typed a flag is not a
 // mistake a tool should be able to make.
 //
 // # A summary prints before its error
@@ -157,7 +157,7 @@
 // an operator wants during one.
 //
 // They exit 0 having found drift or a dirty migration. The five states are the
-// output, not the failure -- migr up is already the gate that exits 4 and 1, and
+// output, not the failure -- migrasyon up is already the gate that exits 4 and 1, and
 // one database holding both would have to pick between them.
 //
 // A database with no history table is printed as itself: one sentence, plus how
@@ -185,11 +185,11 @@
 // # One directory, several languages
 //
 // Each migration is routed by its own extension, through the extensions map in
-// create.go -- a language owns a set, the first of which is what migr create
+// create.go -- a language owns a set, the first of which is what migrasyon create
 // writes, and languageOf reads it backwards. A file whose extension no language
 // owns is refused by discovered, naming the file and every extension that is
 // routed, which keeps §9's strictness while making the answer a set rather than
-// one value. migrations.language is the default for migr create and nothing
+// one value. migrations.language is the default for migrasyon create and nothing
 // else reads it.
 //
 // So sources builds one source per language the directory needs and returns a
@@ -205,7 +205,7 @@
 // history.Record.Runtime was always per row; runtimeOf answers it from the same
 // map the mux routes on, so the row and the runtime that ran it cannot disagree.
 //
-// Before M7-T8's refusal, migr up applied every migration its one runtime
+// Before M7-T8's refusal, migrasyon up applied every migration its one runtime
 // recognized and failed on the first it did not, leaving the project half
 // applied and blaming the migration -- the refusal came back from the SDK, as
 // unknown_migration, which is true and useless. That guarantee is re-made rather
@@ -213,7 +213,7 @@
 // was routed there, in both directions, so a routed file nothing loaded and a
 // migration two runtimes claim are each a failure naming the file.
 //
-// migr create --lang still writes a file for another language on purpose, and
+// migrasyon create --lang still writes a file for another language on purpose, and
 // now the project simply runs it.
 //
 // The source is built after connect and never before it. A runtime
@@ -262,17 +262,17 @@
 // its own invalidation. The basis is in --json as order, and the one-line note
 // is printed only for a directory holding migrations whose declarations a report
 // cannot read -- so a .sql project's output is unchanged, because that format
-// has no syntax to declare with. migr plan answers "what order exactly": it
+// has no syntax to declare with. migrasyon plan answers "what order exactly": it
 // starts the same runtimes a run does.
 //
 // # What a plan prints, and what it does not yet
 //
-// migr plan is engine.Preview rendered in full: --dry-run prints the statement
+// migrasyon plan is engine.Preview rendered in full: --dry-run prints the statement
 // counts and this prints the statements, off one pipeline, so there is no second
 // preview to drift out of sync. --down plans the rollback, which is the
 // direction that most needs it -- an authored down is the only thing standing
 // between an operator and statements nobody wrote, and a .sql migration that
-// authors none is refused here rather than partway through migr down.
+// authors none is refused here rather than partway through migrasyon down.
 //
 // Each operation carries the verdict this engine gives it, printed whether it is
 // native or emulated: a label that appears only when something is unusual is one
@@ -285,20 +285,20 @@
 // exceeds safety.max_lock_impact and closes with where the verdicts came from.
 // --json always carries the same fields. --require-safe implies --safety and
 // exits 5 after printing, through engine.ErrLockImpact, on a plan holding an
-// operation over the ceiling. migr validate --require-safe implies --connect and
+// operation over the ceiling. migrasyon validate --require-safe implies --connect and
 // judges every migration's up half with the session's rewrites and no assessment;
 // a report whose only problems are those exits 5, and any other problem keeps it 2.
 //
-// migr up, its --dry-run and migr plan take --release, the deploy a run belongs to, falling back to
-// MIGR_RELEASE (M13-T7). A step of a change across deploys that waits for a later release
+// migrasyon up, its --dry-run and migrasyon plan take --release, the deploy a run belongs to, falling back to
+// MIGRASYON_RELEASE (M13-T7). A step of a change across deploys that waits for a later release
 // stops the run with a ⏸ held line naming it and why, and the run exits 0; --json carries held.
 // engine.ErrNoRelease is resolved to exit 2 beside ErrDestructive, the operator adding the flag, and
-// a phase declaration no deploy could carry out is exit 2 at discovery, in migr validate too.
+// a phase declaration no deploy could carry out is exit 2 at discovery, in migrasyon validate too.
 //
 // It marks an operation the session performs as a safer sequence with a ↳ rewritten
 // line naming its safety.rewrites key, how many statements it became and why, and
 // closes with a note naming the key that switches each one off (M13-T5).
-// --json carries it as rewrite. --dry-run and migr up count the operations rewritten,
+// --json carries it as rewrite. --dry-run and migrasyon up count the operations rewritten,
 // and -v logs each one as it runs, so a rewrite is never silent.
 //
 // It marks a statement that cannot run inside a transaction with a [no transaction]
@@ -310,7 +310,7 @@
 //
 // # What permits destruction, and what only reports it
 //
-// --allow-destructive is registered on migr up and migr validate, and on nothing
+// --allow-destructive is registered on migrasyon up and migrasyon validate, and on nothing
 // else. CLAUDE.md §5 listed it as a global flag; a rollback is not gated and a
 // report refuses nothing, so anywhere else it would be a flag accepted and
 // ignored, which is worse than one that is absent. allowanceFor reads it beside
@@ -318,27 +318,27 @@
 // standing decision and this run's.
 //
 // Three commands render the same policy three ways, and the split is CLAUDE.md
-// §5's rule rather than a preference. migr up refuses the migration it reached
+// §5's rule rather than a preference. migrasyon up refuses the migration it reached
 // and exits 2 -- the argument is wrong, and the operator retypes it or names the
-// kind. migr validate reports every one as a destructive problem with the object
+// kind. migrasyon validate reports every one as a destructive problem with the object
 // it destroys, which is the list a project needs before the gate stops it. And
-// migr plan marks each operation with what it destroys, says which of them
-// nothing has permitted, and exits 0 -- as migr status reports drift at 0 while
-// migr up exits 4. --dry-run counts them in a line of its own, because a dry run
+// migrasyon plan marks each operation with what it destroys, says which of them
+// nothing has permitted, and exits 0 -- as migrasyon status reports drift at 0 while
+// migrasyon up exits 4. --dry-run counts them in a line of its own, because a dry run
 // that said nothing would report two migrations it would apply and then watch
-// migr up refuse the first.
+// migrasyon up refuse the first.
 //
-// migr init writes allow_destructive: [raw] into the scaffold, which is the one
+// migrasyon init writes allow_destructive: [raw] into the scaffold, which is the one
 // defaulted key it writes. The scaffold commits to language: sql, and every
-// statement in such a migration is a raw operation migr cannot read -- so
+// statement in such a migration is a raw operation migrasyon cannot read -- so
 // without it a scaffolded project could not run its own first migration, which
 // is the failure the dsn fallback already exists to avoid. The comment beside it
 // is what makes it a decision rather than a restated default.
 //
-// # A lint rule reaches migr validate and no other command
+// # A lint rule reaches migrasyon validate and no other command
 //
-// rulesFor resolves migr.yaml's validation.rules against the rules this build
-// ships, and only runValidate reads it: there is no flag, and migr up, migr plan
+// rulesFor resolves migrasyon.yaml's validation.rules against the rules this build
+// ships, and only runValidate reads it: there is no flag, and migrasyon up, migrasyon plan
 // and --dry-run say nothing about rules at all. That is M10-T4's own note read
 // straight -- the run's gates are each about whether an
 // operation is correct or permitted, and a practice judgment is not one of those.
@@ -362,14 +362,14 @@
 //
 // # What validate checks, and what it opens
 //
-// migr validate reaches no database unless it is asked to: a driver is built
-// from migr.yaml and asked to compile, and nothing calls Open. It reads every
+// migrasyon validate reaches no database unless it is asked to: a driver is built
+// from migrasyon.yaml and asked to compile, and nothing calls Open. It reads every
 // migration, compiles both directions for the configured engine, and checks
 // that something can undo each one -- reporting every problem rather than the
 // first.
 //
 // Opening no database is not the same as needing no configuration. Which engine
-// to compile for comes from migr.yaml, so a config it cannot read is still a
+// to compile for comes from migrasyon.yaml, so a config it cannot read is still a
 // failure.
 //
 // --connect adds the checks that need the target server, and is registered here
@@ -412,18 +412,18 @@
 // a .sql file cannot act on. The command knows migrations.language and prints
 // how that format answers it; internal/validate cannot and should not.
 //
-// It exits 2 where migr status exits 0 over the same project. They answer
+// It exits 2 where migrasyon status exits 0 over the same project. They answer
 // different questions: one reports state, the other judges the repository.
 //
 // # What this server will not perform
 //
 // The capability refusal renders three ways, the same split the destructive one
-// does. migr up fails with exit 1 -- the world is not ready rather than the
+// does. migrasyon up fails with exit 1 -- the world is not ready rather than the
 // argument being wrong, since an operator upgrades the server, changes a
 // variable, or rewrites the migration -- and --json carries a capability
 // sub-document naming the driver, the server, and each operation with its
-// subject and the driver's own reason. migr validate --connect reports each as a
-// capability problem. And migr plan marks them ×, prints the reason beneath the
+// subject and the driver's own reason. migrasyon validate --connect reports each as a
+// capability problem. And migrasyon plan marks them ×, prints the reason beneath the
 // operation, and exits 0; --dry-run counts them.
 //
 // The plan's reason is new rather than reformatted: before M10-T2 that column
@@ -432,7 +432,7 @@
 // # Confirming a rename, which has no command yet
 //
 // ConfirmRenames is the interactive half of M11-T4 and its one caller is
-// M11-T5's migr diff: detection is pure and so is emission, so the person goes
+// M11-T5's migrasyon diff: detection is pure and so is emission, so the person goes
 // between them rather than inside either. The policy is this
 // package's rather than that command's, and it is one asymmetry throughout.
 //
@@ -459,12 +459,12 @@
 //
 // # Seeds
 //
-// migr seed applies the seeds in seeds.dir and in the subdirectory named for this
+// migrasyon seed applies the seeds in seeds.dir and in the subdirectory named for this
 // database's environment, through engine.Apply over a session whose History is
 // the seed table -- the seeding wrapper -- so the lock, the transactions, dirty,
 // drift and resume are a migration's own and nothing in internal/engine branches
 // on seeds. The lock is the migration lock: a driver keys it by the history table
-// alone, so a seed and a migr up exclude each other.
+// alone, so a seed and a migrasyon up exclude each other.
 //
 // It refuses unless every migration has run, which is the whole of seeds never
 // mixing with migration ordering: a seed always meets the schema the migrations
@@ -481,10 +481,10 @@
 //
 // # Cutover
 //
-// migr cutover lists every shadow-table migration that has not cut over, with the lag the run
+// migrasyon cutover lists every shadow-table migration that has not cut over, with the lag the run
 // holding it last recorded and how old that reading is -- older than six heartbeats is shown as no
 // run holding it, never as current. --confirm VERSION writes the one column the holder reads, and
-// takes no migration lock, since that run holds it for the whole hold. A migr up that stops
-// holding one exits 6, and --unattended or MIGR_UNATTENDED cuts over at the first caught-up read
+// takes no migration lock, since that run holds it for the whole hold. A migrasyon up that stops
+// holding one exits 6, and --unattended or MIGRASYON_UNATTENDED cuts over at the first caught-up read
 // with no confirmation (M13-T14).
 package cli

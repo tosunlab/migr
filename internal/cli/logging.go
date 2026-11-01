@@ -4,7 +4,7 @@ import (
 	"io"
 	"log/slog"
 
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // newLogger builds the logger for a run from the global flags.
@@ -18,7 +18,7 @@ func newLogger(opts *options, w io.Writer) *slog.Logger {
 		h = slog.NewTextHandler(w, handlerOpts)
 	}
 
-	return slog.New(h).With("migr", version.Version)
+	return slog.New(h).With("migrasyon", version.Version)
 }
 
 // levelFor maps -v repetitions onto a log level.

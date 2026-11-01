@@ -36,16 +36,16 @@ func TestACheckoutRewritingLineEndingsDoesNotMoveTheHash(t *testing.T) {
 }
 
 func TestAnyOtherWhitespaceChangeIsARewrite(t *testing.T) {
-	const base = "func Up(s *migr.Schema) error {\n\treturn s.CreateTable(\"users\")\n}\n"
+	const base = "func Up(s *migrasyon.Schema) error {\n\treturn s.CreateTable(\"users\")\n}\n"
 
 	tests := []struct {
 		name string
 		in   string
 	}{
-		{name: "trailing space added", in: "func Up(s *migr.Schema) error {\n\treturn s.CreateTable(\"users\") \n}\n"},
-		{name: "tab reindented to spaces", in: "func Up(s *migr.Schema) error {\n    return s.CreateTable(\"users\")\n}\n"},
-		{name: "blank line added", in: "func Up(s *migr.Schema) error {\n\n\treturn s.CreateTable(\"users\")\n}\n"},
-		{name: "final newline removed", in: "func Up(s *migr.Schema) error {\n\treturn s.CreateTable(\"users\")\n}"},
+		{name: "trailing space added", in: "func Up(s *migrasyon.Schema) error {\n\treturn s.CreateTable(\"users\") \n}\n"},
+		{name: "tab reindented to spaces", in: "func Up(s *migrasyon.Schema) error {\n    return s.CreateTable(\"users\")\n}\n"},
+		{name: "blank line added", in: "func Up(s *migrasyon.Schema) error {\n\n\treturn s.CreateTable(\"users\")\n}\n"},
+		{name: "final newline removed", in: "func Up(s *migrasyon.Schema) error {\n\treturn s.CreateTable(\"users\")\n}"},
 		{name: "second final newline added", in: base + "\n"},
 		{name: "leading space added", in: " " + base},
 	}

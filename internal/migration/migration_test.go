@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // valid is every filename this package accepts, with what each one parses to.
@@ -82,7 +82,7 @@ func TestFilenameIsTheInverseOfParse(t *testing.T) {
 		})
 	}
 
-	t.Log("One format, one implementation. M5-T1's `migr create` builds a Migration and renders")
+	t.Log("One format, one implementation. M5-T1's `migrasyon create` builds a Migration and renders")
 	t.Log("it rather than concatenating a version, an underscore, and a name of its own -- two")
 	t.Log("spellings of one file format is how a tool stops reading what it just wrote.")
 }
@@ -309,7 +309,7 @@ func TestNewProducesWhatParseAccepts(t *testing.T) {
 		})
 	}
 
-	t.Log("New validates by parsing the filename it just rendered, so `migr create` cannot")
+	t.Log("New validates by parsing the filename it just rendered, so `migrasyon create` cannot")
 	t.Log("write a file Discover would refuse to read -- the two agree by construction rather")
 	t.Log("than by both being maintained.")
 }
@@ -332,7 +332,7 @@ func TestNewRefusesANameTheGrammarRefuses(t *testing.T) {
 		})
 	}
 
-	t.Log("`migr create add-users` gets this package's own refusal, naming the grammar and the")
+	t.Log("`migrasyon create add-users` gets this package's own refusal, naming the grammar and the")
 	t.Log("example. Normalizing the name instead would be a second opinion about what a name")
 	t.Log("may be, and the file on disk would not be the one the operator asked for.")
 }

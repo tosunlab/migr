@@ -8,7 +8,7 @@ import (
 
 	gomysql "github.com/go-mysql-org/go-mysql/mysql"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // A recorded position is spelled by which kind of log the server keeps, and is always a transaction boundary.
@@ -103,7 +103,7 @@ func parseGTIDPosition(raw string, mariadb bool) (position, error) {
 
 	if _, otherErr := other(text); otherErr == nil {
 		return position{}, fmt.Errorf("%w: %q is a GTID set the other flavor of server records, and this "+
-			"server is %s -- abandon the migration with migr resolve --rolled-back and run it again",
+			"server is %s -- abandon the migration with migrasyon resolve --rolled-back and run it again",
 			errPosition, raw, flavor)
 	}
 

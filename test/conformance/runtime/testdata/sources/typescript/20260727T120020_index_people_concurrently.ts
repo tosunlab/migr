@@ -1,4 +1,4 @@
-import { defineMigration } from "@migr/sdk";
+import { defineMigration } from "@migrasyon/sdk";
 
 /** IndexPeopleConcurrently is the fixture for raw's no_transaction, which irVersion 3 carries. */
 export default defineMigration({

@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // waitingProject stages a shadowed project whose hold was detached, so its migration waits for a cutover.
@@ -45,7 +45,7 @@ func TestCutoverListsAWaitingMigrationWithTheLagItsHolderLastMeasured(t *testing
 	}
 
 	for _, want := range []string{versionAt(0) + "  ", "waiting", "held in sync through the shadow table " + usersShadow,
-		"trailed the log by 0s when it last read it", "migr cutover --confirm " + versionAt(0),
+		"trailed the log by 0s when it last read it", "migrasyon cutover --confirm " + versionAt(0),
 		"1 waiting for a cutover confirmation, 0 still copying"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("cutover does not say %q:\n%s", want, stdout)
@@ -62,7 +62,7 @@ func TestCutoverSaysNoRunIsHoldingACopyWhoseLastReadingIsOld(t *testing.T) {
 	}
 
 	for _, want := range []string{"no run is holding the shadow table " + usersShadow, "2h59m",
-		"changes since are not applied, and migr up resumes the hold"} {
+		"changes since are not applied, and migrasyon up resumes the hold"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("a stale reading is not reported as one: missing %q:\n%s", want, stdout)
 			t.Log("A lag figure from a holder that died hours ago is the claim the operator acts on,")
@@ -97,7 +97,7 @@ func TestConfirmingACutoverRecordsItAndTheNextUpSwapsTheCopyIn(t *testing.T) {
 	}
 
 	for _, want := range []string{"confirmed the cutover of " + versionAt(0), "At its last read the copy trailed the log by 0s",
-		"No run is holding it in sync, so nothing swaps it yet: migr up resumes the hold"} {
+		"No run is holding it in sync, so nothing swaps it yet: migrasyon up resumes the hold"} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("the confirmation does not say %q:\n%s", want, stdout)
 		}
@@ -278,7 +278,7 @@ func TestAnUnreadableUnattendedVariableIsATypo(t *testing.T) {
 
 	_, _, err := shadowed(t, dir, drivers, "up")
 	if ExitCode(err) != ExitValidation || !strings.Contains(err.Error(), unattendedVariable) {
-		t.Errorf("MIGR_UNATTENDED=sometimes exited %d: %v", ExitCode(err), err)
+		t.Errorf("MIGRASYON_UNATTENDED=sometimes exited %d: %v", ExitCode(err), err)
 	}
 
 	if len(f.states) != 0 {
@@ -292,8 +292,8 @@ func TestCommandsThatNeedASettledDatabaseNameTheCutoverOverAWaitingMigration(t *
 			dir, _, drivers := waitingProject(t)
 
 			_, _, err := at(t, dir, drivers, noon.Add(time.Hour), command)
-			if ExitCode(err) != ExitRuntime || !strings.Contains(said(err), "migr cutover --confirm") {
-				t.Errorf("migr %s over a waiting migration exited %d: %v", command, ExitCode(err), err)
+			if ExitCode(err) != ExitRuntime || !strings.Contains(said(err), "migrasyon cutover --confirm") {
+				t.Errorf("migrasyon %s over a waiting migration exited %d: %v", command, ExitCode(err), err)
 			}
 		})
 	}

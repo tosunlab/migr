@@ -15,7 +15,7 @@ import { systemOf } from "./system.ts";
 
 /** written lays out one temporary tree of files and returns where it starts. */
 function written(t: TestContext, files: Record<string, string>): string {
-  const at = mkdtempSync(join(tmpdir(), "migr-system-"));
+  const at = mkdtempSync(join(tmpdir(), "migrasyon-system-"));
 
   t.after(() => rmSync(at, { recursive: true, force: true }));
 
@@ -68,7 +68,7 @@ test("a package.json declaring no type at all is CommonJS, which is Node's own d
 });
 
 test("a file with no package.json above it at all is CommonJS, which is Node's own default", () => {
-  assert.equal(systemOf(join("/", "migr-no-such-project-here", "a.ts")), "commonjs");
+  assert.equal(systemOf(join("/", "migrasyon-no-such-project-here", "a.ts")), "commonjs");
 });
 
 test("a package.json that is not JSON is refused naming it, rather than assumed to be either", (t) => {

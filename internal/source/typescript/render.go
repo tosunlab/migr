@@ -6,10 +6,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/source"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/source"
 )
 
 // The same chains the Go writer renders, spelled the way this package's SDK spells them: the methods
@@ -36,10 +36,10 @@ func Render(m migration.Migration, ops ir.Operations) (string, error) {
 const generated = `import { defineMigration, t } from "%s";
 
 /**
- * What migr diff found between the database and the migrations (%s). Read what it does before
+ * What migrasyon diff found between the database and the migrations (%s). Read what it does before
  * running it.
  *
- * There is deliberately no down: every operation here records what it replaced, so migr derives
+ * There is deliberately no down: every operation here records what it replaced, so migrasyon derives
  * the inverse from what up emits. Writing one by hand is still allowed and is always preferred.
  */
 export default defineMigration({

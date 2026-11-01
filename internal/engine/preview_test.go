@@ -5,9 +5,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // versionsPreviewed returns the versions a preview said would run, in the order it would run them.
@@ -44,7 +44,7 @@ func TestAPreviewNeverCreatesTheHistoryTable(t *testing.T) {
 		t.Errorf("the preview would run %q, want every migration on a virgin database", got)
 		t.Log("An apply reads an absent history table as a bug, because it just ensured one. A")
 		t.Log("preview never ensured one, so absent is an answer rather than a failure: nothing")
-		t.Log("has run here yet, and migr up would create the table first.")
+		t.Log("has run here yet, and migrasyon up would create the table first.")
 	}
 }
 
@@ -114,7 +114,7 @@ func TestAPreviewCompilesEveryMigrationItWouldRun(t *testing.T) {
 		t.Errorf("the preview would record under batch %d, want the first", previewed.Batch)
 	}
 
-	t.Log("migr plan prints these statements and --dry-run prints their count. Both read one")
+	t.Log("migrasyon plan prints these statements and --dry-run prints their count. Both read one")
 	t.Log("pipeline, so there is no preview implementation to drift away from what apply does.")
 }
 

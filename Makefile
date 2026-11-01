@@ -1,4 +1,4 @@
-# migr build interface. See CLAUDE.md §5 for the documented command surface.
+# migrasyon build interface. See CLAUDE.md §5 for the documented command surface.
 #
 # Every target crosses BOTH Go modules. A root `go build ./...` silently skips the
 # nested sdk/go module, so a single-module target would report green while the SDK
@@ -10,7 +10,7 @@
 # codes is worse than a single-module target, because it looks thorough.
 
 MODULES          := . sdk/go
-BIN              := bin/migr
+BIN              := bin/migrasyon
 TSDIR            := sdk/typescript
 # The npm wrapper (M14-T3): plain Node with no dependencies, so it needs no install to test.
 NPMCLI           := npm/cli
@@ -18,7 +18,7 @@ COMPOSE          := test/docker-compose.yml
 # The fallback is load-bearing: git can fail inside a container whose ownership
 # does not match the build user, and a build should not die over a version string.
 VERSION          ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
-LDFLAGS          := -X github.com/emrebdr/migr/internal/version.Version=$(VERSION)
+LDFLAGS          := -X github.com/tosunlab/migrasyon/internal/version.Version=$(VERSION)
 GOLANGCI_VERSION := v2.11.4
 # Only a maintainer and the release job run goreleaser, so `make tools` leaves it out; the release
 # workflow pins the same version.
@@ -83,7 +83,7 @@ define ts_run
 endef
 
 help:
-	@echo "migr -- make targets"
+	@echo "migrasyon -- make targets"
 	@echo ""
 	@echo "  build             compile both modules and emit $(BIN)"
 	@echo "  test              unit + golden tests, no Docker required"
@@ -104,7 +104,7 @@ help:
 	@echo "  release-check     validate .goreleaser.yaml (needs goreleaser $(GORELEASER_VERSION))"
 	@echo "  release-snapshot  build every release archive into dist/, unsigned, publishing nothing"
 	@echo "  npm-snapshot      release-snapshot, then the seven npm packages packed into dist/npm"
-	@echo "  docker-image      build both release images for this machine, as migr:test and migr:test-node"
+	@echo "  docker-image      build both release images for this machine, as migrasyon:test and migrasyon:test-node"
 	@echo "  test-docker       run both images against compose's postgres17 as a pipeline would (Docker)"
 	@echo "  test-examples     run every project in examples/ as its README does, each on its own database (Docker)"
 
@@ -115,8 +115,8 @@ help:
 # (git config --global --add safe.directory <path>) or pass -buildvcs=false.
 build:
 	$(call go_each,go build ./...)
-	@echo "==> go build -o $(BIN) ./cmd/migr  ($(VERSION))"
-	@go build -ldflags "$(LDFLAGS)" -o $(BIN) ./cmd/migr
+	@echo "==> go build -o $(BIN) ./cmd/migrasyon  ($(VERSION))"
+	@go build -ldflags "$(LDFLAGS)" -o $(BIN) ./cmd/migrasyon
 	$(call ts_run,npm run build)
 
 # The documentation site (M14-T5): VitePress over docs/ in place, its own npm project so building it
@@ -147,14 +147,14 @@ docker-image:
 	@mkdir -p $(DOCKER_CTX)/linux/$(DOCKER_ARCH)
 	@echo "==> go build linux/$(DOCKER_ARCH)  ($(VERSION))"
 	@CGO_ENABLED=0 GOOS=linux GOARCH=$(DOCKER_ARCH) go build -trimpath -ldflags "$(LDFLAGS)" \
-	  -o $(DOCKER_CTX)/linux/$(DOCKER_ARCH)/migr ./cmd/migr
-	@docker buildx build --quiet --load --platform linux/$(DOCKER_ARCH) -f docker/Dockerfile -t migr:test $(DOCKER_CTX)
-	@docker buildx build --quiet --load --platform linux/$(DOCKER_ARCH) -f docker/node.Dockerfile -t migr:test-node $(DOCKER_CTX)
+	  -o $(DOCKER_CTX)/linux/$(DOCKER_ARCH)/migrasyon ./cmd/migrasyon
+	@docker buildx build --quiet --load --platform linux/$(DOCKER_ARCH) -f docker/Dockerfile -t migrasyon:test $(DOCKER_CTX)
+	@docker buildx build --quiet --load --platform linux/$(DOCKER_ARCH) -f docker/node.Dockerfile -t migrasyon:test-node $(DOCKER_CTX)
 
 test-docker: docker-image
 	$(call ts_run,npm run build)
 	@docker compose -f $(COMPOSE) up -d --wait postgres17
-	@MIGR_IMAGE=migr:test MIGR_NODE_IMAGE=migr:test-node MIGR_VERSION=$(VERSION) COMPOSE=$(COMPOSE) \
+	@MIGRASYON_IMAGE=migrasyon:test MIGRASYON_NODE_IMAGE=migrasyon:test-node MIGRASYON_VERSION=$(VERSION) COMPOSE=$(COMPOSE) \
 	  SDK_DIR=$(TSDIR) test/docker/run.sh
 
 test-examples: build
@@ -165,7 +165,7 @@ npm-snapshot: release-snapshot
 	@cd dist/npm && for p in cli-*/ cli/; do npm pack --silent "./$$p" >/dev/null || exit 1; done && ls *.tgz
 
 # The TypeScript side runs first because `npm test` builds sdk/typescript/dist, and a Go test --
-# internal/source/typescript's typecheck of what migr diff renders -- resolves @migr/sdk through that
+# internal/source/typescript's typecheck of what migrasyon diff renders -- resolves @migrasyon/sdk through that
 # package's exports map, which names dist. A fresh checkout has no dist, so run the other way round the
 # Go test fails on CI and passes on any machine that built once.
 test:
@@ -225,7 +225,7 @@ endif
 
 # The zero-downtime proof (M13-T12): every operation against every compose server and
 # SQLite, up and down, while eight readers and eight writers work the table, each held to its own
-# lock-impact verdict against MIGR_ZERODOWNTIME_BUDGET (1.5s unset). It brings the databases up for
+# lock-impact verdict against MIGRASYON_ZERODOWNTIME_BUDGET (1.5s unset). It brings the databases up for
 # test-integration's reason, and runs only the packages that carry the tag -- the three drivers, each
 # running test/conformance/zerodowntime from its own package, as every conformance suite is run.
 #

@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
 // lineFor returns the status line for one migration, so a test asserts a row rather than a substring.
@@ -36,7 +36,7 @@ func decodeStatus(t *testing.T, stdout string) statusReport {
 
 	var report statusReport
 	if err := json.Unmarshal([]byte(stdout), &report); err != nil {
-		t.Fatalf("migr status --json emitted %v:\n%s", err, stdout)
+		t.Fatalf("migrasyon status --json emitted %v:\n%s", err, stdout)
 	}
 
 	return report
@@ -102,7 +102,7 @@ func TestStatusShowsEveryStateItCanResolve(t *testing.T) {
 	}
 }
 
-func TestStatusPrintsTheOrderMigrUpWouldRunThem(t *testing.T) {
+func TestStatusPrintsTheOrderMigrasyonUpWouldRunThem(t *testing.T) {
 	dir, _, drivers := everyState(t)
 
 	stdout, _, err := runWith(t, dir, noon, drivers, "--json", "status")
@@ -121,8 +121,8 @@ func TestStatusPrintsTheOrderMigrUpWouldRunThem(t *testing.T) {
 
 	if !slices.Equal(got, want) {
 		t.Errorf("status reported %q, want the file order with the recorded-only version appended", got)
-		t.Log("The order is migration.Order's, which is the order migr up would run them; re-sorting")
-		t.Log("here would show an order migr will not follow and discard the dependency overlay.")
+		t.Log("The order is migration.Order's, which is the order migrasyon up would run them; re-sorting")
+		t.Log("here would show an order migrasyon will not follow and discard the dependency overlay.")
 		t.Log("A version no file describes has no position to merge into, so it goes last.")
 	}
 }
@@ -132,7 +132,7 @@ func TestStatusReportsDriftAndDirtWithoutFailing(t *testing.T) {
 
 	stdout, _, err := runWith(t, dir, noon, drivers, "status")
 	if err != nil {
-		t.Log("The five states are this command's output, not its failure. migr up already exits 4")
+		t.Log("The five states are this command's output, not its failure. migrasyon up already exits 4")
 		t.Log("on drift and 1 on dirty; a report that printed correctly did not fail.")
 		t.Fatalf("status exited %v having reported successfully", err)
 	}
@@ -170,7 +170,7 @@ func TestStatusNamesAMissingVersionRatherThanAFilenameItHasNone(t *testing.T) {
 	}
 }
 
-func TestStatusPrintsTheBatchMigrDownWouldActOn(t *testing.T) {
+func TestStatusPrintsTheBatchMigrasyonDownWouldActOn(t *testing.T) {
 	dir, f, drivers := project(t, twoTables()...)
 
 	if _, _, err := runWith(t, dir, noon, drivers, "up", "--step", "1"); err != nil {
@@ -189,7 +189,7 @@ func TestStatusPrintsTheBatchMigrDownWouldActOn(t *testing.T) {
 	if line := lineFor(t, stdout, fileAt(1, "add_teams")); !strings.Contains(line, "batch 2") {
 		t.Errorf("the second migration reads %q, want the batch its own run recorded", line)
 		t.Log("The batch printed is Status.Recorded.Batch, the field LastBatch() reads, so the")
-		t.Log("number an operator sees is the number migr down will act on (M4-T8).")
+		t.Log("number an operator sees is the number migrasyon down will act on (M4-T8).")
 	}
 
 	if len(f.runs) != 2 {
@@ -202,7 +202,7 @@ func TestStatusSaysWhichDirectionLeftAMigrationWhereItIs(t *testing.T) {
 
 	for _, args := range [][]string{{"up"}, {"down"}} {
 		if _, _, err := runWith(t, dir, noon, drivers, args...); err != nil {
-			t.Fatalf("migr %s: %v", args[0], err)
+			t.Fatalf("migrasyon %s: %v", args[0], err)
 		}
 	}
 

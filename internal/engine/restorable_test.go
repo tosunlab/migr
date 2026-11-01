@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // liveType builds the column type a catalog answered exactly, which is what a real driver reports.
@@ -558,7 +558,7 @@ func TestAnAuthoredDownKeepsTheImpliedHalfAndIsAskedForLazily(t *testing.T) {
 		refused bool
 	}{
 		{"a migration that authors its own down", true, false},
-		{"a migration whose inverse migr derives", false, true},
+		{"a migration whose inverse migrasyon derives", false, true},
 	}
 
 	for _, one := range cases {
@@ -588,7 +588,7 @@ func TestAnAuthoredDownKeepsTheImpliedHalfAndIsAskedForLazily(t *testing.T) {
 		})
 	}
 
-	t.Log("migr guarantees what it derives, and an authored down is the author's own instruction --")
+	t.Log("migrasyon guarantees what it derives, and an authored down is the author's own instruction --")
 	t.Log("which is §7's reason for judging only the up half of what a run destroys.")
 }
 

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // DefaultDatabase is the database a command acts on when --database names none and it exists.
@@ -38,7 +38,7 @@ func (c *Config) Target(name string) (string, Database, error) {
 func (c *Config) named(name string) (string, Database, error) {
 	db, ok := c.Databases[name]
 	if !ok {
-		return "", Database{}, fmt.Errorf("--database %s: %w (this migr.yaml defines %s)",
+		return "", Database{}, fmt.Errorf("--database %s: %w (this migrasyon.yaml defines %s)",
 			name, ErrNoDatabase, join(sortedKeys(c.Databases)))
 	}
 
@@ -54,17 +54,17 @@ func (c *Config) sole() (string, Database, error) {
 	return "", Database{}, c.ambiguous()
 }
 
-// ambiguous refuses to guess, since a migr.yaml holding a development and a production target is one file.
+// ambiguous refuses to guess, since a migrasyon.yaml holding a development and a production target is one file.
 func (c *Config) ambiguous() (err error) {
 	if len(c.Databases) == 0 {
-		return fmt.Errorf("%w: this migr.yaml defines none", ErrNoDatabase)
+		return fmt.Errorf("%w: this migrasyon.yaml defines none", ErrNoDatabase)
 	}
 
 	return fmt.Errorf("%w and names no %q, so pass --database to say which one: %s",
 		ErrAmbiguousDatabase, DefaultDatabase, join(sortedKeys(c.Databases)))
 }
 
-// DriverOptions returns what a driver for one database is built from, resolved out of migr.yaml.
+// DriverOptions returns what a driver for one database is built from, resolved out of migrasyon.yaml.
 func (c *Config) DriverOptions(db Database) driver.Options {
 	return driver.Options{
 		Schema:            db.Schema,

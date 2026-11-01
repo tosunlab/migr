@@ -12,11 +12,11 @@ import (
 	"testing/fstest"
 	"time"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/source/golang"
-	"github.com/emrebdr/migr/internal/source/sql"
-	"github.com/emrebdr/migr/internal/source/typescript"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/source/golang"
+	"github.com/tosunlab/migrasyon/internal/source/sql"
+	"github.com/tosunlab/migrasyon/internal/source/typescript"
 )
 
 // migrations opens the migrations directory of an initialized project, as discovery is handed it.
@@ -29,7 +29,7 @@ func migrations(t *testing.T, dir string) fs.FS {
 // writeConfigNaming stages a config for a language other than the one init writes.
 func writeConfigNaming(t *testing.T, dir string, lang config.Language) {
 	t.Helper()
-	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migr")
+	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migrasyon")
 
 	body := strings.Replace(scaffoldConfig, "language: "+string(config.LanguageSQL),
 		"language: "+string(lang), 1)
@@ -68,7 +68,7 @@ func TestCreateWritesAMigrationDiscoveryReadsBack(t *testing.T) {
 		t.Fatalf("discovery found %+v, want %+v", found, want)
 	}
 
-	t.Log("This is the whole task in one assertion: what create writes is what the rest of migr")
+	t.Log("This is the whole task in one assertion: what create writes is what the rest of migrasyon")
 	t.Log("reads. Both go through migration.New, so the two cannot drift into disagreeing.")
 }
 
@@ -128,27 +128,27 @@ func TestCreateRefusesANameTheGrammarRefuses(t *testing.T) {
 	t.Log("and the file on disk would not be the one that was asked for.")
 }
 
-func TestEveryLanguageMigrKnowsHasATemplate(t *testing.T) {
-	t.Log("M7-T2 wrote the last one, so there is no longer a language migr create refuses. What")
-	t.Log("replaces that refusal is this: a fourth language added to migr.yaml and not to the")
-	t.Log("template map fails here rather than at the moment somebody runs migr create.")
+func TestEveryLanguageMigrasyonKnowsHasATemplate(t *testing.T) {
+	t.Log("M7-T2 wrote the last one, so there is no longer a language migrasyon create refuses. What")
+	t.Log("replaces that refusal is this: a fourth language added to migrasyon.yaml and not to the")
+	t.Log("template map fails here rather than at the moment somebody runs migrasyon create.")
 
 	for _, lang := range config.Languages() {
 		if _, ok := templates[lang]; !ok {
-			t.Errorf("migr.yaml accepts migrations.language: %s, and migr create cannot write one", lang)
+			t.Errorf("migrasyon.yaml accepts migrations.language: %s, and migrasyon create cannot write one", lang)
 		}
 	}
 
 	if len(templates) != len(config.Languages()) {
-		t.Errorf("templates holds %d languages and migr knows %d: one of them is not a language",
+		t.Errorf("templates holds %d languages and migrasyon knows %d: one of them is not a language",
 			len(templates), len(config.Languages()))
 	}
 }
 
 func TestEveryLanguageOwnsItsExtensionsAndTheFirstIsWhatCreateWrites(t *testing.T) {
-	t.Log("The relation is one language to many extensions -- migr-runtime-node loads .ts, .js and")
+	t.Log("The relation is one language to many extensions -- migrasyon-runtime-node loads .ts, .js and")
 	t.Log(".mjs -- and M7-T8 wrote it as one-to-one, which refused a .js migration in a TypeScript")
-	t.Log("project. The first entry is the one migr create writes, so the two maps cannot disagree.")
+	t.Log("project. The first entry is the one migrasyon create writes, so the two maps cannot disagree.")
 
 	claimed := make(map[string]config.Language, len(config.Languages()))
 
@@ -161,7 +161,7 @@ func TestEveryLanguageOwnsItsExtensionsAndTheFirstIsWhatCreateWrites(t *testing.
 		}
 
 		if exts[0] != templates[lang].ext {
-			t.Errorf("%s owns %v first and migr create writes %s", lang, exts[0], templates[lang].ext)
+			t.Errorf("%s owns %v first and migrasyon create writes %s", lang, exts[0], templates[lang].ext)
 		}
 
 		for _, ext := range exts {
@@ -183,7 +183,7 @@ func TestEveryLanguageOwnsItsExtensionsAndTheFirstIsWhatCreateWrites(t *testing.
 	}
 }
 
-func TestCreateRefusesALanguageMigrDoesNotKnow(t *testing.T) {
+func TestCreateRefusesALanguageMigrasyonDoesNotKnow(t *testing.T) {
 	dir := initialized(t)
 
 	_, _, err := runIn(t, dir, noon, "create", "add_users", "--lang", "cobol")
@@ -226,7 +226,7 @@ func TestCreateRefusesAMigrationsDirectoryThatIsNotThere(t *testing.T) {
 		t.Fatal("create wrote into a directory that does not exist")
 	}
 
-	if !errorSays(err, "migr init") {
+	if !errorSays(err, "migrasyon init") {
 		t.Errorf("the refusal does not say how to get a migrations directory: %v", err)
 	}
 
@@ -235,8 +235,8 @@ func TestCreateRefusesAMigrationsDirectoryThatIsNotThere(t *testing.T) {
 	}
 
 	t.Log("Discovery refuses to read a directory that is not there rather than reading it as an")
-	t.Log("empty project. Writing into one migr would then have to create is the same mistake:")
-	t.Log("a typo in migrations.dir would build the wrong tree and migr up would find nothing.")
+	t.Log("empty project. Writing into one migrasyon would then have to create is the same mistake:")
+	t.Log("a typo in migrations.dir would build the wrong tree and migrasyon up would find nothing.")
 }
 
 func TestCreateRefusesASecondMigrationClaimingOneVersion(t *testing.T) {
@@ -264,7 +264,7 @@ func TestCreateRefusesASecondMigrationClaimingOneVersion(t *testing.T) {
 	}
 
 	t.Log("create is the only place a duplicate version can be prevented at all. Left to")
-	t.Log("discovery, the same failure arrives at the next `migr up` and blocks every migration")
+	t.Log("discovery, the same failure arrives at the next `migrasyon up` and blocks every migration")
 	t.Log("in the project until somebody renames a file.")
 }
 
@@ -278,7 +278,7 @@ func TestCreateWithoutAConfigIsAValidationFailure(t *testing.T) {
 		t.Errorf("ExitCode = %d, want %d", got, ExitValidation)
 	}
 
-	if !errorSays(err, "migr init") {
+	if !errorSays(err, "migrasyon init") {
 		t.Errorf("the refusal does not say how to get a config: %v", err)
 	}
 }
@@ -317,11 +317,11 @@ func TestCreateJSONNamesTheFileItWrote(t *testing.T) {
 
 func TestClaimantFindsTheFileHoldingAVersion(t *testing.T) {
 	entries, err := fs.ReadDir(fstest.MapFS{
-		"20260727T153000_add_users.sql":  {},
-		"20260727T160000_add_teams.sql":  {},
-		"20260727T153000-not-a-migr.sql": {},
-		"README.md":                      {},
-		".gitkeep":                       {},
+		"20260727T153000_add_users.sql":       {},
+		"20260727T160000_add_teams.sql":       {},
+		"20260727T153000-not-a-migrasyon.sql": {},
+		"README.md":                           {},
+		".gitkeep":                            {},
 	}, ".")
 	if err != nil {
 		t.Fatalf("reading the fixture: %v", err)
@@ -385,7 +385,7 @@ func TestCreateWritesAGoMigrationDiscoveryAccepts(t *testing.T) {
 		t.Fatalf("reading what create wrote: %v", err)
 	}
 
-	for _, want := range []string{"migr.Register", golang.SDK, "func (m Migration) Up("} {
+	for _, want := range []string{"migrasyon.Register", golang.SDK, "func (m Migration) Up("} {
 		if !strings.Contains(string(body), want) {
 			t.Errorf("the template carries no %q:\n%s", want, body)
 		}

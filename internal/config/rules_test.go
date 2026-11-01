@@ -6,7 +6,7 @@ import (
 
 	"github.com/goccy/go-yaml"
 
-	"github.com/emrebdr/migr/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/rule"
 )
 
 // ruleProject is a minimal config whose validation block one case at a time replaces.
@@ -27,11 +27,11 @@ validation:
 func loadRules(t *testing.T, block string) (*Config, error) {
 	t.Helper()
 
-	return parse([]byte(ruleProject+block), "migr.yaml",
+	return parse([]byte(ruleProject+block), "migrasyon.yaml",
 		func(string) (string, bool) { return "", false })
 }
 
-// renderYAML marshals a resolved config the way migr config prints it.
+// renderYAML marshals a resolved config the way migrasyon config prints it.
 func renderYAML(t *testing.T, cfg *Config) string {
 	t.Helper()
 

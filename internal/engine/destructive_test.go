@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // destroying is one operation per destructive kind, each naming something a message can print.
@@ -50,7 +50,7 @@ func TestEveryDestructiveOperationIsFoundAndNamed(t *testing.T) {
 
 		if d.Subject != subjects[i] {
 			t.Errorf("%s names subject %q, want %q", d.Kind, d.Subject, subjects[i])
-			t.Log("The subject is what --json carries and what migr plan marks an operation with,")
+			t.Log("The subject is what --json carries and what migrasyon plan marks an operation with,")
 			t.Log("so a table where a column belongs reads as a different change entirely.")
 		}
 
@@ -185,7 +185,7 @@ func TestARollbackIsNotGatedByTheAllowance(t *testing.T) {
 
 	t.Log("The inverse of add_index is drop_index, which destroys nothing -- but the inverse of")
 	t.Log("create_table is drop_table, so gating a rollback would make the allowance mandatory")
-	t.Log("for migr down outright. A rollback is the operator's own instruction.")
+	t.Log("for migrasyon down outright. A rollback is the operator's own instruction.")
 }
 
 func TestADerivedInverseThatDropsATableStillRollsBack(t *testing.T) {

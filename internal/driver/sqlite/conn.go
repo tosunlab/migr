@@ -10,9 +10,9 @@ import (
 
 	sqlite3 "modernc.org/sqlite/lib"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // sqliteConn is one pinned SQLite connection, never a pool: an in-memory database is per connection.
@@ -33,7 +33,7 @@ type sqliteConn struct {
 	table string
 	// seeds is where seeds are recorded, beside the history and under the same lock.
 	seeds string
-	// lockWait bounds the wait for the migration lock, and is migr.yaml's lock.timeout.
+	// lockWait bounds the wait for the migration lock, and is migrasyon.yaml's lock.timeout.
 	lockWait time.Duration
 	// lock is the lock file this session holds the migration lock through, nil when it holds none.
 	lock *os.File

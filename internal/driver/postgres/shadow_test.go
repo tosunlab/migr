@@ -4,13 +4,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // shadowOfPeople is a shadow of people keyed by id, whose columns the shadow writes as their own types.
-var shadowOfPeople = driver.Shadow{Table: "people", Shadow: "_people_migr_new", Retired: "_people_migr_old",
+var shadowOfPeople = driver.Shadow{Table: "people", Shadow: "_people_migrasyon_new", Retired: "_people_migrasyon_old",
 	Key: []string{"id"}}
 
 // peoplePair is what a copy and a replay know about people and its shadow.

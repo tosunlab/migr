@@ -5,9 +5,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // sessionCompiler asks for a session for one kind, and compiles everything else the usual way.
@@ -138,7 +138,7 @@ func TestWithoutASessionTheOperationIsReportedRatherThanCompiled(t *testing.T) {
 		t.Errorf("the failure does not name the operation: %v", err)
 	}
 
-	t.Log("This is what migr validate sees, since it opens no database: the operation is not")
+	t.Log("This is what migrasyon validate sees, since it opens no database: the operation is not")
 	t.Log("refused and it is not judged either, and the sentinel is what lets validate tell those")
 	t.Log("apart and report it unchecked rather than as a problem (the unchecked shape). Deferring it")
 	t.Log("instead would hand validate a step nothing could ever fill in.")

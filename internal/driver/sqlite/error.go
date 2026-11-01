@@ -10,7 +10,7 @@ import (
 // ErrDSN marks a connection string this driver refuses to open, for errors.Is.
 var ErrDSN = errors.New("connection string cannot be used")
 
-// ErrReplicas refuses replicas in migr.yaml, since a database file has none to read a lag on.
+// ErrReplicas refuses replicas in migrasyon.yaml, since a database file has none to read a lag on.
 var ErrReplicas = errors.New("replicas is not read for SQLite: a database file has no replicas, so " +
 	"remove the key")
 
@@ -177,7 +177,7 @@ func (e *PragmaError) Unwrap() error {
 
 // SchemaError reports a configured schema, which this engine has no namespace to resolve.
 type SchemaError struct {
-	// Schema is what migr.yaml set databases.<name>.schema to.
+	// Schema is what migrasyon.yaml set databases.<name>.schema to.
 	Schema string
 }
 
@@ -214,7 +214,7 @@ func (e *LockStrategyError) Unwrap() error {
 
 // WaitError reports a configured wait this engine cannot be asked to wait.
 type WaitError struct {
-	// Key is the migr.yaml key that set it.
+	// Key is the migrasyon.yaml key that set it.
 	Key string
 	// Requested is what it was set to.
 	Requested string

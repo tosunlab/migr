@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 func TestEveryMigrationIsReadAsAQuestion(t *testing.T) {
@@ -32,7 +32,7 @@ func TestEveryMigrationIsReadAsAQuestion(t *testing.T) {
 	want := []engine.Mode{engine.ModePlan, engine.ModePlan}
 	if !slices.Equal(src.modes, want) {
 		t.Errorf("validation read the migration in %v, want %v", src.modes, want)
-		t.Log("migr validate opens no database at all, and a check that ran the")
+		t.Log("migrasyon validate opens no database at all, and a check that ran the")
 		t.Log("escape hatch would not be one. Both halves are questions, and a source reached")
 		t.Log("through a language runtime is the one that can tell the difference.")
 	}

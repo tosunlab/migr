@@ -5,24 +5,24 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // A stopped shadow-table migration is settled by the repairs every dirty migration is, each meaning
 // what it means for a copy kept current from a log. Rolling it back is the abort: the
 // capture is released and the copy dropped before the row is appended, both by the names the state
 // recorded, so nothing is left holding WAL or disk. Asserting it applied is refused, since only a
-// cutover applies one, and a resume is migr up's -- it is the same run, carried on.
+// cutover applies one, and a resume is migrasyon up's -- it is the same run, carried on.
 
 // errShadowApplied refuses asserting a shadow-table migration applied, which only its cutover can make true.
 var errShadowApplied = errors.New("a shadow-table migration is applied by its cutover and nothing else: " +
-	"migr up carries it on to the cutover, and migr resolve --rolled-back abandons it")
+	"migrasyon up carries it on to the cutover, and migrasyon resolve --rolled-back abandons it")
 
-// errShadowResume refuses resuming a shadow-table migration here, which is migr up's to carry on.
-var errShadowResume = errors.New("a stopped shadow-table migration is carried on by migr up, from the " +
-	"stage and log position it recorded; migr resolve --rolled-back abandons it instead")
+// errShadowResume refuses resuming a shadow-table migration here, which is migrasyon up's to carry on.
+var errShadowResume = errors.New("a stopped shadow-table migration is carried on by migrasyon up, from the " +
+	"stage and log position it recorded; migrasyon resolve --rolled-back abandons it instead")
 
 // stoppedShadow returns where a dirty migration stood in a shadow-table migration, where it was in one.
 func (e *executor) stoppedShadow(ctx context.Context, st history.Status) (*history.ShadowState, error) {

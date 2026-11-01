@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
 // Exit codes, as documented in CLAUDE.md §5.
@@ -19,7 +19,7 @@ import (
 // same command succeeds once whoever holds it lets go; engine.ErrDrifted, since an applied
 // migration that was edited is the one failure invariant #6 gives a code of its own; and
 // engine.ErrDestructive, which is the rule for exit 2 exactly -- the operator retypes the command
-// with --allow-destructive, or names the kind in migr.yaml, and the same command then runs --
+// with --allow-destructive, or names the kind in migrasyon.yaml, and the same command then runs --
 // engine.ErrNoRelease beside it for the same reason, the operator adding --release; and
 // engine.ErrLockImpact, which --require-safe returns where an operation costs more than
 // safety.max_lock_impact allows, so a CI job can tell a plan that would block production from one
@@ -27,17 +27,17 @@ import (
 //
 // Nothing else resolves itself here, and the boundary is deliberate. A history row this build
 // cannot read reports history.ErrCorrupt and a row written under a future checksum scheme reports
-// checksum.SchemeError; the first needs manual repair and the second needs a newer migr, so
+// checksum.SchemeError; the first needs manual repair and the second needs a newer migrasyon, so
 // neither is drift. Reporting either as exit code 4 is how operators learn to ignore exit code 4.
 //
 // The selector refusals a run's own flags produce are tagged by the command that owns those flags
 // rather than added here, for the same reason: a sentinel resolved in this function is one every
 // command inherits, and engine.ErrNoSteps belongs to the two that register --step.
 //
-// ExitLockImpact is produced by --require-safe on migr plan and migr validate and by nothing else:
-// migr up is not gated, so the code means "a preview found this too costly" and never "a run stopped".
+// ExitLockImpact is produced by --require-safe on migrasyon plan and migrasyon validate and by nothing else:
+// migrasyon up is not gated, so the code means "a preview found this too costly" and never "a run stopped".
 //
-// ExitAwaiting is a migr up that stopped holding a shadow-table migration in sync, which stays waiting for
+// ExitAwaiting is a migrasyon up that stopped holding a shadow-table migration in sync, which stays waiting for
 // its cutover: the schema did not change, and nothing failed (M13-T14). engine.ErrAwaitingCutover
 // is read here for the reason the lock sentinels are, so a deploy script can tell "changed" from "not yet".
 const (

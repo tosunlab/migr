@@ -5,8 +5,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // statedAddIndex reports a table, a column or a name that denies what adding an index states.

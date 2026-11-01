@@ -1,11 +1,11 @@
-package migr
+package migrasyon
 
 import (
 	"context"
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 func TestNoTransactionMarksTheStatementJustAddedAndNoOther(t *testing.T) {
@@ -65,7 +65,7 @@ func TestNoTransactionAgainstAnEngineThatReadsTwoIsRefusedBeforeItIsSent(t *test
 
 	greeted := e.send(wire.Initialize, wire.InitializeParams{
 		ProtocolVersions: []int{wire.Version}, IRVersion: 2,
-		Client:     wire.Client{Name: "migr", Version: "0.0.9"},
+		Client:     wire.Client{Name: "migrasyon", Version: "0.0.9"},
 		Migrations: wire.MigrationsAt{Dir: "/srv/app/migrations", Language: "go"},
 		Database:   wire.DatabaseAt{Name: "default", Driver: "postgres"},
 	})

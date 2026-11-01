@@ -7,9 +7,9 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // file is the migration every fixture here is stored under.
@@ -53,11 +53,11 @@ func rawSQL(t *testing.T, ops ir.Operations) []string {
 	return statements
 }
 
-const bothSections = `-- migr:up
+const bothSections = `-- migrasyon:up
 CREATE TABLE users (id bigint primary key);
 CREATE INDEX idx_users_id ON users (id);
 
--- migr:down
+-- migrasyon:down
 DROP TABLE users;
 `
 
@@ -121,9 +121,9 @@ func TestTheDownSectionIsTheOneRolledBack(t *testing.T) {
 
 func TestAFileWithNoDownSectionAuthorsNoDown(t *testing.T) {
 	for _, body := range []string{
-		"-- migr:up\nCREATE TABLE users (id bigint);\n",
-		"-- migr:up\nCREATE TABLE users (id bigint);\n\n-- migr:down\n",
-		"-- migr:up\nCREATE TABLE users (id bigint);\n\n-- migr:down\n-- write this\n",
+		"-- migrasyon:up\nCREATE TABLE users (id bigint);\n",
+		"-- migrasyon:up\nCREATE TABLE users (id bigint);\n\n-- migrasyon:down\n",
+		"-- migrasyon:up\nCREATE TABLE users (id bigint);\n\n-- migrasyon:down\n-- write this\n",
 	} {
 		_, err := sourceOf(t, body).Emit(t.Context(), file, ir.Down, engine.ModeApply)
 		if !errors.Is(err, engine.ErrNoDownAuthored) {
@@ -148,11 +148,11 @@ func TestAFileWithNoUpMarkerIsRefusedRatherThanReadWhole(t *testing.T) {
 	}
 
 	t.Log("Reading an unmarked file as all-up is friendlier right until somebody writes")
-	t.Log("-- migr:Up, at which point the apply runs the down section too.")
+	t.Log("-- migrasyon:Up, at which point the apply runs the down section too.")
 }
 
 func TestSQLAboveTheFirstMarkerIsRefusedRatherThanDropped(t *testing.T) {
-	_, err := sourceOf(t, "CREATE TABLE early (id bigint);\n-- migr:up\nSELECT 1;\n").
+	_, err := sourceOf(t, "CREATE TABLE early (id bigint);\n-- migrasyon:up\nSELECT 1;\n").
 		Emit(t.Context(), file, ir.Up, engine.ModeApply)
 
 	if !errors.Is(err, ErrMalformed) {
@@ -165,7 +165,7 @@ func TestSQLAboveTheFirstMarkerIsRefusedRatherThanDropped(t *testing.T) {
 }
 
 func TestACommentAboveTheFirstMarkerIsFine(t *testing.T) {
-	ops := emit(t, sourceOf(t, "-- what this migration is for\n\n-- migr:up\nSELECT 1;\n"), ir.Up)
+	ops := emit(t, sourceOf(t, "-- what this migration is for\n\n-- migrasyon:up\nSELECT 1;\n"), ir.Up)
 
 	if len(ops) != 1 {
 		t.Errorf("a header comment cost the file its statements: %q", rawSQL(t, ops))
@@ -173,7 +173,7 @@ func TestACommentAboveTheFirstMarkerIsFine(t *testing.T) {
 }
 
 func TestAMarkerCarriedTwiceIsRefusedNamingBothLines(t *testing.T) {
-	_, err := sourceOf(t, "-- migr:up\nSELECT 1;\n-- migr:up\nSELECT 2;\n").
+	_, err := sourceOf(t, "-- migrasyon:up\nSELECT 1;\n-- migrasyon:up\nSELECT 2;\n").
 		Emit(t.Context(), file, ir.Up, engine.ModeApply)
 
 	if !errors.Is(err, ErrMalformed) {
@@ -188,20 +188,20 @@ func TestAMarkerCarriedTwiceIsRefusedNamingBothLines(t *testing.T) {
 }
 
 func TestASectionMarkerIsAWholeLine(t *testing.T) {
-	ops := emit(t, sourceOf(t, "-- migr:up\nSELECT '-- migr:down';\n"), ir.Up)
+	ops := emit(t, sourceOf(t, "-- migrasyon:up\nSELECT '-- migrasyon:down';\n"), ir.Up)
 
 	if got := rawSQL(t, ops); len(got) != 1 {
 		t.Errorf("the up section emitted %q, want the marker inside a string left alone", got)
 	}
 
-	if _, err := sourceOf(t, "-- migr:up\nSELECT 'x';\n").Emit(t.Context(), file, ir.Down, engine.ModeApply); !errors.Is(
+	if _, err := sourceOf(t, "-- migrasyon:up\nSELECT 'x';\n").Emit(t.Context(), file, ir.Down, engine.ModeApply); !errors.Is(
 		err, engine.ErrNoDownAuthored) {
 		t.Errorf("a marker inside a string opened a down section: %v", err)
 	}
 }
 
 func TestADownMarkerAboveTheUpMarkerIsRefused(t *testing.T) {
-	_, err := sourceOf(t, "-- migr:down\nDROP TABLE users;\n-- migr:up\nCREATE TABLE users ();\n").
+	_, err := sourceOf(t, "-- migrasyon:down\nDROP TABLE users;\n-- migrasyon:up\nCREATE TABLE users ();\n").
 		Emit(t.Context(), file, ir.Up, engine.ModeApply)
 
 	if !errors.Is(err, ErrMalformed) {
@@ -220,9 +220,9 @@ func TestTheTemplateThisPackageWritesEmitsNothingAndAuthorsNoDown(t *testing.T) 
 		t.Errorf("the template's empty down returned %v, want ErrNoDownAuthored", err)
 	}
 
-	t.Log("What migr create writes is what this parses, which is the reason the writer and the")
+	t.Log("What migrasyon create writes is what this parses, which is the reason the writer and the")
 	t.Log("reader are one package. A template that did not parse would be a file")
-	t.Log("format with two definitions, found the first time somebody ran what migr wrote.")
+	t.Log("format with two definitions, found the first time somebody ran what migrasyon wrote.")
 }
 
 func TestAMigrationWithNoFileIsReportedByName(t *testing.T) {

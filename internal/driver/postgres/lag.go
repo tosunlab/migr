@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // lagQuery reads every standby this primary streams to: its name, its state, its measured replay lag,
@@ -23,7 +23,7 @@ const streaming = "streaming"
 
 // ErrLagHidden marks a standby whose state this user may not read, which only a monitoring role may.
 var ErrLagHidden = errors.New("pg_stat_replication hides this standby's state from this user -- " +
-	"grant it pg_read_all_stats (or pg_monitor) so migr can read the lag")
+	"grant it pg_read_all_stats (or pg_monitor) so migrasyon can read the lag")
 
 // ErrLagUnmeasured marks a standby with WAL still to replay and no replay lag measured yet.
 var ErrLagUnmeasured = errors.New("the standby has WAL still to replay and its replay lag is not " +

@@ -7,7 +7,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestATransactionCommitsWhenTheWorkReturnsNilAndDiscardsWhenItDoesNot(t *testing.T) {

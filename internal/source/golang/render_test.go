@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 func typ(t *testing.T, spelling string) schema.Type {
@@ -46,9 +46,9 @@ func TestWhatItRendersCompilesAgainstTheRealSDK(t *testing.T) {
 
 go 1.26
 
-require github.com/emrebdr/migr/sdk/go v0.0.0
+require github.com/tosunlab/migrasyon/sdk/go v0.0.0
 
-replace github.com/emrebdr/migr/sdk/go => %s
+replace github.com/tosunlab/migrasyon/sdk/go => %s
 `, filepath.Join(root, "sdk", "go")))
 
 	migrations := filepath.Join(dir, "migrations")
@@ -79,13 +79,13 @@ replace github.com/emrebdr/migr/sdk/go => %s
 		t.Log("that touches it will reformat it and leave a diff nobody wrote.")
 	}
 
-	if !strings.Contains(body, "migr.Literal") {
+	if !strings.Contains(body, "migrasyon.Literal") {
 		t.Error("the file lost the recorded payloads")
 	}
 
 	t.Log("It is built as the package it is -- a Go migration lives in package migrations and is")
 	t.Log("compiled into a runner by the go tool, so a rendered chain that did not")
-	t.Log("compile would stop migr up rather than this test.")
+	t.Log("compile would stop migrasyon up rather than this test.")
 }
 
 func TestTwoGeneratedMigrationsInOnePackageCompileTogether(t *testing.T) {
@@ -111,9 +111,9 @@ func TestTwoGeneratedMigrationsInOnePackageCompileTogether(t *testing.T) {
 
 go 1.26
 
-require github.com/emrebdr/migr/sdk/go v0.0.0
+require github.com/tosunlab/migrasyon/sdk/go v0.0.0
 
-replace github.com/emrebdr/migr/sdk/go => %s
+replace github.com/tosunlab/migrasyon/sdk/go => %s
 `, filepath.Join(root, "sdk", "go")))
 
 	migrations := filepath.Join(dir, "migrations")
@@ -309,22 +309,22 @@ func TestWhatItRendersIsExactlyThis(t *testing.T) {
 	want := "\tif err := s.Table(\"orders\").\n" +
 		"\t\tAddForeignKey(\"orders_user_fk\", []string{\"user_id\"}, \"users\", " +
 		"[]string{\"id\"}).\n" +
-		"\t\tOnDelete(migr.ActionCascade).\n" +
-		"\t\tOnUpdate(migr.ActionSetNull).\n" +
+		"\t\tOnDelete(migrasyon.ActionCascade).\n" +
+		"\t\tOnUpdate(migrasyon.ActionSetNull).\n" +
 		"\t\tApply(ctx); err != nil {\n\t\treturn err\n\t}\n" +
 		"\n" +
 		"\tif err := s.Table(\"users\").\n" +
-		"\t\tAlterColumn(\"note\").Type(migr.String(64)).NotNull().\n" +
-		"\t\tWasType(migr.Text()).\n" +
+		"\t\tAlterColumn(\"note\").Type(migrasyon.String(64)).NotNull().\n" +
+		"\t\tWasType(migrasyon.Text()).\n" +
 		"\t\tWasNullable(true).\n" +
-		"\t\tWasDefault(migr.Literal(\"\")).\n" +
+		"\t\tWasDefault(migrasyon.Literal(\"\")).\n" +
 		"\t\tApply(ctx); err != nil {\n\t\treturn err\n\t}\n" +
 		"\n" +
 		"\treturn s.Table(\"orders\").\n" +
 		"\t\tDropForeignKey(\"orders_user_fk\").\n" +
-		"\t\tWas(migr.ForeignKeyDef{Columns: []string{\"user_id\"}, " +
+		"\t\tWas(migrasyon.ForeignKeyDef{Columns: []string{\"user_id\"}, " +
 		"ReferencesTable: \"users\", ReferencesColumns: []string{\"id\"}, " +
-		"OnDelete: migr.ActionCascade, OnUpdate: migr.ActionSetNull}).\n" +
+		"OnDelete: migrasyon.ActionCascade, OnUpdate: migrasyon.ActionSetNull}).\n" +
 		"\t\tApply(ctx)\n"
 
 	if body != want {

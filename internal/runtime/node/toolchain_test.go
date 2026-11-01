@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // The probe, driven against a node this test wrote.
@@ -45,7 +45,7 @@ func fake(t *testing.T, script string) string {
 }
 
 func TestTheProbeReadsTheVersionAndTheResolvedManifest(t *testing.T) {
-	path := fake(t, answering("24.16.0", "/srv/app/node_modules/@migr/sdk/package.json"))
+	path := fake(t, answering("24.16.0", "/srv/app/node_modules/@migrasyon/sdk/package.json"))
 
 	found, err := ask(t.Context(), t.TempDir())
 	if err != nil {
@@ -60,7 +60,7 @@ func TestTheProbeReadsTheVersionAndTheResolvedManifest(t *testing.T) {
 		t.Errorf("read version %+v", found.version)
 	}
 
-	if found.manifest != "/srv/app/node_modules/@migr/sdk/package.json" {
+	if found.manifest != "/srv/app/node_modules/@migrasyon/sdk/package.json" {
 		t.Errorf("read manifest %q", found.manifest)
 	}
 

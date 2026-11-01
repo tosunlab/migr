@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // mermaidType is the whole of what Mermaid's ER grammar accepts as an attribute type.

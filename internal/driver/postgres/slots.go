@@ -6,14 +6,14 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
-// slotsQuery lists the logical replication slots on this database whose names migr derives, and the WAL each keeps.
+// slotsQuery lists the logical replication slots on this database whose names migrasyon derives, and the WAL each keeps.
 const slotsQuery = `SELECT slot_name::text, active,
   coalesce(pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn), 0)::bigint, %s
  FROM pg_replication_slots
- WHERE database = current_database() AND slot_type = 'logical' AND slot_name LIKE 'migr\_%%'
+ WHERE database = current_database() AND slot_type = 'logical' AND slot_name LIKE 'migrasyon\_%%'
  ORDER BY slot_name`
 
 // walStatusFrom is the release that reports how a slot's WAL is kept, as wal_status.

@@ -49,7 +49,7 @@ const (
 	ElementView       Element = "view"
 )
 
-// Finding is one thing in a snapshot that migr can see and must not act on.
+// Finding is one thing in a snapshot that migrasyon can see and must not act on.
 type Finding struct {
 	// Table is the table it belongs to, empty for a view, which belongs to no table.
 	Table string
@@ -78,7 +78,7 @@ func (f Finding) where() string {
 	}
 }
 
-// Unrepresentable lists everything in a snapshot that migr can see and must not act on.
+// Unrepresentable lists everything in a snapshot that migrasyon can see and must not act on.
 func Unrepresentable(s Snapshot) []Finding {
 	canonical := s.Canonical()
 

@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // ErrLockImpact marks operations that cost a live database more than safety.max_lock_impact allows.
@@ -89,7 +89,7 @@ type Exceeded struct {
 
 // LockImpactError fails a gate that found operations costing more than safety.max_lock_impact allows.
 type LockImpactError struct {
-	// Ceiling is the most a live database may be made to pay, as migr.yaml sets it.
+	// Ceiling is the most a live database may be made to pay, as migrasyon.yaml sets it.
 	Ceiling capability.LockImpact
 	// Exceeded is every migration holding an operation over it, in the order they would run.
 	Exceeded []Exceeded
@@ -105,7 +105,7 @@ statement is unknown, which counts as table_rewrite.`
 
 // LockImpactNext names the ways to get under the ceiling, the last of which a review sees.
 const LockImpactNext = "make each operation cheaper -- a rewrite, an expand and contract, a shadow " +
-	"table, or a smaller step -- or raise safety.max_lock_impact in migr.yaml"
+	"table, or a smaller step -- or raise safety.max_lock_impact in migrasyon.yaml"
 
 // Next names the ways to get under the ceiling.
 func (e *LockImpactError) Next() string {

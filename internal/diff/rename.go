@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // A rename cannot be inferred. Two snapshots that differ by one record the same thing as two that

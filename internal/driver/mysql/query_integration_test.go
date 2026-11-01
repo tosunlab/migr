@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // seeded creates a small table a read can be aimed at, and removes it when the test ends.

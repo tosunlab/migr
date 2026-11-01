@@ -1,4 +1,4 @@
-import { columns, defineMigration } from "@migr/sdk";
+import { columns, defineMigration } from "@migrasyon/sdk";
 
 /** IndexPeople is the fixture for add_index, drop_index, add_unique, and drop_unique. */
 export default defineMigration({

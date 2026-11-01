@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // runner is what a statement is sent through: the open transaction, or the pinned connection.

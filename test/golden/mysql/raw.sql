@@ -1,2 +1,2 @@
--- migr:statement 1
+-- migrasyon:statement 1
 -- a raw statement, passed through verbatim

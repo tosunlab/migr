@@ -3,10 +3,10 @@ package validate
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // M10-T3's done-when is that adding a column to a nonexistent table, or a foreign key to a
@@ -193,11 +193,11 @@ type projection struct {
 //
 //   - the live schema alone refuses every operation of every migration that has already run, since
 //     the schema is what they built. The live-catalog problem, reached from the other side;
-//   - the project's own beginning alone refuses every operation of a migration migr diff wrote. A
+//   - the project's own beginning alone refuses every operation of a migration migrasyon diff wrote. A
 //     drift correction re-adds an index the project already created and drops a column the project
 //     never had, so replaying it from nothing cannot work -- measured on all three of the operations
-//     that close one real gap. A check reporting those would have migr diff's own output fail
-//     migr validate, which is the tool disagreeing with itself.
+//     that close one real gap. A check reporting those would have migrasyon diff's own output fail
+//     migrasyon validate, which is the tool disagreeing with itself.
 //
 // So the check runs where it has both and does not run where it has neither. That is the shape
 // capability already has: a check needing the target database says so rather than

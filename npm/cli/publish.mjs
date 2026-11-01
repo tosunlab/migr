@@ -1,5 +1,5 @@
 // Publishes the seven packages build.mjs wrote: the six platform packages first and
-// @migr/cli last, so the wrapper never names a package the registry does not hold yet; a version
+// @migrasyon/cli last, so the wrapper never names a package the registry does not hold yet; a version
 // already there is skipped, so a failed release can be run again. Before anything, the binary for this
 // machine must report the packages' version. Run as `node npm/cli/publish.mjs <out> [--dry-run]`.
 
@@ -34,7 +34,7 @@ function readManifest(dir) {
 // checkBinary runs this machine's binary and refuses one that reports another version than the packages.
 function checkBinary(out, version) {
   const target = `${goos[process.platform]}-${goarch[process.arch]}`;
-  const binary = path.join(out, `cli-${target}`, "bin", process.platform === "win32" ? "migr.exe" : "migr");
+  const binary = path.join(out, `cli-${target}`, "bin", process.platform === "win32" ? "migrasyon.exe" : "migrasyon");
   const reported = JSON.parse(execFileSync(binary, ["version", "--json"], { encoding: "utf8" })).version;
 
   if (reported !== `v${version}`) {
@@ -63,7 +63,7 @@ function publish(out, dryRun) {
   for (const dir of order) {
     const { name, version: own } = readManifest(path.join(out, dir));
     if (own !== version) {
-      throw new Error(`${name} is ${own} but @migr/cli is ${version}`);
+      throw new Error(`${name} is ${own} but @migrasyon/cli is ${version}`);
     }
 
     if (!dryRun && published(name, version)) {

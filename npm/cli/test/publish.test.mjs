@@ -14,7 +14,7 @@ test("publishing with no wrapper built is refused", () => {
   assert.throws(() => publishOrder(["cli-linux-amd64"]), /run build\.mjs first/);
 });
 
-test("a pre-release is published under next, so npx @migr/cli keeps the latest final release", () => {
+test("a pre-release is published under next, so npx @migrasyon/cli keeps the latest final release", () => {
   assert.equal(distTag("1.2.3"), "latest");
   assert.equal(distTag("1.2.3-rc.1"), "next");
   assert.equal(distTag("0.0.1-next"), "next");

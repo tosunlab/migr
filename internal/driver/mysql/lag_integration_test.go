@@ -12,16 +12,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // The compose source and replica the lag tests use, and the database the replica replicates alone.
 const (
-	lagSourceDSN  = "migr:migr@tcp(127.0.0.1:55480)/migr_lag"
-	lagReplicaDSN = "migr:migr@tcp(127.0.0.1:55490)/migr_lag"
-	replicaRoot   = "root:migr@tcp(127.0.0.1:55490)/"
+	lagSourceDSN  = "migrasyon:migrasyon@tcp(127.0.0.1:55480)/migrasyon_lag"
+	lagReplicaDSN = "migrasyon:migrasyon@tcp(127.0.0.1:55490)/migrasyon_lag"
+	replicaRoot   = "root:migrasyon@tcp(127.0.0.1:55490)/"
 	replicaAddr   = "127.0.0.1:55490"
 )
 
@@ -34,7 +34,7 @@ const (
 
 // replicaDSN is the replica's connection string, preferring the environment override.
 func replicaDSN() string {
-	if override := os.Getenv("MIGR_TEST_MYSQL80_REPLICA_DSN"); override != "" {
+	if override := os.Getenv("MIGRASYON_TEST_MYSQL80_REPLICA_DSN"); override != "" {
 		return override
 	}
 
@@ -46,7 +46,7 @@ func sourceWithReplica(t *testing.T, replicas ...string) *mysqlConn {
 	t.Helper()
 
 	dsn := lagSourceDSN
-	if override := os.Getenv("MIGR_TEST_MYSQL80_LAG_DSN"); override != "" {
+	if override := os.Getenv("MIGRASYON_TEST_MYSQL80_LAG_DSN"); override != "" {
 		dsn = override
 	}
 
@@ -151,7 +151,7 @@ func TestAStoppedReplicaReadsAsUnknown(t *testing.T) {
 }
 
 func TestAnUnreachableReplicaReadsAsUnknownNamingItsAddressAlone(t *testing.T) {
-	c := sourceWithReplica(t, "migr:s3cret@tcp(127.0.0.1:1)/migr_lag")
+	c := sourceWithReplica(t, "migrasyon:s3cret@tcp(127.0.0.1:1)/migrasyon_lag")
 
 	lags, err := c.ReplicaLag(t.Context())
 	if err != nil || len(lags) != 1 || lags[0].Known() || lags[0].Replica != "127.0.0.1:1" {
@@ -164,9 +164,9 @@ func TestAnUnreachableReplicaReadsAsUnknownNamingItsAddressAlone(t *testing.T) {
 }
 
 func TestAUserWithoutReplicationClientReadsAsUnknown(t *testing.T) {
-	onReplica(t, "CREATE USER IF NOT EXISTS 'migr_lagplain'@'%' IDENTIFIED BY 'migr_lagplain'")
+	onReplica(t, "CREATE USER IF NOT EXISTS 'migrasyon_lagplain'@'%' IDENTIFIED BY 'migrasyon_lagplain'")
 
-	c := sourceWithReplica(t, "migr_lagplain:migr_lagplain@tcp("+replicaAddr+")/")
+	c := sourceWithReplica(t, "migrasyon_lagplain:migrasyon_lagplain@tcp("+replicaAddr+")/")
 
 	lags, err := c.ReplicaLag(t.Context())
 	if err != nil || len(lags) != 1 || !errors.Is(lags[0].Err, ErrNoReplicaGrant) {

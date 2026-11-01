@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // holderQuery names the session holding one user-level lock, which needs no privilege to ask.

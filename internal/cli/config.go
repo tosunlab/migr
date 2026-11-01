@@ -7,15 +7,15 @@ import (
 	"github.com/goccy/go-yaml"
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/config"
+	"github.com/tosunlab/migrasyon/internal/config"
 )
 
-// newConfigCmd builds the `migr config` subcommand.
+// newConfigCmd builds the `migrasyon config` subcommand.
 func newConfigCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "config",
 		Short: "Print the resolved configuration, with secrets redacted",
-		Long: "Loads migr.yaml, expands ${VAR} references, applies defaults, and prints the\n" +
+		Long: "Loads migrasyon.yaml, expands ${VAR} references, applies defaults, and prints the\n" +
 			"result. Credentials in connection strings are redacted.",
 		Args: argsOf(cobra.NoArgs),
 		RunE: func(cmd *cobra.Command, _ []string) error {

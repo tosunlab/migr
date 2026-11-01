@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // serverReason is a refusal only a connected server could have reached, which Compile cannot.
@@ -180,7 +180,7 @@ func TestARollbackIsRefusedForTheSameReasonAsARun(t *testing.T) {
 	t.Log("Unlike the destructive gate this is direction-neutral: ir.CreateTable inverts to")
 	t.Log("DropTable, which is why permission is asked of the up half alone -- but an")
 	t.Log("operation the server will not perform is just as unrunnable backwards. A rollback")
-	t.Log("inverts its whole queue before running any of it, so migr down is preflighted whole.")
+	t.Log("inverts its whole queue before running any of it, so migrasyon down is preflighted whole.")
 }
 
 func TestAPreviewMarksWhatARunRefuses(t *testing.T) {
@@ -199,7 +199,7 @@ func TestAPreviewMarksWhatARunRefuses(t *testing.T) {
 		t.Fatalf("the preview compiled %d migrations, want the one it was given", len(previewed.Steps))
 	}
 
-	t.Log("migr plan is the command that tells an operator what migr up will refuse, so it must")
+	t.Log("migrasyon plan is the command that tells an operator what migrasyon up will refuse, so it must")
 	t.Log("not refuse to -- CLAUDE.md §5 with no exception. The mode is what separates the two")
 	t.Log(", and internal/cli is where the verdict becomes a × beside the statement.")
 }

@@ -11,16 +11,16 @@
 //
 // # What is written, and where
 //
-// Everything lands in <module root>/.migr/go/<directory>: the generated main.go,
+// Everything lands in <module root>/.migrasyon/go/<directory>: the generated main.go,
 // the built runner, and the stamp the runner was built from. <directory> is the
 // migrations directory's place in the module with its separators spelled "__",
 // and "_module" for the module's own root, so a project's migrations and its seeds
 // -- two Go packages in one module -- each keep a runner of their own rather than
 // rebuilding the other's on every alternate command (M12-T1). Two names
 // that collide cost a rebuild and never a wrong binary, since the stamp covers the
-// directory. A .gitignore holding "*" is written into .migr the first time, and
-// never over one somebody has edited, so migr's build products stay out of a
-// commit without migr touching the user's own ignore file.
+// directory. A .gitignore holding "*" is written into .migrasyon the first time, and
+// never over one somebody has edited, so migrasyon's build products stay out of a
+// commit without migrasyon touching the user's own ignore file.
 //
 // A directory whose name begins with "." is invisible to the go tool's own
 // patterns, so the generated runner cannot break the user's go build ./..., go vet
@@ -31,7 +31,7 @@
 //
 // Exactly two things, and neither is an identifier from the user's code: a blank
 // import of their migrations package, and runner.Main from
-// github.com/emrebdr/migr/sdk/go/runner. Each migration registers itself from an
+// github.com/tosunlab/migrasyon/sdk/go/runner. Each migration registers itself from an
 // init, so adding one is a one-file change and the generated main never has to
 // know a name the user chose. That package arrives in M6-T7; this adapter is what
 // states the contract it owes.
@@ -39,12 +39,12 @@
 // # What the stamp covers, and what it does not
 //
 // The digest is over the generated runner, every file in the migrations directory,
-// go.mod and go.sum, the toolchain's own identity, and migr's version. A hit skips
+// go.mod and go.sum, the toolchain's own identity, and migrasyon's version. A hit skips
 // go build entirely.
 //
 // It does not cover a package the migrations import from elsewhere in the module.
 // Editing one of those does not force a rebuild, and the runner keeps whatever
-// version of it was compiled in. Deleting .migr/go is the way out. This is stated
+// version of it was compiled in. Deleting .migrasyon/go is the way out. This is stated
 // here and in a test that asserts the hole -- so widening the stamp fails that
 // test rather than quietly making these three paragraphs wrong.
 //

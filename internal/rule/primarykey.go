@@ -3,7 +3,7 @@ package rule
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // MissingPrimaryKey is the id of the rule that reports a table created without a primary key.

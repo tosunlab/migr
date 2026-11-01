@@ -5,13 +5,13 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // Allowance is the destruction a run may perform, and nothing it does not name may happen.
 type Allowance struct {
-	// Kinds are the operation kinds this project permits, which migr.yaml holds and a review sees.
+	// Kinds are the operation kinds this project permits, which migrasyon.yaml holds and a review sees.
 	Kinds []ir.Kind
 	// All reports whether this one run permits every kind, which is what --allow-destructive means.
 	All bool
@@ -134,7 +134,7 @@ func detailOf(op ir.Operation) string {
 	case ir.AlterColumn:
 		return describeRetype(o)
 	case ir.Raw:
-		return fmt.Sprintf("is engine SQL, and migr cannot read what it does: %s", firstLine(o.SQL))
+		return fmt.Sprintf("is engine SQL, and migrasyon cannot read what it does: %s", firstLine(o.SQL))
 	case ir.DataTransform:
 		return fmt.Sprintf("overwrites every value of the column %q from %q, and nothing records "+
 			"what it overwrote", qualified(o.Table, o.Column), o.From)
