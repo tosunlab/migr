@@ -3,7 +3,7 @@ package sqlite
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
 )
 
 func TestTheLockTablesAreWhatSQLiteDeclares(t *testing.T) {

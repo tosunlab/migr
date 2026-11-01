@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
 func TestTheGeneratedRunnerLoadsTheProjectsMigrationsAndRuns(t *testing.T) {
@@ -64,7 +64,7 @@ func TestTwoDirectoriesInOneModuleNeverRebuildEachOther(t *testing.T) {
 		t.Error("building the seeds runner made the migrations runner rebuild")
 		t.Log("A seeds directory and a migrations directory are two Go packages in one module, so")
 		t.Log("each needs a runner of its own -- one shared directory turns every alternate")
-		t.Log("migr up and migr seed into a full rebuild, and two concurrent ones into a race.")
+		t.Log("migrasyon up and migrasyon seed into a full rebuild, and two concurrent ones into a race.")
 	}
 }
 

@@ -8,11 +8,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
-	conformance "github.com/emrebdr/migr/test/conformance/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/driver"
 )
 
 // introspect reads the snapshot back, failing the test rather than returning a reason.

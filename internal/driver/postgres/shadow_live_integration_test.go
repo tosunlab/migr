@@ -14,12 +14,12 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // A shadow-table migration is held to the done-when here, on postgres17, the compose server running
@@ -526,7 +526,7 @@ func TestAShadowMigrationStoppedMidCopyOrMidHoldCarriesOnFromItsRecordedPosition
 	}
 }
 
-// abandon settles a stopped shadow-table migration as rolled back, as migr resolve --rolled-back does.
+// abandon settles a stopped shadow-table migration as rolled back, as migrasyon resolve --rolled-back does.
 func (sc *shadowCase) abandon(t *testing.T) {
 	t.Helper()
 
@@ -651,7 +651,7 @@ func TestAStartKilledBeforeItsRecordLeavesASlotTheNextRunDropsAndRemakes(t *test
 func TestASlotACutoverLeftAndAStrangersAreToldApartAndOnlyOursIsReleased(t *testing.T) {
 	sc := newShadowCase(t)
 	ours := engine.CaptureName(sc.table, shadowVersion)
-	stranger := "migr_20990101t000000_" + digestOf(t.Name())
+	stranger := "migrasyon_20990101t000000_" + digestOf(t.Name())
 
 	for _, name := range []string{ours, stranger} {
 		stream, err := sc.d.Capture(t.Context(), sc.dsn, capture.Request{Name: name, Tables: []string{sc.table}})
@@ -737,10 +737,10 @@ func TestATableThatCannotBeShadowedIsRefusedNamingWhy(t *testing.T) {
 func TestGrantsAndAToastedNoteSurviveTheCutover(t *testing.T) {
 	sc := newShadowCase(t)
 
-	exec(t, sc.c, "DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'migr_reader') THEN "+
-		"CREATE ROLE migr_reader; END IF; END $$")
-	exec(t, sc.c, "GRANT SELECT ON "+quote(sc.table)+" TO migr_reader")
-	exec(t, sc.c, "GRANT UPDATE (label) ON "+quote(sc.table)+" TO migr_reader")
+	exec(t, sc.c, "DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'migrasyon_reader') THEN "+
+		"CREATE ROLE migrasyon_reader; END IF; END $$")
+	exec(t, sc.c, "GRANT SELECT ON "+quote(sc.table)+" TO migrasyon_reader")
+	exec(t, sc.c, "GRANT UPDATE (label) ON "+quote(sc.table)+" TO migrasyon_reader")
 
 	before := sc.scalarOf(t, "SELECT md5(note) FROM "+quote(sc.table)+" WHERE id = 50")
 
@@ -763,12 +763,12 @@ func TestGrantsAndAToastedNoteSurviveTheCutover(t *testing.T) {
 		t.Errorf("a TOASTed note an update left alone changed across the cutover")
 	}
 
-	if got := sc.scalarOf(t, "SELECT has_table_privilege('migr_reader', to_regclass(quote_ident($1)), 'SELECT')::text",
+	if got := sc.scalarOf(t, "SELECT has_table_privilege('migrasyon_reader', to_regclass(quote_ident($1)), 'SELECT')::text",
 		sc.table); got != "true" {
 		t.Error("the table's grant did not survive the cutover")
 	}
 
-	if got := sc.scalarOf(t, "SELECT has_column_privilege('migr_reader', to_regclass(quote_ident($1)), 'label', 'UPDATE')::text",
+	if got := sc.scalarOf(t, "SELECT has_column_privilege('migrasyon_reader', to_regclass(quote_ident($1)), 'label', 'UPDATE')::text",
 		sc.table); got != "true" {
 		t.Error("the column grant did not survive the cutover")
 	}

@@ -6,5 +6,5 @@
 -- never registers under one: MariaDB disconnects one of two readers sharing an id. MySQL has no
 -- privilege of that name, which is why this server has a directory of its own rather than sharing
 -- initdb. PROCESS is initdb/grant-process.sql's, for the same lock-impact probes.
-GRANT REPLICATION SLAVE, BINLOG MONITOR, REPLICATION MASTER ADMIN, PROCESS ON *.* TO 'migr'@'%';
+GRANT REPLICATION SLAVE, BINLOG MONITOR, REPLICATION MASTER ADMIN, PROCESS ON *.* TO 'migrasyon'@'%';
 FLUSH PRIVILEGES;

@@ -16,11 +16,11 @@ func TestEveryShippedRuleSaysWhatItIsAndWhatItChecks(t *testing.T) {
 	for _, r := range All() {
 		t.Run(string(r.ID), func(t *testing.T) {
 			if !r.ID.Valid() {
-				t.Errorf("id %q is not one migr.yaml can name", r.ID)
+				t.Errorf("id %q is not one migrasyon.yaml can name", r.ID)
 			}
 
 			if strings.TrimSpace(r.Summary) == "" {
-				t.Error("it has no summary, so migr config cannot say what it checks")
+				t.Error("it has no summary, so migrasyon config cannot say what it checks")
 			}
 
 			if !r.Default.Valid() {

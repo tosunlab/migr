@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 func TestItProposesNothingForTwoSchemasThatAgree(t *testing.T) {
@@ -154,7 +154,7 @@ func TestItEmitsEveryDropCarryingWhatItReplaced(t *testing.T) {
 	}
 
 	t.Log("A differ is the one producer that knows both states exactly, so it fills every from")
-	t.Log("payload the IR defines -- which is what makes a migration migr diff writes reversible")
+	t.Log("payload the IR defines -- which is what makes a migration migrasyon diff writes reversible")
 	t.Log("by derivation, and why a drop it cannot record is refused rather than emitted bare.")
 }
 

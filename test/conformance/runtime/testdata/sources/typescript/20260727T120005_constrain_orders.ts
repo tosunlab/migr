@@ -1,4 +1,4 @@
-import { defineMigration } from "@migr/sdk";
+import { defineMigration } from "@migrasyon/sdk";
 
 /** ConstrainOrders is the fixture for add_check, drop_check, add_foreign_key, and drop_foreign_key. */
 export default defineMigration({

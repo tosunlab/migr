@@ -8,7 +8,7 @@ import (
 	"sync"
 )
 
-// Constructor builds a runtime adapter, which needs nothing from migr.yaml that a Project lacks.
+// Constructor builds a runtime adapter, which needs nothing from migrasyon.yaml that a Project lacks.
 type Constructor func() (Runtime, error)
 
 // ErrNoConstructor reports a registration with nothing to construct.
@@ -46,7 +46,7 @@ type UnknownError struct {
 
 // Error names the language that was asked for and the ones this build has.
 func (e *UnknownError) Error() string {
-	return fmt.Sprintf("unknown runtime %q: this build of migr has %s", e.Name, describeKnown(e.Known))
+	return fmt.Sprintf("unknown runtime %q: this build of migrasyon has %s", e.Name, describeKnown(e.Known))
 }
 
 // describeKnown renders the registered set, saying so plainly when it is empty.

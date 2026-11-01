@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Mode is whether a migration.execute is a run or a preview, which §6 says changes one callback.

@@ -116,8 +116,8 @@ func TestTheTableOptionsAfterTheColumnListSurvive(t *testing.T) {
 func TestRenderingPutsTheDefinitionUnderAGivenName(t *testing.T) {
 	d := split(t, `CREATE TABLE "users" (id integer, email text)`)
 
-	rendered := d.render("migr_rebuild_users")
-	if !strings.HasPrefix(rendered, `CREATE TABLE "migr_rebuild_users" (`) {
+	rendered := d.render("migrasyon_rebuild_users")
+	if !strings.HasPrefix(rendered, `CREATE TABLE "migrasyon_rebuild_users" (`) {
 		t.Errorf("rendered as %s", rendered)
 	}
 

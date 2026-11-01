@@ -26,7 +26,7 @@ func All() []Rule {
 	return rules
 }
 
-// IDs returns the id of every rule this build ships, sorted, which is what migr.yaml may name.
+// IDs returns the id of every rule this build ships, sorted, which is what migrasyon.yaml may name.
 func IDs() []ID {
 	rules := All()
 

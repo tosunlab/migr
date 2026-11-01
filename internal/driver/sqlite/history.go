@@ -11,9 +11,9 @@ import (
 	lib "modernc.org/sqlite"
 	sqlite3 "modernc.org/sqlite/lib"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // historyColumns is the order this store binds and scans, and the only place that order is stated.

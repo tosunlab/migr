@@ -4,9 +4,9 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // fill is the data operation the chunking tests plan, backfilling one column.

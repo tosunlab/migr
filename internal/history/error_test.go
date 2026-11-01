@@ -5,12 +5,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/checksum"
 )
 
 func TestACorruptRowIsNotDrift(t *testing.T) {
 	err := error(&CorruptError{
-		Table:   "migr_migrations",
+		Table:   "migrasyon_migrations",
 		Version: "20260727T153000",
 		Batch:   7,
 		Ordinal: 2,
@@ -35,7 +35,7 @@ func TestACorruptRowIsNotDrift(t *testing.T) {
 		t.Log("and reporting either as exit code 4 is how operators learn to ignore exit code 4.")
 	}
 
-	for _, want := range []string{"migr_migrations", "20260727T153000", "batch 7", "ordinal 2",
+	for _, want := range []string{"migrasyon_migrations", "20260727T153000", "batch 7", "ordinal 2",
 		"checksum"} {
 		if !strings.Contains(err.Error(), want) {
 			t.Errorf("message %q does not name %q", err, want)
@@ -47,7 +47,7 @@ func TestACorruptRowIsNotDrift(t *testing.T) {
 }
 
 func TestACorruptRowWithNoCauseUnwrapsToTheSentinelAlone(t *testing.T) {
-	corrupt := &CorruptError{Table: "migr_migrations", Field: "outcome"}
+	corrupt := &CorruptError{Table: "migrasyon_migrations", Field: "outcome"}
 
 	if !errors.Is(error(corrupt), ErrCorrupt) {
 		t.Error("a corrupt row with no underlying cause matched nothing")

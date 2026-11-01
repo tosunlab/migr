@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // batchCap is how many changes one read hands over before it stops at the next commit.
@@ -223,7 +223,7 @@ func (s *slotStream) Start() capture.Position {
 func (s *slotStream) Next(ctx context.Context) (capture.Batch, error) {
 	if s.gone {
 		return capture.Batch{}, fmt.Errorf("the replication slot %s no longer exists, so the WAL since this "+
-			"shadow-table migration's recorded position is gone with it -- abandon it with migr resolve "+
+			"shadow-table migration's recorded position is gone with it -- abandon it with migrasyon resolve "+
 			"--rolled-back and run it again", s.name)
 	}
 

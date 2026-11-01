@@ -8,8 +8,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
 // options holds the values bound to the root command's persistent flags.
@@ -64,9 +64,9 @@ func rootCmd(opts *options) *cobra.Command {
 	}
 
 	cmd := &cobra.Command{
-		Use:   "migr",
+		Use:   "migrasyon",
 		Short: "Polyglot, database-agnostic migration framework",
-		Long: "migr runs database migrations written as code in your own language against\n" +
+		Long: "migrasyon runs database migrations written as code in your own language against\n" +
 			"PostgreSQL, MySQL, SQLite, and more, through one migration workflow.",
 		Args:          argsOf(cobra.NoArgs),
 		SilenceUsage:  true,
@@ -100,8 +100,8 @@ func rootCmd(opts *options) *cobra.Command {
 // registerGlobalFlags binds the persistent flags shared by every subcommand.
 func registerGlobalFlags(cmd *cobra.Command, opts *options) {
 	f := cmd.PersistentFlags()
-	f.StringVar(&opts.configPath, "config", "", "path to migr.yaml (default: ./migr.yaml)")
-	f.StringVar(&opts.database, "database", "", "database to target, by name in migr.yaml")
+	f.StringVar(&opts.configPath, "config", "", "path to migrasyon.yaml (default: ./migrasyon.yaml)")
+	f.StringVar(&opts.database, "database", "", "database to target, by name in migrasyon.yaml")
 	f.BoolVar(&opts.jsonOut, "json", false, "emit JSON results on stdout and JSON logs on stderr")
 	f.CountVarP(&opts.verbosity, "verbose", "v", "increase log detail (-v info, -vv debug)")
 }

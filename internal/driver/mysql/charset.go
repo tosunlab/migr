@@ -1,6 +1,6 @@
 package mysql
 
-import "github.com/emrebdr/migr/internal/schema"
+import "github.com/tosunlab/migrasyon/internal/schema"
 
 // characterSet is the one this driver declares on every column that can carry one (doc.go).
 const characterSet = "utf8mb4"

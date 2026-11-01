@@ -1,13 +1,13 @@
-# `@migr/sdk`
+# `@migrasyon/sdk`
 
 Write database migrations in TypeScript and run them against any engine
-[migr](https://github.com/emrebdr/migr) supports.
+[migrasyon](https://github.com/tosunlab/migrasyon) supports.
 
-> **Pre-alpha.** A migration can be written and run by `migr-runtime-node`, and `migr` cannot yet
+> **Pre-alpha.** A migration can be written and run by `migrasyon-runtime-node`, and `migrasyon` cannot yet
 > start one: the adapter that spawns this runtime lands in M7-T6. Do not depend on it.
 
 ```console
-npm install @migr/sdk@alpha
+npm install @migrasyon/sdk@alpha
 ```
 
 ## Writing a migration
@@ -16,7 +16,7 @@ A migration has one required member and four optional ones. `up` performs the ch
 else is there when you need it:
 
 ```ts
-import { defineMigration } from "@migr/sdk";
+import { defineMigration } from "@migrasyon/sdk";
 
 export default defineMigration({
   async up(s) { ... },                       // required
@@ -28,7 +28,7 @@ export default defineMigration({
 
 `defineMigration` does nothing at runtime — it returns what it was given. It exists so the members
 are contextually typed: `s` is inferred, no annotation is written, and a wrong signature is a
-compile error rather than a surprise at `migr up`.
+compile error rather than a surprise at `migrasyon up`.
 
 The parts can also be exported one by one, which is the style a `.js` or `.mjs` migration usually
 takes. **A module uses one style or the other**; exporting a default migration _and_ named parts is
@@ -44,7 +44,7 @@ export const dependencies = ["20260727T153000"];
 
 Every migration has both directions, and there are exactly three honest answers:
 
-| What you write             | What migr does                             |
+| What you write             | What migrasyon does                        |
 | -------------------------- | ------------------------------------------ |
 | `down`                     | runs it                                    |
 | `irreversible: "<reason>"` | halts a rollback with **your** reason      |
@@ -60,7 +60,7 @@ statement run. An `up` that emits nothing is still refused.
 
 It is a `readonly string[]` rather than a function, and that is the type saying what the framework
 requires: a dependency is **declared** by a migration and never **computed** by one. A graph that
-could branch on live data would let `migr plan` and `migr up` order the same migrations differently.
+could branch on live data would let `migrasyon plan` and `migrasyon up` order the same migrations differently.
 `dependencies() { ... }` is a compile error for that reason.
 
 Everything above is enforced twice — in the types, and again when the module is read, since a `.js`
@@ -71,7 +71,7 @@ migration is compiled by nothing and no type can constrain a module's exports ag
 Four chains, one per thing a change acts on, each ending in `apply()`:
 
 ```ts
-import { call, defineMigration, t } from "@migr/sdk";
+import { call, defineMigration, t } from "@migrasyon/sdk";
 
 export default defineMigration({
   async up(s) {
@@ -96,13 +96,13 @@ export default defineMigration({
 `s.table(name)` changes a table that already exists, `s.view(name)` a view, and `s.raw(driver, sql)`
 is the escape hatch for what the IR cannot express — it names one engine, so no other will run it.
 `.noTransaction()` after a statement declares that it cannot run inside a transaction, as
-`CREATE INDEX CONCURRENTLY` cannot: migr runs it on its own, the statements around it in
+`CREATE INDEX CONCURRENTLY` cannot: migrasyon runs it on its own, the statements around it in
 transactions of their own, and records how far it got after each. It needs an engine reading
 `irVersion` 3, and against an older one the migration is refused before anything is sent.
 
 **Nothing is emitted until `apply`**, which sends the whole chain in one call and empties it, so
 applying twice does not emit twice. A chain built without it emits nothing at all, and a migration
-that reports success having changed nothing is the worst failure this format has — so migr fails
+that reports success having changed nothing is the worst failure this format has — so migrasyon fails
 such a migration, naming the object and counting what was never applied. An `apply()` that is sent
 and never `await`ed is caught the same way: its failure is surfaced when the call ends rather than
 disappearing into a promise nobody read.
@@ -132,7 +132,7 @@ its default and restates the whole declaration, so an applied file cannot change
 underneath its checksum:
 
 ```ts
-import { replaceColumn, t } from "@migr/sdk";
+import { replaceColumn, t } from "@migrasyon/sdk";
 
 export default replaceColumn("users", "email", t.string(255)).with(t.string(320)).expand();
 ```
@@ -147,16 +147,16 @@ export default replaceColumn("users", "email", t.string(255)).with(t.string(320)
 `renameTo(name)` ends the column under a new name instead, so swap renames nothing and contract
 drops the original; `via` and `retire` override the two derived names. Each unsafe step sends a
 warning naming what it breaks for an app version still serving, in plan mode too. Each phase also
-declares itself a **step** of the change, waiting on the one before it, and migr runs a step only
-under a release after the one that applied its prior step: a deploy runs `migr up --release <build>`
-(or sets `MIGR_RELEASE`), and the four land a deploy apart, the run holding at the next step rather
+declares itself a **step** of the change, waiting on the one before it, and migrasyon runs a step only
+under a release after the one that applied its prior step: a deploy runs `migrasyon up --release <build>`
+(or sets `MIGRASYON_RELEASE`), and the four land a deploy apart, the run holding at the next step rather
 than failing. A hand-written migration declares the same with a `phase` property —
 `{ change, name, after }`. The backfill's `data_transform` and the contract's `drop_column` are
 destructive by kind, so a project permits both in `validation.allow_destructive`.
 
 ### Running through a shadow table
 
-A migration changing one large table declares `online: SHADOW_TABLE`, and migr then performs it
+A migration changing one large table declares `online: SHADOW_TABLE`, and migrasyon then performs it
 through a copy of the table rather than as a plain `ALTER`:
 
 1. it copies the rows in chunks while reading the table's writes from the server's replication log;
@@ -169,7 +169,7 @@ through a replication slot, and SQLite has no log to read. Any other value of `o
 when the file is loaded.
 
 ```ts
-import { columns, defineMigration, SHADOW_TABLE } from "@migr/sdk";
+import { columns, defineMigration, SHADOW_TABLE } from "@migrasyon/sdk";
 
 export default defineMigration({
   online: SHADOW_TABLE,
@@ -236,7 +236,7 @@ SQL is.
 
 `s.exec(...)` sends a statement the IR cannot express, and it costs three things:
 
-- it is **recorded rather than run** under `migr plan`, and the result says so with
+- it is **recorded rather than run** under `migrasyon plan`, and the result says so with
   `executed: false` — so a migration branching on `rowsAffected` can tell it is being previewed
   rather than being told a lie;
 - it runs **outside the transaction the operations run in**, committed on its own, so a migration
@@ -255,14 +255,14 @@ table.
 
 ### Two channels for two kinds of thing to say
 
-`s.log(level, message, fields)` reaches `migr --json`'s log stream as an object a script can filter.
+`s.log(level, message, fields)` reaches `migrasyon --json`'s log stream as an object a script can filter.
 Anything the language itself prints goes to **stderr**, which the engine passes through verbatim and
 never parses — `console.log` in a migration is redirected there before the first protocol message,
 because stdout carries protocol and nothing else.
 
 ## How a migration is loaded
 
-Installing this package installs an executable, **`migr-runtime-node`**. It is what the engine
+Installing this package installs an executable, **`migrasyon-runtime-node`**. It is what the engine
 spawns, it speaks the protocol over its stdin and stdout, and it is the only thing that reads your
 migration files:
 
@@ -309,7 +309,7 @@ outside the directory, where the import above reaches them.
 There is a second exemption and it is narrow: a file whose name is a **well-formed migration** in an
 extension this runtime does not load — `20260727T153000_add_users.go` — belongs to another runtime and
 is skipped, because one directory may hold more than one language. A `README.md` is not that, and is
-still refused. Nothing is skipped by everything in silence: migr routed every file by its extension
+still refused. Nothing is skipped by everything in silence: migrasyon routed every file by its extension
 and holds what each runtime reports here against what it sent.
 
 ## The version means something
@@ -330,13 +330,13 @@ Three tests hold the claim up rather than leaving it to a release checklist: `VE
 
 ## Testing a migration
 
-`@migr/sdk/testing` is a subpath of its own, so the library a migration imports carries no test
+`@migrasyon/sdk/testing` is a subpath of its own, so the library a migration imports carries no test
 helpers. There are three, and what separates them is who can actually answer the question.
 
 **What IR did this half emit?** The SDK can answer that alone, in this process, reaching nothing:
 
 ```ts
-import { capture } from "@migr/sdk/testing";
+import { capture } from "@migrasyon/sdk/testing";
 
 const c = await capture(addUsers);
 
@@ -380,7 +380,7 @@ r.down.is(...); // empty exactly when the engine derives the inverse
 
 It does not invert anything. Every inverse lives in the engine, so that two SDKs cannot reach two
 answers for one migration — whether an
-operation can be inverted at all is reported by `migr validate` below. The one rollback this can see
+operation can be inverted at all is reported by `migrasyon validate` below. The one rollback this can see
 is impossible it throws over: an up that sends statements of its own and authors no down, since a
 statement has no inverse to derive.
 
@@ -399,9 +399,9 @@ p.dsn; // inspect the database with your own driver
 ```
 
 The database is a throwaway SQLite file (`driver` and `dsn` together point it somewhere real), and
-the `migr.yaml` goes under `<project>/.migr/` rather than in a temp directory — the directory holding
-it is the runtime's working directory, and this runtime resolves `@migr/sdk` from there. The binary
-is `MIGR_BIN`, or `migr` on `PATH`; when there is neither this **fails rather than skipping**, and
+the `migrasyon.yaml` goes under `<project>/.migrasyon/` rather than in a temp directory — the directory holding
+it is the runtime's working directory, and this runtime resolves `@migrasyon/sdk` from there. The binary
+is `MIGRASYON_BIN`, or `migrasyon` on `PATH`; when there is neither this **fails rather than skipping**, and
 `found()` answers the same question without starting anything if you would rather skip deliberately.
 
 `roundTrip()` catches residue: a down that left a table behind makes the second up fail, and the
@@ -418,8 +418,8 @@ migrations/20260301T090000_add_users.ts
 test/migrations.test.ts                  // project({ dir: "../migrations" })
 ```
 
-A command that fails throws with what migr wrote on stderr. One case needs more than the exit code:
-`migr validate` exits 2 both for _the checks found problems_, whose report is on stdout, and for _this
+A command that fails throws with what migrasyon wrote on stderr. One case needs more than the exit code:
+`migrasyon validate` exits 2 both for _the checks found problems_, whose report is on stdout, and for _this
 command was given something it refuses_, whose message is on stderr. `validate()` tells them apart by
 whether a document was printed, so a refused filename arrives as an error naming the file rather than
 as an empty report.
@@ -430,21 +430,21 @@ The package ships ESM and CommonJS side by side, each in a directory that declar
 so a plain `.d.ts` beside each bundle is unambiguous:
 
 ```
-dist/esm/  index.js  index.d.ts  package.json {"type":"module"}     migr-runtime-node.js
+dist/esm/  index.js  index.d.ts  package.json {"type":"module"}     migrasyon-runtime-node.js
 dist/cjs/  index.js  index.d.ts  package.json {"type":"commonjs"}
-dist/<fmt>/testing/index.js        # @migr/sdk/testing, which imports ../index.js
+dist/<fmt>/testing/index.js        # @migrasyon/sdk/testing, which imports ../index.js
 ```
 
 The test helpers are a second entry point rather than a second bundle: their one non-builtin import
 is the library beside them, left external, so the package grows by the helpers and not by a copy of
 itself. Node's own package self-reference cannot do that job here — the `package.json` each format
-directory carries to declare its `type` shadows the real manifest, so `@migr/sdk` resolves to nothing
+directory carries to declare its `type` shadows the real manifest, so `@migrasyon/sdk` resolves to nothing
 from inside `dist/` — which is why the specifier is relative and the build finishes the `.ts` → `.js`
 rewrite for it.
 
 ```ts
-import { PROTOCOL_VERSION } from "@migr/sdk"; // ESM
-const { PROTOCOL_VERSION } = require("@migr/sdk"); // CJS
+import { PROTOCOL_VERSION } from "@migrasyon/sdk"; // ESM
+const { PROTOCOL_VERSION } = require("@migrasyon/sdk"); // CJS
 ```
 
 `npm test` builds first and then loads both artifacts, so "builds to both" is measured on every run

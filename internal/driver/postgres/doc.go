@@ -12,7 +12,7 @@
 //
 // # Reading a snapshot back
 //
-// Four probes over current_schema(), which is asked for rather than assumed: migr.yaml need not
+// Four probes over current_schema(), which is asked for rather than assumed: migrasyon.yaml need not
 // name a schema, and an unset one leaves the search path to the server. Every type this driver emits
 // reads back exactly -- this is the only one of the three engines whose native map has no
 // collisions, and only because it refuses enum outright. Two measurements decided the SQL. Joining
@@ -29,15 +29,15 @@
 // One session-level advisory lock, taken on the session that will release it — which is why a
 // Conn is one pinned connection and never a pool. The key is two int4s:
 //
-//	pg_advisory_lock(<a constant identifying migr>, <digest of schema + history table>)
+//	pg_advisory_lock(<a constant identifying migrasyon>, <digest of schema + history table>)
 //
 // PostgreSQL keeps the two-key advisory space separate from the one-key space and never lets them
 // collide, so an application using pg_advisory_lock(bigint) for its own purposes cannot collide
-// with migr at all — by construction rather than by hash luck. The fixed first half makes migr's
+// with migrasyon at all — by construction rather than by hash luck. The fixed first half makes migrasyon's
 // locks recognizable in pg_locks, which is what the holder report reads.
 //
 // The second half is a SHA-256 digest, not hash/maphash: maphash is seeded per process, so it
-// would give every migr invocation a different key and the lock would block nobody. The two inputs
+// would give every migrasyon invocation a different key and the lock would block nobody. The two inputs
 // are separated by a NUL, which no identifier may contain, so schema "a" with table "bc" and
 // schema "ab" with table "c" are different installations rather than one. Advisory locks are
 // already scoped to the database, so the database name adds nothing and is not an input; neither
@@ -58,7 +58,7 @@
 // documentation's "a table, index, row, or other database object".
 //
 // It is set through set_config rather than SET, because SET takes no bound parameters — the same
-// reason applySearchPath uses it, and the reason migr.yaml's lock.timeout is bound rather than
+// reason applySearchPath uses it, and the reason migrasyon.yaml's lock.timeout is bound rather than
 // concatenated.
 //
 // The surviving session is not merely a precondition for something later; it is what makes the
@@ -74,7 +74,7 @@
 // Invariant #12's "a timeout retries with backoff rather than queueing" is about DDL statements,
 // and its reason does not transfer: an ALTER TABLE blocked behind a long-running query blocks every
 // later query on that table, so staying queued is itself the outage. An advisory lock blocks
-// nothing but other migr runs. safety.lock_retries belongs to that per-statement bound, which is why
+// nothing but other migrasyon runs. safety.lock_retries belongs to that per-statement bound, which is why
 // it sits in the safety block beside safety.lock_timeout rather than beside lock.timeout. Since
 // M13-T2 a statement whose lock_timeout expires is 55P03 wrapped in driver.ErrStatementLockTimeout,
 // and internal/engine reruns the migration's transaction after a jittered backoff -- the rollback
@@ -125,7 +125,7 @@
 // That covers a client that closed, crashed cleanly, or was killed with SIGTERM. It does not cover
 // one killed with SIGKILL, OOM-killed, or partitioned away: no FIN reaches the server, the backend
 // stays blocked in ReadCommand, and it holds the lock until TCP keepalives expire — two hours by
-// default on Linux. A crashed migr up would wedge every later run for that long, which is the one
+// default on Linux. A crashed migrasyon up would wedge every later run for that long, which is the one
 // case invariant #11 exists for.
 //
 // So the startup packet pins tcp_keepalives_idle, _interval and _count, bringing that to about
@@ -135,7 +135,7 @@
 // a proxy that closes a socket sends FIN or RST, which is the opposite of the failure being
 // modeled. What is tested is that the server was asked.
 //
-// migr never terminates a holder itself: killing another session on the strength of an advisory
+// migrasyon never terminates a holder itself: killing another session on the strength of an advisory
 // row is not a decision a migration tool makes silently, and the usual victim would be a
 // legitimately slow migration. It reports the pid instead, and an integration test terminates the
 // pid taken out of the error to prove the advice works.
@@ -143,16 +143,16 @@
 // Recoverability is a property of the strategy rather than of the driver, and the file and table
 // strategies will need machinery this one does not — a lock file, unlike a backend, does not
 // vanish when its owner dies. lock.strategy reaches this driver through Options and anything but
-// advisory is refused at construction, so a strategy migr.yaml names and this engine cannot do is
+// advisory is refused at construction, so a strategy migrasyon.yaml names and this engine cannot do is
 // an error rather than a silent substitution.
 //
 // # Who holds the lock, and since when
 //
-// A failed acquire reads pg_locks joined to pg_stat_activity on migr's fixed class id and reports
+// A failed acquire reads pg_locks joined to pg_stat_activity on migrasyon's fixed class id and reports
 // a driver.LockHolder. Four clauses in that query are load-bearing and each has a test: granted
 // separates the holder from the sessions queued behind it; objsubid = 2 keeps the two-integer key
 // space apart from the bigint one, whose rows carry an identical classid and objid; and classid
-// and objid are what make the lock migr's, and this installation's.
+// and objid are what make the lock migrasyon's, and this installation's.
 //
 // PostgreSQL records no grant time for an advisory lock, so what is reported is the holder's
 // session age — which bounds the hold from above and is the honest answer. xact_start is the
@@ -214,12 +214,12 @@
 // Ensure reports it present and the index is never created at all. It is a setup step, taken
 // before the migration transaction opens and under the migration lock, and it deliberately does
 // not go through the plan or capability path — this driver declares add_index as long_exclusive,
-// so --require-safe would otherwise refuse to create migr's own history table.
+// so --require-safe would otherwise refuse to create migrasyon's own history table.
 //
 // to_regclass folds an unquoted name to lower case, so the existence check passes the name
 // through quote_ident. Without it a mixed-case history table reports absent forever and every run
 // tries to create it. When the table is present, every column history.Schema declares must be
-// there; extras are fine, because a table a newer migr extended must stay usable.
+// there; extras are fine, because a table a newer migrasyon extended must stay usable.
 //
 // One SQLSTATE means two things and is classified per call site rather than from a table. Two
 // concurrent CREATE TABLEs do not both raise 42P07: the loser blocks on a pg_catalog unique index
@@ -247,8 +247,8 @@
 // have waited for a lock forever. Both halves were measured on PostgreSQL 16 and 17.
 //
 // So there are two bounds, and they are not the same setting: the advisory acquire waits under
-// migr.yaml's lock.timeout, and each statement under safety.lock_timeout. Options carries both,
-// and whichever migr.yaml left unset falls back to the contract's own constant rather than to
+// migrasyon.yaml's lock.timeout, and each statement under safety.lock_timeout. Options carries both,
+// and whichever migrasyon.yaml left unset falls back to the contract's own constant rather than to
 // zero — which the server would read as no bound at all.
 //
 // # What a lock verdict says
@@ -316,7 +316,7 @@
 // Resolve(op).Allowed() is false exactly when Compile refuses. Here the rule calls the compiler,
 // so the two cannot drift and the suite proves the wiring rather than a coincidence.
 //
-// Callers are unaffected: migr validate and migr plan read the declaration before anything
+// Callers are unaffected: migrasyon validate and migrasyon plan read the declaration before anything
 // touches a database, so the declaration is still what is consulted. Which of the two is derived
 // is an implementation detail of this driver, and it does not generalize — SQLite must declare
 // Emulated with a named strategy, and a Compile that succeeded says nothing about how.
@@ -447,7 +447,7 @@
 // and skips a build or drop it finds already done. A failed REINDEX leaves <name>_ccnew INVALID
 // beside the original, and both are dropped. InvalidIndexes lists every INVALID index the namespace
 // holds, and Introspect marks each one -- schema.Index.Invalid and a marker -- so a name it holds
-// is not taken and migr diff declines to compare it. Only a raw operation declaring no_transaction
+// is not taken and migrasyon diff declines to compare it. Only a raw operation declaring no_transaction
 // and these rewrites set Statement.NoTransaction, and a raw one's concurrent statement is repaired
 // too, never reindexed, since nothing says which index it builds.
 //
@@ -501,7 +501,7 @@
 //
 // # search_path needs more than a bound parameter
 //
-// The schema from migr.yaml is set through set_config with a bound parameter — and that alone is
+// The schema from migrasyon.yaml is set through set_config with a bound parameter — and that alone is
 // not enough. A bound parameter stops SQL injection, but search_path is a list-valued setting, so
 // PostgreSQL parses whatever value it receives as comma-separated entries: a schema of
 // "public, pg_catalog" silently becomes two of them, which is a privilege surface rather than a
@@ -548,12 +548,12 @@
 // publication of its derived name first, which is how a start killed before its record is cleaned.
 // The session is a driver.Shadower -- LIKE ... EXCLUDING INDEXES with every index recreated under a
 // derived name, a FOR SHARE copy, an idempotent replay, and a cutover in one transaction that swaps
-// the index names and the tables -- and a driver.CaptureKeeper, listing the migr_ slots and the WAL
+// the index names and the tables -- and a driver.CaptureKeeper, listing the migrasyon_ slots and the WAL
 // each retains. shadow.go, shadow_catalog.go, stream.go, pgoutput.go and slots.go hold it.
 //
 // Three things keep a read's cost to one batch, each measured on a CI runner that never caught up
 // without it. A peek, and an advance, decode from the slot's restart point rather than from where
-// migr confirmed, and that point moves only past a RUNNING_XACTS record the background writer logs
+// migrasyon confirmed, and that point moves only past a RUNNING_XACTS record the background writer logs
 // every 15 seconds: so before each advance the stream logs one itself with pg_log_standby_snapshot,
 // which PostgreSQL 16 adds and which needs superuser or an EXECUTE grant -- refused, it is not asked
 // again and the slot moves at the server's own pace. Measured under eight writers, the restart point

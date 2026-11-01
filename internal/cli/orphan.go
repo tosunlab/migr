@@ -6,10 +6,10 @@ import (
 	"log/slog"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // orphanedSlot is a change-stream resource no live shadow-table migration owns, as a report renders it.
@@ -22,7 +22,7 @@ type orphanedSlot struct {
 	Retained int64 `json:"retained_bytes"`
 	// Status is the server's word for how that log is kept, absent where it has none.
 	Status string `json:"status,omitempty"`
-	// Ours reports a resource only this project's runs can have left, which migr up releases.
+	// Ours reports a resource only this project's runs can have left, which migrasyon up releases.
 	Ours bool `json:"ours"`
 	// Why says how it came to be left.
 	Why string `json:"why"`
@@ -80,10 +80,10 @@ func describeSlotStatus(status string) string {
 	return " (wal_status " + status + ")"
 }
 
-// describeOrphanRemedy says what drops an orphan: the next migr up for this project's, a person for anyone else's.
+// describeOrphanRemedy says what drops an orphan: the next migrasyon up for this project's, a person for anyone else's.
 func describeOrphanRemedy(one orphanedSlot) string {
 	if one.Ours {
-		return "the next migr up drops it"
+		return "the next migrasyon up drops it"
 	}
 
 	return "once nothing reads it, drop it with SELECT pg_drop_replication_slot(" + quotedLiteral(one.Name) +
@@ -119,7 +119,7 @@ func logReleased(log *slog.Logger) func(engine.ReleasedCapture) {
 			"why", r.Orphan.Why}
 
 		if r.InUse {
-			log.Warn("left an orphaned replication slot something is reading through -- the next migr up "+
+			log.Warn("left an orphaned replication slot something is reading through -- the next migrasyon up "+
 				"tries again", attrs...)
 
 			return

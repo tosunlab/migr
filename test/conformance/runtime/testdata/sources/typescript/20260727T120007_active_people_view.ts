@@ -1,4 +1,4 @@
-import { defineMigration } from "@migr/sdk";
+import { defineMigration } from "@migrasyon/sdk";
 
 /** ActivePeopleView is the fixture for create_view and drop_view, whose queries are engine SQL. */
 export default defineMigration({

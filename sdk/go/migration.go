@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import "context"
 
@@ -20,7 +20,7 @@ type Irreversible interface {
 	Irreversible() string
 }
 
-// Validator is a migration that checks itself, which migr validate runs and which emits nothing.
+// Validator is a migration that checks itself, which migrasyon validate runs and which emits nothing.
 type Validator interface {
 	// Validate reports what is wrong with this migration, reaching no database.
 	Validate() error

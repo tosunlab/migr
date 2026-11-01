@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	zerodowntime "github.com/emrebdr/migr/test/conformance/zerodowntime"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	zerodowntime "github.com/tosunlab/migrasyon/test/conformance/zerodowntime"
 )
 
 // zdServers are the servers the zero-downtime suite holds this driver to; three of them permit capture.
@@ -25,10 +25,10 @@ var zdServers = []struct {
 	variant        Variant
 	shadowOnly     bool
 }{
-	{"mysql80", "MIGR_TEST_MYSQL80_DSN", "migr:migr@tcp(127.0.0.1:55480)/migr", MySQL, false},
-	{"mysql80gtid", "MIGR_TEST_MYSQL80GTID_DSN", "migr:migr@tcp(127.0.0.1:55481)/migr", MySQL, true},
-	{"mariadb114", "MIGR_TEST_MARIADB114_DSN", "migr:migr@tcp(127.0.0.1:55411)/migr", MariaDB, false},
-	{"mariadb114binlog", "MIGR_TEST_MARIADB114BINLOG_DSN", "migr:migr@tcp(127.0.0.1:55412)/migr", MariaDB, true},
+	{"mysql80", "MIGRASYON_TEST_MYSQL80_DSN", "migrasyon:migrasyon@tcp(127.0.0.1:55480)/migrasyon", MySQL, false},
+	{"mysql80gtid", "MIGRASYON_TEST_MYSQL80GTID_DSN", "migrasyon:migrasyon@tcp(127.0.0.1:55481)/migrasyon", MySQL, true},
+	{"mariadb114", "MIGRASYON_TEST_MARIADB114_DSN", "migrasyon:migrasyon@tcp(127.0.0.1:55411)/migrasyon", MariaDB, false},
+	{"mariadb114binlog", "MIGRASYON_TEST_MARIADB114BINLOG_DSN", "migrasyon:migrasyon@tcp(127.0.0.1:55412)/migrasyon", MariaDB, true},
 }
 
 // zdLockWait is the suite's lock wait on this driver: lock_wait_timeout holds whole seconds, so one rather than half the budget.

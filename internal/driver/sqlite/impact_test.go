@@ -3,8 +3,8 @@ package sqlite
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // declared is what this driver says each operation costs a live database.

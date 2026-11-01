@@ -5,12 +5,12 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
-	conformance "github.com/emrebdr/migr/test/conformance/driver"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/driver"
 )
 
 // errNoServer refuses everything on a session the conformance suite never reaches for.

@@ -6,7 +6,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // ErrPhase marks phase declarations that do not describe a change a deploy can carry out in order.

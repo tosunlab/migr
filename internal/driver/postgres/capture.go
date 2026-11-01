@@ -6,7 +6,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/capability"
 )
 
 // captureQuery reads the three things logical decoding needs: the WAL level, a role allowed to
@@ -36,7 +36,7 @@ func readCapture(ctx context.Context, conn *pgx.Conn) capability.Capture {
 	var a captureAnswer
 
 	if err := conn.QueryRow(ctx, captureQuery).Scan(&a.level, &a.replicates, &a.free, &a.keep); err != nil {
-		return capability.Lacks(fmt.Sprintf("an answer migr could read about wal_level, the "+
+		return capability.Lacks(fmt.Sprintf("an answer migrasyon could read about wal_level, the "+
 			"REPLICATION attribute and free replication slots (%v)", err))
 	}
 

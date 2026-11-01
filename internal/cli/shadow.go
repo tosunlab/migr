@@ -7,10 +7,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // shadowing gives a run what a shadow-table migration changes its table through, and what it logs.
@@ -63,9 +63,9 @@ func logShadow(log *slog.Logger, unattended bool) func(engine.ShadowProgress) {
 		case p.Holding && !warned:
 			warned = true
 
-			log.Warn("holding the shadow table in sync until its cutover is confirmed -- migr cutover "+
+			log.Warn("holding the shadow table in sync until its cutover is confirmed -- migrasyon cutover "+
 				"--confirm "+p.Migration.Version+" confirms it; Ctrl-C detaches and keeps it, exiting 6, "+
-				"and the next migr up carries the hold on", append(attrs, "behind", p.Behind)...)
+				"and the next migrasyon up carries the hold on", append(attrs, "behind", p.Behind)...)
 		case p.Holding:
 			log.Info("holding the shadow table in sync", append(attrs, "read", p.Batch, "behind", p.Behind)...)
 		case p.Batch > 0:
@@ -108,7 +108,7 @@ type shadowDoc struct {
 	Confirmed bool `json:"confirmed,omitempty"`
 	// age is how long before this report the log was last read.
 	age time.Duration
-	// Refusal is why migr up would refuse it before creating anything, absent where it would not.
+	// Refusal is why migrasyon up would refuse it before creating anything, absent where it would not.
 	Refusal string `json:"refusal,omitempty"`
 }
 
@@ -132,14 +132,14 @@ func shadowDocOf(planned *engine.ShadowPlan) *shadowDoc {
 	return doc
 }
 
-// writeShadow says how a migration runs through a shadow table, or why migr up would refuse to.
+// writeShadow says how a migration runs through a shadow table, or why migrasyon up would refuse to.
 func (m compiledMigration) writeShadow(b *strings.Builder) {
 	if m.Shadow == nil {
 		return
 	}
 
 	if m.Shadow.Refusal != "" {
-		fmt.Fprintf(b, "       ×  through a shadow table -- migr up refuses it: %s\n", m.Shadow.Refusal)
+		fmt.Fprintf(b, "       ×  through a shadow table -- migrasyon up refuses it: %s\n", m.Shadow.Refusal)
 
 		return
 	}
@@ -204,7 +204,7 @@ func waitingOf(state history.ShadowState, now time.Time) *shadowDoc {
 // describeWaiting says how current a waiting shadow table is, whether anything holds it, and what confirms it.
 func describeWaiting(at *shadowDoc, version string) string {
 	if at == nil || at.Behind == nil || at.Held == nil {
-		return "waiting for its cutover to be confirmed -- migr cutover --confirm " + version + " confirms it"
+		return "waiting for its cutover to be confirmed -- migrasyon cutover --confirm " + version + " confirms it"
 	}
 
 	reading := fmt.Sprintf("it trailed the log by %s when it last read it, %s ago (log position %s, "+
@@ -214,13 +214,13 @@ func describeWaiting(at *shadowDoc, version string) string {
 	switch {
 	case !*at.Held:
 		return fmt.Sprintf("waiting for its cutover, and no run is holding the shadow table %s in sync: "+
-			"%s -- changes since are not applied, and migr up resumes the hold%s", at.Shadow, reading,
+			"%s -- changes since are not applied, and migrasyon up resumes the hold%s", at.Shadow, reading,
 			confirmation(at, version))
 	case at.Confirmed:
 		return fmt.Sprintf("held in sync through the shadow table %s: %s -- confirmed, so the run "+
 			"holding it cuts it over at its next read", at.Shadow, reading)
 	default:
-		return fmt.Sprintf("held in sync through the shadow table %s: %s -- migr cutover --confirm %s "+
+		return fmt.Sprintf("held in sync through the shadow table %s: %s -- migrasyon cutover --confirm %s "+
 			"swaps it in, catching up under a lock bounded by safety.lock_timeout", at.Shadow, reading,
 			version)
 	}
@@ -232,7 +232,7 @@ func confirmation(at *shadowDoc, version string) string {
 		return "; its cutover is confirmed, so that run performs it"
 	}
 
-	return "; migr cutover --confirm " + version + " confirms the swap"
+	return "; migrasyon cutover --confirm " + version + " confirms the swap"
 }
 
 // roundedSeconds renders a duration to whole seconds, the precision a lag is measured at.
@@ -243,7 +243,7 @@ func roundedSeconds(d time.Duration) string {
 // describeShadowStopped says where a stopped shadow-table migration stands and the two ways on.
 func describeShadowStopped(at *shadowDoc) string {
 	return fmt.Sprintf("stopped %s through the shadow table %s at log position %s, which it and the "+
-		"change stream %s are kept for -- migr up carries it on, and migr resolve --rolled-back "+
+		"change stream %s are kept for -- migrasyon up carries it on, and migrasyon resolve --rolled-back "+
 		"abandons it", at.Stage, at.Shadow, at.Position, at.Capture)
 }
 

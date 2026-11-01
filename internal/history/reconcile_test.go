@@ -5,9 +5,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 func TestAMigrationWithAFileAndNoRunsIsPending(t *testing.T) {
@@ -300,7 +300,7 @@ func TestAVersionRolledBackAndThenDeletedIsNotReportedAtAll(t *testing.T) {
 	statuses := reconcile(t, nil, up(users, 1, Applied), down(users, 2, Applied))
 	if len(statuses) != 0 {
 		t.Errorf("a rolled-back, deleted migration reported %v, want nothing", statuses)
-		t.Log("It is fully undone and its file's absence is expected. migr history still")
+		t.Log("It is fully undone and its file's absence is expected. migrasyon history still")
 		t.Log("prints its rows; missing is the alarm for schema nobody can unwind, and")
 		t.Log("diluting it with tombstones is how an operator learns to ignore it.")
 	}
@@ -392,7 +392,7 @@ func TestStatusesKeepTheOrderTheMigrationsWereGivenIn(t *testing.T) {
 		t.Errorf("the statuses came back as %v, want %v", got, want)
 		t.Log("Order overlays declared dependencies on timestamp order, so the sequence a")
 		t.Log("caller hands over is what up will run. Re-sorting by version here would show")
-		t.Log("an order migr will not follow, and would discard the overlay (M4-T2).")
+		t.Log("an order migrasyon will not follow, and would discard the overlay (M4-T2).")
 	}
 }
 

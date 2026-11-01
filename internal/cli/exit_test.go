@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestExitCode(t *testing.T) {
@@ -105,15 +105,15 @@ func TestAnUnreadableChecksumIsNotDrift(t *testing.T) {
 		{
 			name: "a checksum that will not parse",
 			err: &history.CorruptError{
-				Table: "migr_migrations", Field: "checksum", Err: checksum.ErrMalformed,
+				Table: "migrasyon_migrations", Field: "checksum", Err: checksum.ErrMalformed,
 			},
 		},
 		{
 			name: "a row written under a scheme this build cannot compute",
 			err: &history.CorruptError{
-				Table: "migr_migrations",
+				Table: "migrasyon_migrations",
 				Field: "checksum",
-				Err:   &checksum.SchemeError{Received: "migr2", Supported: checksum.Supported()},
+				Err:   &checksum.SchemeError{Received: "migrasyon2", Supported: checksum.Supported()},
 			},
 		},
 		{name: "the bare corrupt sentinel", err: history.ErrCorrupt},
@@ -124,7 +124,7 @@ func TestAnUnreadableChecksumIsNotDrift(t *testing.T) {
 			if got := ExitCode(tt.err); got != ExitRuntime {
 				t.Errorf("ExitCode = %d, want %d", got, ExitRuntime)
 				t.Log("A row this build cannot read needs manual repair and one under a future")
-				t.Log("scheme needs a newer migr. Neither is someone editing an applied migration,")
+				t.Log("scheme needs a newer migrasyon. Neither is someone editing an applied migration,")
 				t.Log("and reporting either as exit 4 is how operators learn to ignore exit 4.")
 			}
 		})
@@ -138,7 +138,7 @@ func TestAnExplicitExitCodeStillBeatsTheDriftSentinel(t *testing.T) {
 	if got := ExitCode(err); got != ExitValidation {
 		t.Errorf("ExitCode = %d, want %d", got, ExitValidation)
 		t.Log("A command that classified a failure itself has more context than this fallback,")
-		t.Log("and migr validate will classify drift as one problem among several it reports.")
+		t.Log("and migrasyon validate will classify drift as one problem among several it reports.")
 	}
 }
 

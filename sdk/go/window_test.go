@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"context"
@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // collecting is a host that keeps every operation document it was sent, the way a capture does.

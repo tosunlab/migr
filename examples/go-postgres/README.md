@@ -5,17 +5,17 @@ that need no database.
 
 | Migration | Undone by |
 |---|---|
-| `20261101T100000_create_accounts.go` | **derived**: it writes no `Down`, so migr inverts what `Up` emits |
+| `20261101T100000_create_accounts.go` | **derived**: it writes no `Down`, so migrasyon inverts what `Up` emits |
 | `20261101T100100_add_accounts_nickname.go` | **authored**: its `Down` drops the index and column, recording each with `Was` |
 | `20261101T100200_add_accounts_tier.go` | **nothing**: it reads the table to decide its default, and declares itself `Irreversible` |
 
 ## Run it
 
-You need [migr](../../README.md#installing), Go 1.24 or later, and Docker for the database.
+You need [migrasyon](../../README.md#installing), Go 1.24 or later, and Docker for the database.
 
 ```console
 $ docker compose up -d --wait
-$ migr plan --safety --to 20261101T100100
+$ migrasyon plan --safety --to 20261101T100100
 ```
 
 ```text
@@ -38,10 +38,10 @@ PostgreSQL builds it `CONCURRENTLY` instead, outside any transaction, so writes 
 
 **Why `--to`:** `add_accounts_tier` reads `accounts` to decide its default, and a read runs against
 the database as it is now. On an empty database that table doesn't exist yet, so a plan reaching
-that migration fails. A plan stops before it; `migr up` runs it once the table is there.
+that migration fails. A plan stops before it; `migrasyon up` runs it once the table is there.
 
 ```console
-$ migr up
+$ migrasyon up
 up — database "default", batch 1
 
   1  20261101T100000_create_accounts.go        1 statement  575µs
@@ -49,9 +49,9 @@ up — database "default", batch 1
   4  20261101T100200_add_accounts_tier.go      1 statement  345µs
 
 applied 3 migrations in 2.379ms
-$ migr status
-$ migr down
-migr: 20261101T100200_add_accounts_tier.go: this migration declares that it cannot be undone: the tiers written after it ran are not recorded anywhere a rollback could restore them from
+$ migrasyon status
+$ migrasyon down
+migrasyon: 20261101T100200_add_accounts_tier.go: this migration declares that it cannot be undone: the tiers written after it ran are not recorded anywhere a rollback could restore them from
 $ docker compose down -v
 ```
 
@@ -64,15 +64,15 @@ than an irreversible migration can be rolled back past it, so to start over, dro
 $ go test ./...
 ```
 
-`migrationtest/` uses the SDK's test helpers, from `github.com/emrebdr/migr/sdk/go/migrtest`:
-- `migrtest.Up` and `migrtest.Down` capture what each half emits;
-- `migrtest.Stage` answers `add_accounts_tier`'s read, so the test chooses the branch: with accounts,
+`migrationtest/` uses the SDK's test helpers, from `github.com/tosunlab/migrasyon/sdk/go/migrasyontest`:
+- `migrasyontest.Up` and `migrasyontest.Down` capture what each half emits;
+- `migrasyontest.Stage` answers `add_accounts_tier`'s read, so the test chooses the branch: with accounts,
   the column gets a default, and on an empty table it doesn't;
-- `migrtest.Reversal` reports how each migration is undone;
-- `migrtest.New` runs the real `migr` binary on a throwaway SQLite file: it validates, applies all
+- `migrasyontest.Reversal` reports how each migration is undone;
+- `migrasyontest.New` runs the real `migrasyon` binary on a throwaway SQLite file: it validates, applies all
   three, and checks the rollback is refused.
 
-They need `migr` on `PATH` (or `MIGR_BIN`), and no database. The tests live in a package of their
+They need `migrasyon` on `PATH` (or `MIGRASYON_BIN`), and no database. The tests live in a package of their
 own because the migrations directory accepts only migrations.
 
 ## CI
@@ -80,14 +80,14 @@ own because the migrations directory accepts only migrations.
 [`.github/workflows/migrations.yml`](.github/workflows/migrations.yml) runs on every pull request,
 against a PostgreSQL 17 service container:
 - `go test ./...`;
-- `migr validate --require-safe`, which compiles every migration against the server and fails on an
+- `migrasyon validate --require-safe`, which compiles every migration against the server and fails on an
   operation above `safety.max_lock_impact` (`brief_exclusive`);
-- `migr up`.
+- `migrasyon up`.
 
-Copy it into your own repository. It installs migr from npm as `@migr/cli`, so it needs a published
+Copy it into your own repository. It installs migrasyon from npm as `@migrasyon/cli`, so it needs a published
 release.
 
 ## Using this as a starting point
 
 This project links the Go SDK from this repository, since it isn't published yet. In your own copy,
-delete the `replace` line in `go.mod` and run `go get github.com/emrebdr/migr/sdk/go`.
+delete the `replace` line in `go.mod` and run `go get github.com/tosunlab/migrasyon/sdk/go`.

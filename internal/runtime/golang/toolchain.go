@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // program is the toolchain binary this adapter looks for and runs, and the only one it knows.
@@ -39,7 +39,7 @@ func find() (string, error) {
 	path, err := exec.LookPath(program)
 	if err != nil {
 		return "", remedy.With(fmt.Errorf("%w: %w", ErrNoToolchain, err),
-			"install Go and put go on the PATH migr runs with: a Go migration is built by it")
+			"install Go and put go on the PATH migrasyon runs with: a Go migration is built by it")
 	}
 
 	return path, nil

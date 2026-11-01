@@ -7,9 +7,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // referenced builds a table with one of everything that can point at it, and rows in all of them.
@@ -264,7 +264,7 @@ func TestARebuildIsRefusedWhereItWouldTakeAnotherTablesRowsWithIt(t *testing.T) 
 func TestARebuildIsRefusedWhenItCannotProceedSafely(t *testing.T) {
 	c := openFile(t)
 	exec(t, c, `CREATE TABLE "users" ("id" integer PRIMARY KEY)`)
-	exec(t, c, `CREATE TABLE "migr_rebuild_users" ("id" integer)`)
+	exec(t, c, `CREATE TABLE "migrasyon_rebuild_users" ("id" integer)`)
 
 	check := ir.AddCheck{Table: "users", Name: "ck", Expression: `"id" > 0`}
 
@@ -357,7 +357,7 @@ func TestARebuildReWordsTheRecordedStatementOnceAndThenSettles(t *testing.T) {
 		})
 	}
 
-	t.Log("This is the claim cmd/migr's round trip used to make and no longer can: it compares the")
+	t.Log("This is the claim cmd/migrasyon's round trip used to make and no longer can: it compares the")
 	t.Log("neutral snapshot, where a re-wording is invisible by design. The wording is a fact about")
 	t.Log("this engine, so it is measured here, against the statement SQLite actually recorded.")
 }

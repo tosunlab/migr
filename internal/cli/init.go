@@ -11,16 +11,16 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // scaffoldDir is the migrations directory init creates, and the one the config it writes names.
 const scaffoldDir = "migrations"
 
-// scaffoldConfig is a migr.yaml holding every key that has no default, plus the one decision it owes.
-const scaffoldConfig = `# Written by migr init. Every other setting has a default, and migr config
+// scaffoldConfig is a migrasyon.yaml holding every key that has no default, plus the one decision it owes.
+const scaffoldConfig = `# Written by migrasyon init. Every other setting has a default, and migrasyon config
 # prints the resolved set with secrets redacted.
 version: 1
 migrations:
@@ -34,8 +34,8 @@ databases:
     dsn: ${DATABASE_URL:-` + scaffoldDSN + `}
 validation:
   # Every statement in a .sql migration reaches the database as a raw operation,
-  # whose effect migr cannot read -- so this project permits that kind, or nothing
-  # it writes will run. The operations migr can read stay refused until named here:
+  # whose effect migrasyon cannot read -- so this project permits that kind, or nothing
+  # it writes will run. The operations migrasyon can read stay refused until named here:
   # drop_table, drop_column, drop_view, alter_column.
   allow_destructive: [` + string(ir.KindRaw) + `]
 `
@@ -44,14 +44,14 @@ validation:
 const scaffoldDSN = "postgres://localhost:5432/mydb"
 
 // nextStep is what to do with a scaffolded project, and what is still owed before it connects.
-const nextStep = "next: `migr create add_users`, and set DATABASE_URL before `migr up`\n"
+const nextStep = "next: `migrasyon create add_users`, and set DATABASE_URL before `migrasyon up`\n"
 
-// newInitCmd builds the `migr init` subcommand.
+// newInitCmd builds the `migrasyon init` subcommand.
 func newInitCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "init",
-		Short: "Scaffold migr.yaml and a migrations directory",
-		Long: "Writes a migr.yaml holding the settings that have no default, and creates the\n" +
+		Short: "Scaffold migrasyon.yaml and a migrations directory",
+		Long: "Writes a migrasyon.yaml holding the settings that have no default, and creates the\n" +
 			"migrations directory beside it. An existing config is never overwritten.",
 		Args: argsOf(cobra.NoArgs),
 		RunE: func(cmd *cobra.Command, _ []string) error {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // fixture is one operation paired with its canonical JSON document.

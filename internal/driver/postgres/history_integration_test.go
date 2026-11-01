@@ -9,13 +9,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
-// historyTable is deliberately not migr_migrations: a store that ignored Options.HistoryTable and
+// historyTable is deliberately not migrasyon_migrations: a store that ignored Options.HistoryTable and
 // hard-coded the default would pass every assertion in this file if both halves agreed on it.
 const historyTable = "runs_of_migrations"
 
@@ -105,7 +105,7 @@ func TestTheHistoryTableIsCreatedAndSeenFromAnotherSession(t *testing.T) {
 // Introspect leaves out the table the session was opened with, which is this one -- so
 // what describes it is a session pointed at a different history table, for which it is an ordinary
 // table like any other. That the name is what decides is the point rather than a way around it: the
-// same exclusion is why every migr diff over a migrated database does not propose dropping the
+// same exclusion is why every migrasyon diff over a migrated database does not propose dropping the
 // migration history.
 
 // checkCreatedTable holds what Ensure created to what the neutral schema declares.
@@ -150,8 +150,8 @@ func TestASnapshotLeavesOutTheHistoryTableTheSessionRecordsIn(t *testing.T) {
 			if described := describeSchema(t, historyIn(t, dsn, target)); strings.Contains(
 				described, historyTable) {
 				t.Errorf("the session's own history table is in its snapshot:\n%s", described)
-				t.Log("Read as part of the schema, migr's own bookkeeping would have every")
-				t.Log("migr diff propose dropping the migration history.")
+				t.Log("Read as part of the schema, migrasyon's own bookkeeping would have every")
+				t.Log("migrasyon diff propose dropping the migration history.")
 			}
 		})
 	}
@@ -534,7 +534,7 @@ func TestARowFromANewerBuildIsStillReadable(t *testing.T) {
 
 	t.Log("Record.Validate is a write-side precondition and is deliberately not run on read: it")
 	t.Log("refuses last_statement on a non-dirty run, so applying it here would make a row this")
-	t.Log("build merely does not understand unreadable -- and migr history is the command an")
+	t.Log("build merely does not understand unreadable -- and migrasyon history is the command an")
 	t.Log("operator runs to inspect exactly that table.")
 }
 
@@ -633,7 +633,7 @@ func TestAMixedCaseHistoryTableIsFoundOnceItExists(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 	target := scratchSchema(t, dsn)
 
-	conn := open(t, dsn, driver.Options{Schema: target, HistoryTable: "MigrRuns"})
+	conn := open(t, dsn, driver.Options{Schema: target, HistoryTable: "MigrasyonRuns"})
 
 	session, ok := conn.(*pgConn)
 	if !ok {

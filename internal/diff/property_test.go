@@ -5,9 +5,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 func TestEveryProposedOperationIsWellFormed(t *testing.T) {
@@ -36,8 +36,8 @@ func TestEveryProposedListIsReversible(t *testing.T) {
 	}
 
 	t.Log("This is what refusing a drop it cannot record buys: every operation carries a complete")
-	t.Log("from payload, so a migration migr diff writes is reversible by derivation and passes")
-	t.Log("migr validate's own reverse check rather than failing the gate it was written for.")
+	t.Log("from payload, so a migration migrasyon diff writes is reversible by derivation and passes")
+	t.Log("migrasyon validate's own reverse check rather than failing the gate it was written for.")
 }
 
 func TestNoProposedListIsOneTheRunWouldRefuse(t *testing.T) {
@@ -48,7 +48,7 @@ func TestNoProposedListIsOneTheRunWouldRefuse(t *testing.T) {
 			live := one.from
 
 			for _, found := range engine.Unrestorable(ops, &live) {
-				t.Errorf("migr up would refuse what this diff proposes: %s", found.Describe())
+				t.Errorf("migrasyon up would refuse what this diff proposes: %s", found.Describe())
 			}
 
 			reversed, err := ir.ReverseAll(ops)
@@ -59,7 +59,7 @@ func TestNoProposedListIsOneTheRunWouldRefuse(t *testing.T) {
 			target := one.to
 
 			for _, found := range engine.Stated(engine.Unrestorable(reversed, &target)) {
-				t.Errorf("migr down would refuse the inverse of what this diff proposes: %s",
+				t.Errorf("migrasyon down would refuse the inverse of what this diff proposes: %s",
 					found.Describe())
 			}
 		})

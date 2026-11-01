@@ -7,14 +7,14 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // driverName is what the fake compiler here is called, and what every raw operation is addressed to.

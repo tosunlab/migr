@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // constraintKeywords open a table constraint, and are what tells one from a column definition.

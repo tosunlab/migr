@@ -4,8 +4,8 @@ package source
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Chain is one statement of a migration: what it starts from, and the calls made on it in order.
@@ -109,9 +109,9 @@ const (
 // ErrNotRenderable marks an operation no language writes, which is the one the IR has no builder for.
 var ErrNotRenderable = fmt.Errorf("no migration source expresses it")
 
-// A migration migr diff writes has to be reversible by derivation, which is the differ's own stated
+// A migration migrasyon diff writes has to be reversible by derivation, which is the differ's own stated
 // payoff -- so every recorded-state payload the differ filled in is rendered too. A renderer that
-// dropped them would write migrations this project's own migr validate rejects, and the reason the
+// dropped them would write migrations this project's own migrasyon validate rejects, and the reason the
 // differ declines to emit a drop it cannot record would have been spent for nothing.
 //
 // One neutral chain with a writer per language rather than a renderer per language, because the Go

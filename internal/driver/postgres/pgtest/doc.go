@@ -3,12 +3,12 @@
 // # Why this is a package and not a test helper
 //
 // Invariant #3 bans raw SQL above a driver package, and M5-T2 stated the part that governs tests:
-// no test above a driver package composes SQL to send to a database on migr's behalf. A DROP TABLE
-// is exactly that, so it cannot live in cmd/migr -- which is the only package permitted to drive
+// no test above a driver package composes SQL to send to a database on migrasyon's behalf. A DROP TABLE
+// is exactly that, so it cannot live in cmd/migrasyon -- which is the only package permitted to drive
 // the whole stack, because it is the only one permitted to name a concrete driver.
 //
 // So it lives here, inside the driver's own subtree, and is exported. depguard denies the
-// internal/driver/ prefix to everything but cmd/migr, so the one package that may ask is the one
+// internal/driver/ prefix to everything but cmd/migrasyon, so the one package that may ask is the one
 // package that may import this.
 //
 // # What is left here, and what used to be

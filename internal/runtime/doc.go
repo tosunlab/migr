@@ -14,7 +14,7 @@
 //	import (
 //		stdruntime "runtime"
 //
-//		"github.com/emrebdr/migr/internal/runtime"
+//		"github.com/tosunlab/migrasyon/internal/runtime"
 //	)
 //
 // M0-T3 enforces this with the importas linter rather than leaving it to habit.
@@ -65,9 +65,9 @@
 // canceled request the runtime ignored, and the operator's Ctrl-C. So a runtime
 // that forked a helper cannot leave one behind either.
 //
-// That group is also why cmd/migr handles signals. A terminal signals the
+// That group is also why cmd/migrasyon handles signals. A terminal signals the
 // foreground group, and a child in its own group never sees Ctrl-C, so without
-// a handler an interrupted migr up would orphan exactly what this exists to
+// a handler an interrupted migrasyon up would orphan exactly what this exists to
 // prevent.
 //
 // One edge is not coverable from here and is stated rather than papered over:
@@ -92,5 +92,5 @@
 //
 // Status: the contract, the registry, and the session (M6-T5); the Go adapter
 // (M6-T6); and, since M6-T10, internal/cli starts one for every command that
-// runs or previews a migration in a language migr does not read itself.
+// runs or previews a migration in a language migrasyon does not read itself.
 package runtime

@@ -2,7 +2,7 @@
 //
 // Support answers whether an operation can run at all: Native, Emulated with a named strategy, or
 // Unsupported with a human-readable reason. A capability is never silently degraded — emulation is
-// surfaced in migr plan output.
+// surfaced in migrasyon plan output.
 //
 // Lock impact answers what the operation costs a live database: LockFree, BriefExclusive,
 // LongExclusive, or TableRewrite. It is version-dependent and must be resolved from the connected
@@ -42,7 +42,7 @@
 // no way to classify against a server nobody is talking to.
 //
 // The consequence worth stating: Resolve takes no context, performs no I/O, and returns no error.
-// That is what lets migr plan print an annotated plan per statement, and what lets the
+// That is what lets migrasyon plan print an annotated plan per statement, and what lets the
 // version-dependent cases be tested exhaustively with no database — two Sets built for two server
 // versions, asked the same question, disagreeing.
 //

@@ -8,10 +8,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
-	conformance "github.com/emrebdr/migr/test/conformance/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/driver"
 )
 
 // introspect reads the snapshot back, failing the test rather than returning a reason.
@@ -545,7 +545,7 @@ func TestTheSnapshotConformanceSuitePasses(t *testing.T) {
 		conformance.Snapshot{
 			Driver: newDriver(t, driver.Options{}),
 			Conn:   session,
-			Prefix: "migr_snap",
+			Prefix: "migrasyon_snap",
 		}.Run(t)
 	})
 
@@ -559,7 +559,7 @@ func TestTheDiffConformanceSuitePasses(t *testing.T) {
 		conformance.Diff{
 			Driver: newDriver(t, driver.Options{}),
 			Conn:   session,
-			Prefix: "migr_diff",
+			Prefix: "migrasyon_diff",
 		}.Run(t)
 	})
 

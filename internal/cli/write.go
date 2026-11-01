@@ -8,10 +8,10 @@ import (
 	"os"
 )
 
-// newFileMode is what migr writes its files as, matching the mode the golden-file harness uses.
+// newFileMode is what migrasyon writes its files as, matching the mode the golden-file harness uses.
 const newFileMode = 0o600
 
-// newDirMode is what migr creates a directory as.
+// newDirMode is what migrasyon creates a directory as.
 const newDirMode = 0o750
 
 // writeJSON renders a result as the indented document --json promises on stdout.
@@ -39,7 +39,7 @@ func writeResult(w io.Writer, opts *options, result fmt.Stringer) error {
 	return nil
 }
 
-// writeNew creates a file that must not already exist, so nothing migr writes can overwrite anything.
+// writeNew creates a file that must not already exist, so nothing migrasyon writes can overwrite anything.
 func writeNew(path, content string) error {
 	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, newFileMode)
 	if err != nil {

@@ -10,18 +10,18 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // statementIndent is how far a statement sits under the operation it was compiled from.
 const statementIndent = "          "
 
-// newPlanCmd builds the `migr plan` subcommand.
+// newPlanCmd builds the `migrasyon plan` subcommand.
 func newPlanCmd(opts *options) *cobra.Command {
 	narrow := &narrowing{}
 	safe := &safety{}
@@ -48,7 +48,7 @@ func newPlanCmd(opts *options) *cobra.Command {
 	return cmd
 }
 
-// safety is what migr plan was asked about the lock axis: whether to print it, and whether to gate on it.
+// safety is what migrasyon plan was asked about the lock axis: whether to print it, and whether to gate on it.
 type safety struct {
 	// shown prints each operation's lock verdict beside its support verdict.
 	shown bool
@@ -165,7 +165,7 @@ type operation struct {
 	Destroys string `json:"destroys,omitempty"`
 	// Rows says which rows a data operation writes, since its statements write them all at once.
 	Rows string `json:"rows,omitempty"`
-	// Refused reports an operation nothing permits, which migr up would stop at rather than run.
+	// Refused reports an operation nothing permits, which migrasyon up would stop at rather than run.
 	Refused bool `json:"refused,omitempty"`
 	// Deferred reports an operation this engine compiles only as it runs, which has no statements here.
 	Deferred bool `json:"deferred,omitempty"`
@@ -211,13 +211,13 @@ type chunks struct {
 	Table string `json:"table"`
 	// Key names that key's columns, empty where the table has none.
 	Key []string `json:"key,omitempty"`
-	// Rows is how many rows each chunk covers, as migr.yaml paces it.
+	// Rows is how many rows each chunk covers, as migrasyon.yaml paces it.
 	Rows int `json:"rows"`
-	// Pause is how long a run waits between two chunks, as migr.yaml paces it.
+	// Pause is how long a run waits between two chunks, as migrasyon.yaml paces it.
 	Pause string `json:"pause,omitempty"`
 	// ReplicaLag is the lag above which a run holds the next chunk back, absent where none is read.
 	ReplicaLag string `json:"replica_lag_threshold,omitempty"`
-	// Refusal is why migr up would refuse the operation, or why this preview could not render it.
+	// Refusal is why migrasyon up would refuse the operation, or why this preview could not render it.
 	Refusal string `json:"refusal,omitempty"`
 }
 
@@ -312,7 +312,7 @@ func disagreementsOf(found []engine.Disagreement) []disagreed {
 
 // compiledPlan is what one direction would send to one database, in the form --json reports it.
 type compiledPlan struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Direction is which way the plan was compiled.
 	Direction ir.Direction `json:"direction"`
@@ -334,7 +334,7 @@ type compiledPlan struct {
 	Ceiling capability.LockImpact `json:"max_lock_impact"`
 	// Held is the step the run would stop at because it waits for a later release.
 	Held *heldDoc `json:"held,omitempty"`
-	// Unreleased is why migr up would refuse this run for naming no release, absent where it would not.
+	// Unreleased is why migrasyon up would refuse this run for naming no release, absent where it would not.
 	Unreleased string `json:"unreleased,omitempty"`
 	// InvalidIndexes are the indexes a failed concurrent build or drop left INVALID, absent where there are none.
 	InvalidIndexes []invalidIndex `json:"invalid_indexes,omitempty"`
@@ -667,7 +667,7 @@ func (p compiledPlan) body() string {
 	fmt.Fprintf(&b, "plan — database %q, %s%s\n", p.Database, p.Direction, describeBatch(p.Batch))
 
 	if !p.Recorded {
-		fmt.Fprintf(&b, "\nthis database has no migration history table yet; migr %s would create it\n",
+		fmt.Fprintf(&b, "\nthis database has no migration history table yet; migrasyon %s would create it\n",
 			p.Direction)
 	}
 
@@ -731,7 +731,7 @@ func (p compiledPlan) writeSafetyNote(b *strings.Builder) {
 		return
 	}
 
-	fmt.Fprintf(b, "marked %s above: %s safety.max_lock_impact (%s), so migr plan --require-safe "+
+	fmt.Fprintf(b, "marked %s above: %s safety.max_lock_impact (%s), so migrasyon plan --require-safe "+
 		"exits 5 on this plan.\n", overCeilingMarker, describeExceeding(over), p.Ceiling)
 }
 
@@ -807,7 +807,7 @@ func (p compiledPlan) writeRewriteNote(b *strings.Builder) {
 	}
 
 	fmt.Fprintf(b, "\nmarked \u21b3 above: %s this engine performs as a safer sequence than was declared, "+
-		"so the statements shown are what migr %s sends. Each runs as declared instead with %s, "+
+		"so the statements shown are what migrasyon %s sends. Each runs as declared instead with %s, "+
 		"or every one with safety.auto_rewrite: false.\n", describeUnpermitted(total), p.Direction,
 		strings.Join(keys, ", "))
 }
@@ -827,7 +827,7 @@ func (p compiledPlan) writeSplitNote(b *strings.Builder) {
 	}
 
 	fmt.Fprintf(b, "\nmarked %s above: statements that cannot run inside a transaction, in %s. "+
-		"migr %s runs each on its own and the statements around it in transactions of their "+
+		"migrasyon %s runs each on its own and the statements around it in transactions of their "+
 		"own, recording how far it got after each part commits -- a failure partway leaves the "+
 		"migration dirty, and a statement outside a transaction that gives up on a lock is not "+
 		"tried again.\n", noTransactionMarker, describeMigrations(split), p.Direction)
@@ -842,7 +842,7 @@ func (p compiledPlan) writeChunkedNote(b *strings.Builder) {
 	fmt.Fprintf(b, "\nrun in chunks above: each chunk is its own transaction, committed with a checkpoint "+
 		"saying how far it got, and the statements shown are one chunk between two keys with "+
 		"every bound argument a placeholder. A run that stops partway leaves the migration dirty, "+
-		"and the next migr up carries on after the last committed chunk.\n")
+		"and the next migrasyon up carries on after the last committed chunk.\n")
 }
 
 // writeDeferredNote says which operations this plan could not compile, and why that is not a failure.
@@ -855,7 +855,7 @@ func (p compiledPlan) writeDeferredNote(b *strings.Builder) {
 	fmt.Fprintf(b, "\nmarked \u2192 above: %s this engine compiles against the database "+
 		"immediately before each one runs, so their statements are rendered from the schema the "+
 		"operations ahead of them leave. A preview applies nothing, so only the first operation of "+
-		"the first migration can be compiled exactly, and it is -- migr %s expands each of the "+
+		"the first migration can be compiled exactly, and it is -- migrasyon %s expands each of the "+
 		"rest as it reaches it.\n", describeUnpermitted(deferred), p.Direction)
 }
 
@@ -882,7 +882,7 @@ func (p compiledPlan) writeUnsupportedNote(b *strings.Builder) {
 	}
 
 	fmt.Fprintf(b, "\nmarked × above: %s this server declares it cannot perform, with the reason "+
-		"beneath each. migr %s refuses the migration they are in before sending anything; this plan "+
+		"beneath each. migrasyon %s refuses the migration they are in before sending anything; this plan "+
 		"prints what it would have sent. The verdict is resolved against the connected server, so "+
 		"another server may answer differently.\n", describeUnpermitted(unsupported), p.Direction)
 }
@@ -895,7 +895,7 @@ func (p compiledPlan) writeUnrestorableNote(b *strings.Builder) {
 	}
 
 	fmt.Fprintf(b, "\nmarked ~ above: %s whose record of the schema this database contradicts, "+
-		"which migr %s refuses the migration they are in over. Only the first migration is judged: "+
+		"which migrasyon %s refuses the migration they are in over. Only the first migration is judged: "+
 		"a preview applies nothing, so the schema every later one would run against is the one its "+
 		"predecessors leave.\n", describeUnpermitted(found), p.Direction)
 }
@@ -926,16 +926,16 @@ func (p compiledPlan) countUnsupported() int {
 	return total
 }
 
-// writeRefusedNote says what migr up would refuse, since a report finds a problem without failing.
+// writeRefusedNote says what migrasyon up would refuse, since a report finds a problem without failing.
 func (p compiledPlan) writeRefusedNote(b *strings.Builder) {
 	refused := p.countRefused()
 	if refused == 0 {
 		return
 	}
 
-	fmt.Fprintf(b, "\nmarked ? above: %s that nothing has permitted. migr %s refuses the migration "+
+	fmt.Fprintf(b, "\nmarked ? above: %s that nothing has permitted. migrasyon %s refuses the migration "+
 		"they are in; this plan reports them. Permit them for one run with --allow-destructive, or "+
-		"for this project by naming their kinds in migr.yaml under validation.allow_destructive.\n",
+		"for this project by naming their kinds in migrasyon.yaml under validation.allow_destructive.\n",
 		describeUnpermitted(refused), p.Direction)
 }
 
@@ -963,14 +963,14 @@ func describeUnpermitted(n int) string {
 	return fmt.Sprintf("%d operations", n)
 }
 
-// writeDirectNote says what a preview could not hold back, since migr up commits those on their own.
+// writeDirectNote says what a preview could not hold back, since migrasyon up commits those on their own.
 func (p compiledPlan) writeDirectNote(b *strings.Builder) {
 	if p.Direct == 0 {
 		return
 	}
 
 	fmt.Fprintf(b, "\nmarked ! above: %s sent through the escape hatch rather than the plan. "+
-		"migr %s commits each on its own, before the transaction its migration's operations "+
+		"migrasyon %s commits each on its own, before the transaction its migration's operations "+
 		"run in, and a later failure does not undo it.\n", describeStatements(p.Direct), p.Direction)
 }
 
@@ -1175,7 +1175,7 @@ func describeReshaped(now, declared int) string {
 	return fmt.Sprintf("%s instead of %d", describeStatements(now), declared)
 }
 
-// rewriteKey is the migr.yaml key that switches a rewrite off.
+// rewriteKey is the migrasyon.yaml key that switches a rewrite off.
 func rewriteKey(name driver.RewriteName) string {
 	return "safety.rewrites." + string(name)
 }
@@ -1256,7 +1256,7 @@ func (o operation) writeReason(b *strings.Builder) {
 func (o operation) describeDestroys() string {
 	switch {
 	case o.Refused && o.Destroys == "":
-		return "  ? migr cannot read what this does"
+		return "  ? migrasyon cannot read what this does"
 	case o.Refused:
 		return fmt.Sprintf("  ? destroys %q", o.Destroys)
 	case o.Destroys != "":

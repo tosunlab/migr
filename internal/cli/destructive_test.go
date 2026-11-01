@@ -10,9 +10,9 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // permitting rewrites a staged project's allowance, since the scaffold it derives from permits raw.
@@ -32,7 +32,7 @@ func permitting(t *testing.T, dir string, kinds ...ir.Kind) {
 // allowingRaw is what the scaffold writes, and what a test rewrites to permit something else.
 const allowingRaw = "allow_destructive: [" + string(ir.KindRaw) + "]"
 
-// refusing stages a project that permits nothing, which is every migr.yaml written by hand.
+// refusing stages a project that permits nothing, which is every migrasyon.yaml written by hand.
 func refusing(t *testing.T) (string, *fake, *driver.Registry) {
 	t.Helper()
 
@@ -47,14 +47,14 @@ func TestARunIsRefusedOverAMigrationNothingPermits(t *testing.T) {
 
 	_, _, err := runWith(t, dir, noon, drivers, "up")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr up exited %d, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon up exited %d, want %d: %v", got, ExitValidation, err)
 	}
 
 	message := said(err)
 
 	for _, want := range []string{
 		fileAt(0, "add_users"),
-		"migr cannot read what this migration does",
+		"migrasyon cannot read what this migration does",
 		"operation 1",
 		string(ir.KindRaw),
 		"CREATE TABLE users (id bigint);",
@@ -66,7 +66,7 @@ func TestARunIsRefusedOverAMigrationNothingPermits(t *testing.T) {
 			t.Log("The done-when asks for the migration, the operation, and the affected object --")
 			t.Log("and a refusal an operator cannot act on is worse than one that never fired.")
 			t.Log("The headline is raw's own: a .sql migration compiles to nothing else, so saying")
-			t.Log("that a CREATE TABLE destroys data would assert what migr cannot read.")
+			t.Log("that a CREATE TABLE destroys data would assert what migrasyon cannot read.")
 		}
 	}
 }
@@ -75,15 +75,15 @@ func TestTheFlagAndTheConfigEachPermitTheSameRun(t *testing.T) {
 	dir, _, drivers := refusing(t)
 
 	if _, _, err := runWith(t, dir, noon, drivers, "up", "--allow-destructive"); err != nil {
-		t.Fatalf("migr up --allow-destructive: %v", err)
+		t.Fatalf("migrasyon up --allow-destructive: %v", err)
 	}
 
 	again, _, driversAgain := project(t, twoTables()...)
 
 	if _, _, err := runWith(t, again, noon, driversAgain, "up"); err != nil {
-		t.Log("The scaffold permits raw, so every project migr init writes runs its own first")
+		t.Log("The scaffold permits raw, so every project migrasyon init writes runs its own first")
 		t.Log("migration. A flag is for one run; the config is the project's standing decision.")
-		t.Fatalf("migr up over a project that permits raw: %v", err)
+		t.Fatalf("migrasyon up over a project that permits raw: %v", err)
 	}
 }
 
@@ -93,7 +93,7 @@ func TestAnAllowanceThatNamesAnotherKindPermitsNothingHere(t *testing.T) {
 
 	_, _, err := runWith(t, dir, noon, drivers, "up")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr up exited %d, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon up exited %d, want %d: %v", got, ExitValidation, err)
 	}
 
 	if !strings.Contains(err.Error(), "This project permits drop_table") {
@@ -107,16 +107,16 @@ func TestARollbackIsNotGatedByTheAllowance(t *testing.T) {
 	dir, _, drivers := project(t, twoTables()...)
 
 	if _, _, err := runWith(t, dir, noon, drivers, "up"); err != nil {
-		t.Fatalf("migr up: %v", err)
+		t.Fatalf("migrasyon up: %v", err)
 	}
 
 	permitting(t, dir)
 
 	if _, _, err := runWith(t, dir, noon, drivers, "down"); err != nil {
 		t.Log("The inverse of create_table is drop_table, so gating a rollback would make the")
-		t.Log("allowance mandatory for migr down outright. A rollback is what the operator asked")
-		t.Log("for, and migr down registers no --allow-destructive to pass either.")
-		t.Fatalf("migr down over a project that permits nothing: %v", err)
+		t.Log("allowance mandatory for migrasyon down outright. A rollback is what the operator asked")
+		t.Log("for, and migrasyon down registers no --allow-destructive to pass either.")
+		t.Fatalf("migrasyon down over a project that permits nothing: %v", err)
 	}
 }
 
@@ -125,17 +125,17 @@ func TestAReportFindsTheProblemWithoutFailing(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "plan")
 	if err != nil {
-		t.Fatalf("migr plan over a project that permits nothing: %v", err)
+		t.Fatalf("migrasyon plan over a project that permits nothing: %v", err)
 	}
 
-	for _, want := range []string{"? migr cannot read", "marked ? above", "--allow-destructive"} {
+	for _, want := range []string{"? migrasyon cannot read", "marked ? above", "--allow-destructive"} {
 		if !strings.Contains(out, want) {
-			t.Errorf("the plan does not mark what migr up would refuse (%q):\n%s", want, out)
+			t.Errorf("the plan does not mark what migrasyon up would refuse (%q):\n%s", want, out)
 		}
 	}
 
-	t.Log("A report exits 0 having found a problem, as migr status does over a drifted database")
-	t.Log("while migr up exits 4. This is the same rule: the plan says what up will refuse, and")
+	t.Log("A report exits 0 having found a problem, as migrasyon status does over a drifted database")
+	t.Log("while migrasyon up exits 4. This is the same rule: the plan says what up will refuse, and")
 	t.Log("up is the gate.")
 }
 
@@ -144,14 +144,14 @@ func TestADryRunSaysWhatTheRunItDescribesWouldRefuse(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "up", "--dry-run")
 	if err != nil {
-		t.Fatalf("migr up --dry-run over a project that permits nothing: %v", err)
+		t.Fatalf("migrasyon up --dry-run over a project that permits nothing: %v", err)
 	}
 
 	for _, want := range []string{"3 operations that nothing has permitted", "--allow-destructive"} {
 		if !strings.Contains(out, want) {
-			t.Errorf("the dry run does not say what migr up would refuse (%q):\n%s", want, out)
+			t.Errorf("the dry run does not say what migrasyon up would refuse (%q):\n%s", want, out)
 			t.Log("A dry run counts rather than listing, so without this line it would report two")
-			t.Log("migrations it would apply and then migr up would refuse the first of them.")
+			t.Log("migrations it would apply and then migrasyon up would refuse the first of them.")
 		}
 	}
 }
@@ -161,15 +161,15 @@ func TestAPermittedOperationIsMarkedWithoutBeingMarkedRefused(t *testing.T) {
 
 	out, _, err := runWith(t, dir, noon, drivers, "plan")
 	if err != nil {
-		t.Fatalf("migr plan: %v", err)
+		t.Fatalf("migrasyon plan: %v", err)
 	}
 
-	if strings.Contains(out, "? migr cannot read") {
+	if strings.Contains(out, "? migrasyon cannot read") {
 		t.Errorf("a permitted operation is marked as one nothing permits:\n%s", out)
 	}
 
 	if strings.Contains(out, "marked ? above") {
-		t.Errorf("the plan says migr up would refuse a permitted run:\n%s", out)
+		t.Errorf("the plan says migrasyon up would refuse a permitted run:\n%s", out)
 	}
 }
 
@@ -178,7 +178,7 @@ func TestTheRefusalIsOneJSONObjectNamingWhatItWouldDestroy(t *testing.T) {
 
 	_, stderr, err := runWith(t, dir, noon, drivers, "--json", "up")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr --json up exited %d, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon --json up exited %d, want %d: %v", got, ExitValidation, err)
 	}
 
 	var document failure
@@ -230,7 +230,7 @@ func TestValidateReportsEveryDestructiveOperationAndHowToPermitIt(t *testing.T) 
 
 	out, _, err := runWith(t, dir, noon, drivers, "validate")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr validate exited %d, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon validate exited %d, want %d: %v", got, ExitValidation, err)
 	}
 
 	for _, want := range []string{
@@ -249,7 +249,7 @@ func TestValidatePassesTheSameProjectOnceItPermitsWhatItDoes(t *testing.T) {
 	dir, _, drivers := project(t, twoTables()...)
 
 	if _, _, err := runWith(t, dir, noon, drivers, "validate"); err != nil {
-		t.Fatalf("migr validate over a project that permits raw: %v", err)
+		t.Fatalf("migrasyon validate over a project that permits raw: %v", err)
 	}
 }
 

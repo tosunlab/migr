@@ -2,7 +2,7 @@ package protocol
 
 import "time"
 
-// The bounds docs/protocol.md §8.2 tabulates, which migr.yaml surfaces and may override.
+// The bounds docs/protocol.md §8.2 tabulates, which migrasyon.yaml surfaces and may override.
 const (
 	// DefaultHandshake bounds spawn to the initialize result, after which the runtime never started.
 	DefaultHandshake = 30 * time.Second

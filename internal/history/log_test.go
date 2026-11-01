@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestTheZeroLogIsADatabaseWithNoHistoryTable(t *testing.T) {
@@ -43,13 +43,13 @@ func TestReadReportsATableNothingCreatedAsAnAbsentLogRatherThanAFailure(t *testi
 }
 
 func TestReadPropagatesEveryOtherFailureRatherThanReadingItAsAbsence(t *testing.T) {
-	refused := errors.New("permission denied for table migr_migrations")
+	refused := errors.New("permission denied for table migrasyon_migrations")
 
 	log, err := Read(t.Context(), stubStore{err: refused})
 	if !errors.Is(err, refused) {
 		t.Errorf("Read reported %v, want the store's own failure", err)
 		t.Log("Only ErrNoTable becomes an absent log. Anything else read as absence would")
-		t.Log("report a database migr cannot see into as one with nothing in it.")
+		t.Log("report a database migrasyon cannot see into as one with nothing in it.")
 	}
 
 	if log.Present() {
@@ -59,7 +59,7 @@ func TestReadPropagatesEveryOtherFailureRatherThanReadingItAsAbsence(t *testing.
 
 func TestReadNeverReportsACorruptRowAsAnAbsentTable(t *testing.T) {
 	corrupt := &CorruptError{
-		Table: "migr_migrations", Batch: 7, Ordinal: 2,
+		Table: "migrasyon_migrations", Batch: 7, Ordinal: 2,
 		Field: "checksum", Err: errors.New("malformed checksum"),
 	}
 

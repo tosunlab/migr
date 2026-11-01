@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // env builds a lookup function over a fixed set of variables.
@@ -56,7 +56,7 @@ func TestExampleFromClaudeMDLoads(t *testing.T) {
 		{field: "migrations.language", got: cfg.Migrations.Language, want: LanguageTypeScript},
 		{field: "databases.default.driver", got: cfg.Databases["default"].Driver, want: "postgres"},
 		{field: "databases.default.schema", got: cfg.Databases["default"].Schema, want: "public"},
-		{field: "history.table", got: cfg.History.Table, want: "migr_migrations"},
+		{field: "history.table", got: cfg.History.Table, want: "migrasyon_migrations"},
 		{field: "lock.strategy", got: cfg.Lock.Strategy, want: LockAdvisory},
 		{field: "lock.timeout", got: cfg.Lock.Timeout.Duration(), want: 30 * time.Second},
 		{field: "safety.lock_timeout", got: cfg.Safety.LockTimeout.Duration(), want: 3 * time.Second},
@@ -164,7 +164,7 @@ func TestTheAcceptedCeilingsAreTheOnesCapabilityDefines(t *testing.T) {
 
 	t.Log("Config validates against capability.Ceilings() rather than a list of its own, so")
 	t.Log("renaming or removing a verdict on either side fails here instead of leaving")
-	t.Log("migr.yaml quietly accepting a word no driver reports.")
+	t.Log("migrasyon.yaml quietly accepting a word no driver reports.")
 }
 
 func TestAnUnresolvedLockVerdictIsNotAValidCeiling(t *testing.T) {
@@ -215,7 +215,7 @@ func TestEveryKindThatCanDestroyMayBePermittedByName(t *testing.T) {
 
 	t.Log("Config validates against ir.DestructiveKinds() rather than a list of its own, so an")
 	t.Log("operation that stops or starts being destructive fails here instead of leaving")
-	t.Log("migr.yaml accepting a word that permits nothing.")
+	t.Log("migrasyon.yaml accepting a word that permits nothing.")
 }
 
 func TestAProjectThatSaysNothingPermitsNoDestruction(t *testing.T) {
@@ -226,7 +226,7 @@ func TestAProjectThatSaysNothingPermitsNoDestruction(t *testing.T) {
 
 	if got := cfg.Validation.AllowDestructive; len(got) != 0 || got == nil {
 		t.Errorf("allow_destructive = %v, want an empty list", got)
-		t.Log("The resolved value is an empty list rather than nil, so migr config --json prints")
+		t.Log("The resolved value is an empty list rather than nil, so migrasyon config --json prints")
 		t.Log("[] rather than null for a project that permits nothing.")
 	}
 }
@@ -312,7 +312,7 @@ databases:
 		want  any
 	}{
 		{field: "migrations.dir", got: cfg.Migrations.Dir, want: "migrations"},
-		{field: "history.table", got: cfg.History.Table, want: "migr_migrations"},
+		{field: "history.table", got: cfg.History.Table, want: "migrasyon_migrations"},
 		{field: "lock.strategy", got: cfg.Lock.Strategy, want: LockStrategy("")},
 		{field: "lock.timeout", got: cfg.Lock.Timeout.Duration(), want: 30 * time.Second},
 		{field: "safety.lock_timeout", got: cfg.Safety.LockTimeout.Duration(), want: 3 * time.Second},
@@ -338,7 +338,7 @@ databases:
 	}
 
 	t.Log("§8.2: these defaults are the protocol's, so this reads them from there rather than")
-	t.Log("restating them. A second copy in migr.yaml's defaults is a second definition of a")
+	t.Log("restating them. A second copy in migrasyon.yaml's defaults is a second definition of a")
 	t.Log("value the specification owns.")
 	t.Log("lock.strategy has no default on purpose (M8-T1). Choosing advisory here chose one")
 	t.Log("engine's lock for every project, and this package may not know an engine: a SQLite")
@@ -379,7 +379,7 @@ lock:
 `)
 
 	if _, err := parse(bogus, "test.yaml", env(nil)); err == nil {
-		t.Error("a strategy that is not a word migr knows was accepted")
+		t.Error("a strategy that is not a word migrasyon knows was accepted")
 		t.Log("Two checks answer two questions: this package asks whether the value is a")
 		t.Log("word, and the driver asks whether the engine can do it. Dropping the default must")
 		t.Log("not drop the first question.")
@@ -495,8 +495,8 @@ func TestLoadReportsMissingFileHelpfully(t *testing.T) {
 		t.Fatal("a missing file must be an error")
 	}
 
-	if !strings.Contains(remedy.Of(err), "migr init") {
-		t.Errorf("the error should say to run migr init next, got: %v (next: %q)", err, remedy.Of(err))
+	if !strings.Contains(remedy.Of(err), "migrasyon init") {
+		t.Errorf("the error should say to run migrasyon init next, got: %v (next: %q)", err, remedy.Of(err))
 	}
 }
 
@@ -532,19 +532,19 @@ func TestAConfigNamesItsOwnMigrationsFromAnywhere(t *testing.T) {
 		{
 			name:   "relative to a config in another directory",
 			dir:    "./migrations",
-			source: filepath.Join("..", "other", "migr.yaml"),
+			source: filepath.Join("..", "other", "migrasyon.yaml"),
 			want:   filepath.Join("..", "other", "migrations"),
 		},
 		{
 			name:   "relative to a config named by an absolute path",
 			dir:    "db/changes",
-			source: "/srv/app/migr.yaml",
+			source: "/srv/app/migrasyon.yaml",
 			want:   "/srv/app/db/changes",
 		},
 		{
 			name:   "an absolute dir is left where it points",
 			dir:    absolute,
-			source: filepath.Join("..", "other", "migr.yaml"),
+			source: filepath.Join("..", "other", "migrasyon.yaml"),
 			want:   absolute,
 		},
 		{
@@ -556,7 +556,7 @@ func TestAConfigNamesItsOwnMigrationsFromAnywhere(t *testing.T) {
 		{
 			name:   "the default, beside a config somewhere else",
 			dir:    "",
-			source: filepath.Join("..", "other", "migr.yaml"),
+			source: filepath.Join("..", "other", "migrasyon.yaml"),
 			want:   filepath.Join("..", "other", "migrations"),
 		},
 	}
@@ -574,7 +574,7 @@ func TestAConfigNamesItsOwnMigrationsFromAnywhere(t *testing.T) {
 		})
 	}
 
-	t.Log("Read relative to the working directory instead, `migr --config ../other/migr.yaml up`")
+	t.Log("Read relative to the working directory instead, `migrasyon --config ../other/migrasyon.yaml up`")
 	t.Log("would find whatever ./migrations happened to be beside the operator and apply it to")
 	t.Log("the other project's database. Nothing had read migrations.dir before M4-T1, so")
 	t.Log("nothing had noticed.")
@@ -610,11 +610,11 @@ func TestEveryLanguageLanguagesListsIsAccepted(t *testing.T) {
 		}
 	}
 
-	t.Log("Languages is what the CLI offers in `migr create --lang`'s refusal. Two lists is how")
-	t.Log("a value migr suggests becomes one migr.yaml then refuses.")
+	t.Log("Languages is what the CLI offers in `migrasyon create --lang`'s refusal. Two lists is how")
+	t.Log("a value migrasyon suggests becomes one migrasyon.yaml then refuses.")
 }
 
-func TestSQLIsALanguageAMigrYAMLMayName(t *testing.T) {
+func TestSQLIsALanguageAMigrasyonYAMLMayName(t *testing.T) {
 	cfg, err := loadWithLanguage(t, "sql")
 	if err != nil {
 		t.Fatalf("migrations.language: sql is refused: %v", err)
@@ -625,7 +625,7 @@ func TestSQLIsALanguageAMigrYAMLMayName(t *testing.T) {
 	}
 
 	t.Log("M5's goal is SQL-file migrations as the interim source format until M6 lands the SDKs,")
-	t.Log("and engine.Options.Runtime is the language spelled as migr.yaml spells it. A format")
+	t.Log("and engine.Options.Runtime is the language spelled as migrasyon.yaml spells it. A format")
 	t.Log("with no spelling here is one nothing can be asked to run.")
 }
 

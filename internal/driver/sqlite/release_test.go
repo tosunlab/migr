@@ -5,9 +5,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestAReleaseSurvivesTheRoundTripOnePerBatch(t *testing.T) {

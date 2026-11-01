@@ -12,11 +12,11 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // scheme versions the stamp itself, so widening what it covers invalidates every cached binary.
-const scheme = "migrgo1"
+const scheme = "migrasyongo1"
 
 // manifests are the module files a build depends on, whose contents pin every dependency version.
 var manifests = []string{"go.mod", "go.sum"}

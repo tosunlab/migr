@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // answering is a session that runs every statement and answers with the snapshot a test staged.
@@ -44,7 +44,7 @@ func snapshotSuite(t *testing.T, live *schema.Snapshot) (Snapshot, *answering) {
 		live:     live,
 	}
 
-	return Snapshot{Driver: newFake("fake"), Conn: session, Prefix: "migr_snap"}, session
+	return Snapshot{Driver: newFake("fake"), Conn: session, Prefix: "migrasyon_snap"}, session
 }
 
 // reported returns what the suite complains about when a driver answers one staged snapshot.

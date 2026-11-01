@@ -10,8 +10,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 func TestAShadowStateIsRecordedBesideTheHistoryAndASaveKeepsItsConfirmation(t *testing.T) {
@@ -27,7 +27,7 @@ func TestAShadowStateIsRecordedBesideTheHistoryAndASaveKeepsItsConfirmation(t *t
 		}
 
 		begun := history.ShadowState{Version: "20261020T130000", Table: "people", Shadow: "_people_new",
-			Retired: "_people_old", Capture: "migr_slot", Stage: history.StageCopying, Position: "0/16B3748",
+			Retired: "_people_old", Capture: "migrasyon_slot", Stage: history.StageCopying, Position: "0/16B3748",
 			UpdatedAt: time.Date(2026, 10, 20, 9, 30, 0, 123456000, time.UTC)}
 		saved := begun
 		saved.Stage, saved.Position, saved.Copied, saved.Cursor = history.StageSyncing, "0/16B3790", 7, []string{"7"}
@@ -54,7 +54,7 @@ func TestAShadowStateIsRecordedBesideTheHistoryAndASaveKeepsItsConfirmation(t *t
 		}
 
 		if _, present := introspect(t, session).Table(history.ShadowTable(session.history.table)); present {
-			t.Error("the snapshot holds the shadow-state table, which every migr diff would propose dropping")
+			t.Error("the snapshot holds the shadow-state table, which every migrasyon diff would propose dropping")
 		}
 	})
 }
@@ -76,15 +76,15 @@ func TestARoleThatMayNotReplicateIsRefusedCaptureNamingTheAttribute(t *testing.T
 	session := scratchSession(t, 1)
 
 	for _, sql := range []string{`DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = ` +
-		`'migr_capplain') THEN CREATE ROLE migr_capplain; END IF; END $$`,
-		`ALTER ROLE migr_capplain LOGIN NOREPLICATION PASSWORD 'migr_capplain'`} {
+		`'migrasyon_capplain') THEN CREATE ROLE migrasyon_capplain; END IF; END $$`,
+		`ALTER ROLE migrasyon_capplain LOGIN NOREPLICATION PASSWORD 'migrasyon_capplain'`} {
 		if err := session.Exec(t.Context(), driver.Statement{SQL: sql}); err != nil {
 			t.Fatalf("staging the role: %v", err)
 		}
 	}
 
 	dsn := dsnFor(servers[1].env, servers[1].dsn)
-	plain := open(t, "postgres://migr_capplain:migr_capplain"+dsn[strings.Index(dsn, "@"):], driver.Options{})
+	plain := open(t, "postgres://migrasyon_capplain:migrasyon_capplain"+dsn[strings.Index(dsn, "@"):], driver.Options{})
 
 	if reason := plain.Capabilities().Capture().Reason(); !strings.Contains(reason, "REPLICATION attribute") ||
 		strings.Contains(reason, "wal_level") {

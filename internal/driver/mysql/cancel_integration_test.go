@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // cancelBound is how long a statement runs before its context ends, in every case here.
@@ -89,7 +89,7 @@ func TestAContextCancelLeftToTheLibraryLeavesTheStatementOnTheServer(t *testing.
 	t.Log("by closing its connection, and the server is not told. MySQL 8.0 left the ALTER running")
 	t.Log("for the whole of its lock_wait_timeout -- still queued, still holding up every reader --")
 	t.Log("while MariaDB 11.4 polls a waiting client and stopped it about 650ms later. On both the")
-	t.Log("session that held migr's lock was gone.")
+	t.Log("session that held migrasyon's lock was gone.")
 }
 
 func TestACanceledStatementIsKilledOnTheServerAndTheSessionCarriesOn(t *testing.T) {
@@ -214,7 +214,7 @@ func TestAUserWithoutPROCESSCanStillKillItsOwnStatement(t *testing.T) {
 	}
 
 	t.Log("KILL QUERY on a thread of one's own needs no privilege at all -- CONNECTION_ADMIN or")
-	t.Log("SUPER is for other users' threads -- so migr needs no grant a deployment lacks to stop")
+	t.Log("SUPER is for other users' threads -- so migrasyon needs no grant a deployment lacks to stop")
 	t.Log("what it started.")
 }
 

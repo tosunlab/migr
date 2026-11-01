@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Digest is one SHA-256 sum, fixed width so an ill-formed digest is unrepresentable.

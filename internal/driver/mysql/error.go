@@ -211,7 +211,7 @@ func (e *CharacterSetError) Unwrap() error {
 
 // SchemaError reports a configured schema that is not the database the connection string names.
 type SchemaError struct {
-	// Schema is what migr.yaml set databases.<name>.schema to.
+	// Schema is what migrasyon.yaml set databases.<name>.schema to.
 	Schema string
 	// Database is what the connection string named, empty when it named none.
 	Database string
@@ -281,7 +281,7 @@ func (e *LockError) Unwrap() []error {
 
 // WaitError reports a configured wait this engine cannot be asked to wait.
 type WaitError struct {
-	// Key is the migr.yaml key that set it.
+	// Key is the migrasyon.yaml key that set it.
 	Key string
 	// Requested is what it was set to.
 	Requested string

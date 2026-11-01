@@ -1,9 +1,9 @@
 ---
 layout: home
-title: migr
+title: migrasyon
 
 hero:
-  name: migr
+  name: migrasyon
   text: Schema migrations as code
   tagline: Write them in Go, TypeScript or SQL. Run them on PostgreSQL, MySQL, MariaDB or SQLite. Safe on a live database.
   actions:

@@ -9,7 +9,7 @@ import (
 )
 
 // Program is what this binary calls itself, wherever it has to name itself to something else.
-const Program = "migr"
+const Program = "migrasyon"
 
 // Version is the framework version, overridden at build time via -ldflags.
 var Version = "dev"

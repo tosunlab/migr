@@ -1,5 +1,5 @@
-// Builds @migr/sdk to both module formats, each beside the declarations that describe it, and the
-// executable it installs as migr-runtime-node.
+// Builds @migrasyon/sdk to both module formats, each beside the declarations that describe it, and the
+// executable it installs as migrasyon-runtime-node.
 //
 // esbuild emits the bundles and tsc emits the types, which is the split the package already pays
 // for: it ships esbuild as a runtime dependency to transpile a user's own .ts migrations, so nothing
@@ -29,7 +29,7 @@ const entry = join(root, "src", "index.ts");
 // The test helpers, bundled apart from the library and importing it rather than copying it.
 //
 // Its one non-builtin import is "../index.ts", marked external so the library stays where it is: the
-// emitted file is a few hundred bytes. Node's self-reference ("@migr/sdk" from inside the package)
+// emitted file is a few hundred bytes. Node's self-reference ("@migrasyon/sdk" from inside the package)
 // cannot do this job -- each format directory carries a package.json declaring its type, and that
 // manifest shadows the real one, so Node resolves no such package. A relative specifier does work in
 // both formats, and finishing the .ts -> .js rewrite for it is the same rewrite the declarations
@@ -54,14 +54,14 @@ const targets = [
 // declarationsIn is the directory tsc emits into, which every other target is copied from.
 const declarationsIn = targets[0].dir;
 
-// The executable this package installs as migr-runtime-node, which is a shebang and three lines.
+// The executable this package installs as migrasyon-runtime-node, which is a shebang and three lines.
 //
 // It is generated rather than committed for the same reason each format's package.json is: dist/ is
 // the answer to what ships. A second bundled entry point would put a whole second copy of the
 // library in the package, and there is nothing here worth typechecking -- it names one export and
 // exits with what that returns. process.test.ts drives this file itself.
 const runtime = {
-  name: "migr-runtime-node.js",
+  name: "migrasyon-runtime-node.js",
   dir: targets[0].dir,
   source: `#!/usr/bin/env node
 import { main } from "./index.js";

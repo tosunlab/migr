@@ -13,7 +13,7 @@ databases:
     dsn: ${DATABASE_URL}
     schema: public
 history:
-  table: migr_migrations
+  table: migrasyon_migrations
 lock:
   strategy: advisory        # advisory | table | file
   timeout: 30s              # wait for the migration lock

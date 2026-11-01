@@ -6,11 +6,11 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
-// retrying gives a run its backoff and its two bounds from migr.yaml's safety block, and logs every retry.
+// retrying gives a run its backoff and its two bounds from migrasyon.yaml's safety block, and logs every retry.
 func (t *target) retrying(options engine.Options, log *slog.Logger) engine.Options {
 	options.Backoff = engine.Exponential{
 		Base:    t.cfg.Safety.LockBackoff.Duration(),
@@ -42,7 +42,7 @@ func jitter(span time.Duration) time.Duration {
 	return time.Duration(drawn.Int64())
 }
 
-// logRewrite reports every operation run as a safer sequence at -v, since migr plan is where it is shown first.
+// logRewrite reports every operation run as a safer sequence at -v, since migrasyon plan is where it is shown first.
 func logRewrite(log *slog.Logger) func(engine.Rewrote) {
 	return func(r engine.Rewrote) {
 		log.Info("running an operation as a safer sequence", "migration", r.Migration.Filename(),

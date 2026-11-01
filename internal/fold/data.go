@@ -3,8 +3,8 @@ package fold
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The data operations change no schema, so folding one leaves it exactly as it was -- but each names

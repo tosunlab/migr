@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 func TestAReleaseIsRecordedBesideTheHistoryAndReadBack(t *testing.T) {
@@ -37,7 +37,7 @@ func TestAReleaseIsRecordedBesideTheHistoryAndReadBack(t *testing.T) {
 		}
 
 		if _, present := introspect(t, session).Table(history.ReleaseTable(session.history.table)); present {
-			t.Error("the snapshot holds the release table, which every migr diff would propose dropping")
+			t.Error("the snapshot holds the release table, which every migrasyon diff would propose dropping")
 		}
 	})
 }

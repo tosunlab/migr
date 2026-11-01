@@ -3,8 +3,8 @@ package mysql
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // current is the release both containers are at or above, which most verdicts are measured against.

@@ -9,15 +9,15 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // digestPrefix is how much of a digest a table shows, since comparing 64 hex characters is --json's job.
 const digestPrefix = 12
 
-// newStatusCmd builds the `migr status` subcommand.
+// newStatusCmd builds the `migrasyon status` subcommand.
 func newStatusCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "status",
@@ -101,7 +101,7 @@ func checkpointsOf(ctx context.Context, store history.Store) ([]history.Checkpoi
 
 // recordedRun is the run that left a migration in the state it is in, absent when none did.
 type recordedRun struct {
-	// Batch is the invocation that run belonged to, which is the batch migr down would act on.
+	// Batch is the invocation that run belonged to, which is the batch migrasyon down would act on.
 	Batch int64 `json:"batch"`
 	// Ordinal is its position within that batch.
 	Ordinal int32 `json:"ordinal"`
@@ -152,7 +152,7 @@ const (
 
 // statusReport is what one database reconciled to, in the form --json reports it.
 type statusReport struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Recorded reports whether this database has a migration history table at all.
 	Recorded bool `json:"history_table"`
@@ -311,7 +311,7 @@ func (s statusReport) body() string {
 	}
 
 	if len(s.Statuses) == 0 {
-		fmt.Fprintf(&b, "\nnothing to report: no %s is in any state, and migr %shistory\n"+
+		fmt.Fprintf(&b, "\nnothing to report: no %s is in any state, and migrasyon %shistory\n"+
 			"shows the runs that left it that way.\n", about.noun, about.command)
 
 		return b.String()
@@ -344,7 +344,7 @@ func (s statusReport) writeOrderNote(b *strings.Builder) {
 	about := s.about.or()
 
 	fmt.Fprintf(b, "\nthe order above is version order: %s may declare a dependency that only a "+
-		"language runtime reports, and a report starts none. migr %s prints the order a run "+
+		"language runtime reports, and a report starts none. migrasyon %s prints the order a run "+
 		"will use.\n", about.count(s.Unread), orderShower(about))
 }
 
@@ -418,7 +418,7 @@ func describeState(row statusRow, about subject) string {
 	return "this build has no note for that state"
 }
 
-// describeAsserted says when a settled state was asserted by an operator rather than run by migr.
+// describeAsserted says when a settled state was asserted by an operator rather than run by migrasyon.
 func describeAsserted(run *recordedRun) string {
 	if run == nil || run.Outcome != history.Resolved {
 		return ""
@@ -435,7 +435,7 @@ func describeDirty(run *recordedRun, at *checkpoint, about subject) string {
 
 	if at != nil {
 		return fmt.Sprintf("stopped running in chunks: operation %d, %s and %s written, through "+
-			"key (%s) -- the next migr %s carries on from there", at.Operation,
+			"key (%s) -- the next migrasyon %s carries on from there", at.Operation,
 			describeChunks(at.Chunks), describeWritten(at.Written), strings.Join(at.Cursor, ", "),
 			describeResumer(run.Direction, about))
 	}

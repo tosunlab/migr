@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // ErrCannotShadow marks a shadow-table migration refused before anything was created, naming what is missing.
@@ -32,8 +32,8 @@ var ErrNotCutOver = errors.New("this shadow-table migration has not cut over")
 
 // errShadowing is what the row a shadow-table migration writes at its start records, until it cuts over.
 var errShadowing = errors.New("running through a shadow table: the copy is kept current from the " +
-	"replication log until migr cutover --confirm confirms it -- the next migr up carries it on from the " +
-	"recorded log position, and migr resolve --rolled-back abandons it, dropping the shadow and " +
+	"replication log until migrasyon cutover --confirm confirms it -- the next migrasyon up carries it on from the " +
+	"recorded log position, and migrasyon resolve --rolled-back abandons it, dropping the shadow and " +
 	"releasing the capture")
 
 // identifierLimit is the shortest identifier limit among the engines, which every derived name fits.
@@ -95,17 +95,17 @@ type ShadowRun struct {
 
 // ShadowName derives the copy a migration changes a table through, unique to the migration.
 func ShadowName(table, version string) string {
-	return derived("_"+table+"_migr_"+strings.ToLower(version), "_new")
+	return derived("_"+table+"_migrasyon_"+strings.ToLower(version), "_new")
 }
 
 // RetiredName derives the name the original table keeps after a migration's cutover, unique to the migration.
 func RetiredName(table, version string) string {
-	return derived("_"+table+"_migr_"+strings.ToLower(version), "_old")
+	return derived("_"+table+"_migrasyon_"+strings.ToLower(version), "_old")
 }
 
 // CaptureName derives the server-side resource a migration's change stream reads through.
 func CaptureName(table, version string) string {
-	return "migr_" + strings.ToLower(version) + "_" + digest(table)
+	return "migrasyon_" + strings.ToLower(version) + "_" + digest(table)
 }
 
 // derived joins a stem and a suffix, shortening the stem with a digest where the whole would not fit.

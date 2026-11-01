@@ -50,7 +50,7 @@ func TestTheOneCallWithNoTimeoutHasNoKeyToSetEither(t *testing.T) {
 	}
 }
 
-// tabulatedTimeouts reads §8.2's table as the migr.yaml key each default is surfaced under.
+// tabulatedTimeouts reads §8.2's table as the migrasyon.yaml key each default is surfaced under.
 func tabulatedTimeouts(t *testing.T) map[string]time.Duration {
 	t.Helper()
 

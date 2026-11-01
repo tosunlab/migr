@@ -1,6 +1,6 @@
-# migr Operation IR — `irVersion` 3
+# migrasyon Operation IR — `irVersion` 3
 
-The neutral middle of `migr`. Language SDKs emit it; database drivers consume it. Nothing else
+The neutral middle of `migrasyon`. Language SDKs emit it; database drivers consume it. Nothing else
 crosses that boundary.
 
 ## 1. Scope
@@ -25,7 +25,7 @@ The reference implementation is `internal/ir`.
   live database, are separate axes owned by the capability model. *Destructive* is not the same
   claim as *unsafe* or *unsupported*.
 - **Policy.** The IR carries a destructiveness classification; refusing to run one belongs to the
-  validator and to the engine, and what a project permits belongs to `migr.yaml`.
+  validator and to the engine, and what a project permits belongs to `migrasyon.yaml`.
   
 - **Transport.** How a document reaches the engine is `docs/protocol.md`.
 - **Engine limits.** PostgreSQL caps decimal precision at 1000 and MySQL at 65. Those belong to
@@ -140,7 +140,7 @@ SDK, and language defaults disagree here.
 
 Non-ASCII characters are emitted as UTF-8, not as `\u` escapes. **U+2028 (LINE SEPARATOR) and
 U+2029 (PARAGRAPH SEPARATOR) are ordinary non-ASCII characters here**, emitted as UTF-8 like any
-other. They are not line terminators on any stream migr reads: a frame ends at U+000A and nowhere
+other. They are not line terminators on any stream migrasyon reads: a frame ends at U+000A and nowhere
 else ([protocol.md §2.2](protocol.md#22-one-message-per-line)).
 
 That rule costs some implementers work, so what it asks is stated plainly. Go's `encoding/json`

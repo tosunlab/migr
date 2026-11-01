@@ -6,7 +6,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestTheDataOperationsWriteTheRowsTheyName(t *testing.T) {

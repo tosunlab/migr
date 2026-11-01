@@ -17,7 +17,7 @@
 // invariant #13 requires in order to derive lock impact from the server rather than from
 // documentation — nowhere to live. Making the connection the receiver removes all three.
 //
-// Compile is deliberately pure: no context, no connection, no clock. That is what lets migr plan
+// Compile is deliberately pure: no context, no connection, no clock. That is what lets migrasyon plan
 // print statements without touching a database, what lets golden tests run with no engine
 // installed, and what the Compiler interface exists to name.
 //
@@ -136,18 +136,18 @@
 //
 // # The migration lock: what a driver owes, and what it may not decide
 //
-// Options carries two bounds and a strategy, and Waits defaults whichever migr.yaml left unset.
+// Options carries two bounds and a strategy, and Waits defaults whichever migrasyon.yaml left unset.
 // Non-positive means unset rather than "no bound", because on every engine so far a zero timeout is
 // the spelling for waiting forever — the opposite of what an operator who left a field blank meant.
 // The defaults are DefaultLockWait and DefaultStatementLockWait, and internal/config applies those
-// same constants, so a driver built from migr.yaml and one built by hand behave alike.
+// same constants, so a driver built from migrasyon.yaml and one built by hand behave alike.
 //
 // The two are different settings and are easy to swap. LockWait bounds the wait for the migration
-// lock (migr.yaml's lock.timeout); StatementLockWait bounds one statement's wait for a lock
+// lock (migrasyon.yaml's lock.timeout); StatementLockWait bounds one statement's wait for a lock
 // (safety.lock_timeout), which is what invariant #12 requires of every DDL statement.
 //
-// LockStrategy is what migr.yaml asked for, and a driver must refuse one it does not implement
-// rather than silently substituting its own. internal/config asks whether a value is a word migr
+// LockStrategy is what migrasyon.yaml asked for, and a driver must refuse one it does not implement
+// rather than silently substituting its own. internal/config asks whether a value is a word migrasyon
 // knows; only the driver can say whether this engine can do it.
 //
 // Giving up on the lock is ErrLockTimeout, and every driver reports it, because internal/cli cannot
@@ -229,7 +229,7 @@
 //
 // # Registration is explicit
 //
-// cmd/migr builds a Registry and calls Register, which returns an error on a duplicate name.
+// cmd/migrasyon builds a Registry and calls Register, which returns an error on a duplicate name.
 // There is no init() and no blank import, because neither can report that error, and panicking
 // instead terminates with status 2 — which this project has already assigned to validation
 // failure, making a wiring bug indistinguishable from a bad migration to anything reading exit
@@ -241,7 +241,7 @@
 // nothing that check does not, and depguard leaves a driver package able to register only itself.
 // test/conformance/driver takes a Driver and an open Conn instead (M2-T4).
 //
-// A driver name has one spelling. migr.yaml deliberately does not validate driver names against
+// A driver name has one spelling. migrasyon.yaml deliberately does not validate driver names against
 // a list — that would require core to know which drivers exist — so this registry is the only
 // place a name is ever checked, and it rejects a variant rather than quietly accepting a second
 // way to say the same thing.
@@ -271,7 +271,7 @@
 // Driver because a stream outlives statements and fails apart from the pinned session. It is
 // mandatory; MySQL implements it from M13-T10, PostgreSQL from M13-T15 through a
 // replication slot, and SQLite always refuses. CaptureKeeper is optional on a Conn and
-// PostgreSQL's alone: it lists the migr_ slots on the database and releases one, which is how an
+// PostgreSQL's alone: it lists the migrasyon_ slots on the database and releases one, which is how an
 // orphaned slot is reported and dropped. Shadower is optional on a Conn, as
 // Chunker is (M13-T9): its absence is named by the preflight rather than discovered at a
 // call. Admits reads the table and refuses what that engine cannot carry through a shadow, before
@@ -282,7 +282,7 @@
 //
 // # A note for M2-T3
 //
-// depguard denies the internal/driver/ prefix everywhere except cmd/migr, so a shared
+// depguard denies the internal/driver/ prefix everywhere except cmd/migrasyon, so a shared
 // internal/driver/drivertest helper package would be denied to internal/driver/postgres and to
 // test/conformance/driver. The fix is one allow entry, using the same longer-prefix-beats-shorter
 // mechanism that already keeps internal/runtime/protocol importable.

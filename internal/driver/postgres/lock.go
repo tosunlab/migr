@@ -1,8 +1,8 @@
 package postgres
 
 import (
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // missingValueRelease is the release that stores a column default instead of rewriting the table.

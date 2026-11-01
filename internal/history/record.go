@@ -4,14 +4,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // Record is one run of one migration, as a row of the history table holds it.
 type Record struct {
-	// Batch is the migr invocation this run belonged to; down rolls back a whole batch.
+	// Batch is the migrasyon invocation this run belonged to; down rolls back a whole batch.
 	Batch int64
 	// Ordinal is the run's position within its batch, so order survives a clock that ties.
 	Ordinal int32
@@ -35,9 +35,9 @@ type Record struct {
 	Error string
 	// Driver is the engine the run targeted, spelled as that driver is registered.
 	Driver string
-	// Runtime is the language the migration was written in, spelled as migr.yaml spells it.
+	// Runtime is the language the migration was written in, spelled as migrasyon.yaml spells it.
 	Runtime string
-	// EngineVersion is the migr build that performed the run, filled in by Stamp.
+	// EngineVersion is the migrasyon build that performed the run, filled in by Stamp.
 	EngineVersion string
 	// IRVersion is the operation IR version that build emits, filled in by Stamp.
 	IRVersion int32

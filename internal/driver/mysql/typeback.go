@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // boolType is the one spelling whose parameter is not a display width, on either variant.
@@ -103,7 +103,7 @@ func logicalType(spelling string) (schema.Type, schema.Certainty, bool) {
 
 // A char is a uuid only at the width a uuid is stored in, a tinyint is a bool only at width one,
 // and both temporal types carry the one fractional-seconds precision this driver emits. Anything
-// else is a type migr has no name for rather than a near miss to be read as one.
+// else is a type migrasyon has no name for rather than a near miss to be read as one.
 
 // fitsParameters refuses a parameter this driver does not itself emit, which names no logical type.
 func fitsParameters(base, args string) bool {
@@ -301,7 +301,7 @@ func catalogAction(recorded string, variant Variant) (schema.ReferentialAction, 
 
 	action, known := recordedActions[named]
 	if !known {
-		return "", fmt.Errorf("%w: this server records the referential action %q, which migr has "+
+		return "", fmt.Errorf("%w: this server records the referential action %q, which migrasyon has "+
 			"no name for", ErrIntrospect, recorded)
 	}
 

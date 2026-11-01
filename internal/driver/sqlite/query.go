@@ -11,13 +11,13 @@ import (
 
 	sqlite3 "modernc.org/sqlite/lib"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // hexPrefix opens the rendering of a bytes value, which is the one PostgreSQL gives a bytea.
 const hexPrefix = `\x`
 
-// Query runs a migration's own read with query_only set, so SQLite refuses a write rather than migr.
+// Query runs a migration's own read with query_only set, so SQLite refuses a write rather than migrasyon.
 func (c *sqliteConn) Query(ctx context.Context, q driver.Query) (out driver.Rows, err error) {
 	if err := c.outsideTransaction(ErrQuery); err != nil {
 		return driver.Rows{}, err

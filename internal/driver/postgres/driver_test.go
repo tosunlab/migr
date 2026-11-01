@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
 )
 
 // newDriver builds the driver under test, failing the test if construction ever grows a failure.
@@ -127,8 +127,8 @@ func TestTheHistoryStoreIsBoundToTheSessionAndItsTable(t *testing.T) {
 	}
 
 	if store.table != "audit_log" {
-		t.Errorf("the store writes to %q, want the table migr.yaml named", store.table)
-		t.Log("A store that hard-coded migr_migrations would pass every round-trip test, since")
+		t.Errorf("the store writes to %q, want the table migrasyon.yaml named", store.table)
+		t.Log("A store that hard-coded migrasyon_migrations would pass every round-trip test, since")
 		t.Log("both halves would agree on the wrong table. Options.HistoryTable exists to be read.")
 	}
 

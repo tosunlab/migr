@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // A chunk is two statements in the transaction the engine opened around it: a read of the key of the

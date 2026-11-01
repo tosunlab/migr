@@ -7,19 +7,19 @@
 
 version: 2
 
-project_name: migr
+project_name: migrasyon
 
 before:
   hooks:
     - go mod tidy -diff
     # Shell completions ship in every archive, so the Homebrew cask installs them and no user's machine
     # has to run the binary to make them. Hooks are not run through a shell, hence sh -c.
-    - sh -c 'mkdir -p completions && go run ./cmd/migr completion bash > completions/migr.bash && go run ./cmd/migr completion zsh > completions/_migr && go run ./cmd/migr completion fish > completions/migr.fish'
+    - sh -c 'mkdir -p completions && go run ./cmd/migrasyon completion bash > completions/migrasyon.bash && go run ./cmd/migrasyon completion zsh > completions/_migrasyon && go run ./cmd/migrasyon completion fish > completions/migrasyon.fish'
 
 builds:
-  - id: migr
-    main: ./cmd/migr
-    binary: migr
+  - id: migrasyon
+    main: ./cmd/migrasyon
+    binary: migrasyon
     env:
       - CGO_ENABLED=0
     goos: [linux, darwin, windows]
@@ -29,12 +29,12 @@ builds:
     # The v keeps the form `make build` stamps from git describe; the commit still comes from the
     # go tool's VCS stamping.
     ldflags:
-      - -s -w -X github.com/emrebdr/migr/internal/version.Version=v{{ .Version }}
+      - -s -w -X github.com/tosunlab/migrasyon/internal/version.Version=v{{ .Version }}
     mod_timestamp: "{{ .CommitTimestamp }}"
 
 archives:
-  - id: migr
-    ids: [migr]
+  - id: migrasyon
+    ids: [migrasyon]
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     formats: [tar.gz]
     format_overrides:
@@ -75,24 +75,24 @@ signs:
 # a final release; an empty tag is dropped.
 dockers_v2:
   - id: minimal
-    ids: [migr]
+    ids: [migrasyon]
     dockerfile: docker/Dockerfile
-    images: [ghcr.io/emrebdr/migr]
+    images: [ghcr.io/tosunlab/migrasyon]
     tags:
       - "{{ .Version }}"
       - "{{ if not .Prerelease }}latest{{ end }}"
     platforms: [linux/amd64, linux/arm64]
     labels: &labels
-      org.opencontainers.image.source: https://github.com/emrebdr/migr
+      org.opencontainers.image.source: https://github.com/tosunlab/migrasyon
       org.opencontainers.image.version: "{{ .Version }}"
       org.opencontainers.image.revision: "{{ .FullCommit }}"
       org.opencontainers.image.created: "{{ .CommitDate }}"
       org.opencontainers.image.licenses: MIT
-      org.opencontainers.image.title: migr
+      org.opencontainers.image.title: migrasyon
   - id: node
-    ids: [migr]
+    ids: [migrasyon]
     dockerfile: docker/node.Dockerfile
-    images: [ghcr.io/emrebdr/migr]
+    images: [ghcr.io/tosunlab/migrasyon]
     tags:
       - "{{ .Version }}-node"
       - "{{ if not .Prerelease }}latest-node{{ end }}"
@@ -108,30 +108,30 @@ docker_signs:
       - --yes
       - ${artifact}@${digest}
 
-# The tap behind `brew install emrebdr/tap/migr` (M14-T2): a cask, since goreleaser deprecated
-# the formula generator, committed to emrebdr/homebrew-tap with a token scoped to that repository alone.
+# The tap behind `brew install tosunlab/tap/migrasyon` (M14-T2): a cask, since goreleaser deprecated
+# the formula generator, committed to tosunlab/homebrew-tap with a token scoped to that repository alone.
 # A pre-release never reaches it, and a snapshot only writes it under dist/homebrew.
 homebrew_casks:
-  - name: migr
-    ids: [migr]
-    binaries: [migr]
-    homepage: https://github.com/emrebdr/migr
+  - name: migrasyon
+    ids: [migrasyon]
+    binaries: [migrasyon]
+    homepage: https://github.com/tosunlab/migrasyon
     description: Polyglot, database-agnostic schema migrations, safe on a live database
     license: MIT
     completions:
-      bash: completions/migr.bash
-      zsh: completions/_migr
-      fish: completions/migr.fish
+      bash: completions/migrasyon.bash
+      zsh: completions/_migrasyon
+      fish: completions/migrasyon.fish
     repository:
-      owner: emrebdr
+      owner: tosunlab
       name: homebrew-tap
       branch: main
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     directory: Casks
     commit_author:
-      name: migr-release
-      email: migr-release@users.noreply.github.com
-    commit_msg_template: "migr {{ .Tag }}"
+      name: migrasyon-release
+      email: migrasyon-release@users.noreply.github.com
+    commit_msg_template: "migrasyon {{ .Tag }}"
     skip_upload: auto
     # The binary is not notarized, and Homebrew carries a download's quarantine onto the binary,
     # so Gatekeeper would refuse its first run. Written as postflight_steps by hand: goreleaser's hooks
@@ -139,7 +139,7 @@ homebrew_casks:
     custom_block: |
       postflight_steps do
         on_macos do
-          run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "migr"], chdir: "."
+          run "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", "migrasyon"], chdir: "."
         end
       end
 
@@ -170,7 +170,7 @@ changelog:
 
 release:
   github:
-    owner: emrebdr
-    name: migr
+    owner: tosunlab
+    name: migrasyon
   prerelease: auto
   draft: false

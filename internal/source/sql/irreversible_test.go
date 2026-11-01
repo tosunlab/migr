@@ -5,17 +5,17 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // declaredReason is the reason every fixture here gives for its migration having no undo.
 const declaredReason = "the rows are gone; restore from a backup"
 
-const declaredIrreversible = `-- migr:up
+const declaredIrreversible = `-- migrasyon:up
 DROP TABLE legacy_sessions;
 
--- migr:irreversible: ` + declaredReason + `
+-- migrasyon:irreversible: ` + declaredReason + `
 `
 
 func TestADeclaredIrreversibleMigrationStillSaysWhatItDoes(t *testing.T) {
@@ -48,8 +48,8 @@ func TestADeclaredIrreversibleMigrationRefusesItsDownWithTheAuthorsReason(t *tes
 
 func TestADeclarationIsRefusedWithoutAReason(t *testing.T) {
 	for _, body := range []string{
-		"-- migr:up\nDROP TABLE t;\n\n-- migr:irreversible:\n",
-		"-- migr:up\nDROP TABLE t;\n\n-- migr:irreversible:   \n",
+		"-- migrasyon:up\nDROP TABLE t;\n\n-- migrasyon:irreversible:\n",
+		"-- migrasyon:up\nDROP TABLE t;\n\n-- migrasyon:irreversible:   \n",
 	} {
 		_, err := sourceOf(t, body).Emit(t.Context(), file, ir.Up, engine.ModeApply)
 
@@ -62,8 +62,8 @@ func TestADeclarationIsRefusedWithoutAReason(t *testing.T) {
 }
 
 func TestADeclarationIsRefusedBesideADownSection(t *testing.T) {
-	body := "-- migr:up\nDROP TABLE t;\n\n-- migr:down\nCREATE TABLE t (id bigint);\n\n" +
-		"-- migr:irreversible: " + declaredReason + "\n"
+	body := "-- migrasyon:up\nDROP TABLE t;\n\n-- migrasyon:down\nCREATE TABLE t (id bigint);\n\n" +
+		"-- migrasyon:irreversible: " + declaredReason + "\n"
 
 	_, err := sourceOf(t, body).Emit(t.Context(), file, ir.Up, engine.ModeApply)
 
@@ -77,7 +77,7 @@ func TestADeclarationIsRefusedBesideADownSection(t *testing.T) {
 }
 
 func TestADeclarationIsRefusedAboveTheUpMarker(t *testing.T) {
-	body := "-- migr:irreversible: " + declaredReason + "\n-- migr:up\nDROP TABLE t;\n"
+	body := "-- migrasyon:irreversible: " + declaredReason + "\n-- migrasyon:up\nDROP TABLE t;\n"
 
 	_, err := sourceOf(t, body).Emit(t.Context(), file, ir.Up, engine.ModeApply)
 
@@ -95,7 +95,7 @@ func TestADeclarationIsRefusedAboveTheUpMarker(t *testing.T) {
 }
 
 func TestADeclarationIsRefusedCarriedTwice(t *testing.T) {
-	body := "-- migr:up\nDROP TABLE t;\n\n-- migr:irreversible: one\n-- migr:irreversible: two\n"
+	body := "-- migrasyon:up\nDROP TABLE t;\n\n-- migrasyon:irreversible: one\n-- migrasyon:irreversible: two\n"
 
 	_, err := sourceOf(t, body).Emit(t.Context(), file, ir.Up, engine.ModeApply)
 
@@ -105,7 +105,7 @@ func TestADeclarationIsRefusedCarriedTwice(t *testing.T) {
 }
 
 func TestSQLBelowADeclarationIsRefusedRatherThanDropped(t *testing.T) {
-	body := "-- migr:up\nDROP TABLE t;\n\n-- migr:irreversible: " + declaredReason +
+	body := "-- migrasyon:up\nDROP TABLE t;\n\n-- migrasyon:irreversible: " + declaredReason +
 		"\nCREATE TABLE t (id bigint);\n"
 
 	_, err := sourceOf(t, body).Emit(t.Context(), file, ir.Up, engine.ModeApply)
@@ -118,7 +118,7 @@ func TestSQLBelowADeclarationIsRefusedRatherThanDropped(t *testing.T) {
 }
 
 func TestACommentBelowADeclarationIsFine(t *testing.T) {
-	body := "-- migr:up\nDROP TABLE t;\n\n-- migr:irreversible: " + declaredReason +
+	body := "-- migrasyon:up\nDROP TABLE t;\n\n-- migrasyon:irreversible: " + declaredReason +
 		"\n-- the backup lives in the nightly bucket\n"
 
 	if _, err := sourceOf(t, body).Emit(t.Context(), file, ir.Up, engine.ModeApply); err != nil {

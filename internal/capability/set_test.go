@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // everyKind returns a rule for every operation, so a test can remove or replace just one.

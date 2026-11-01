@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // Progress is how far a chunked data operation has got, reported after every chunk commits.
@@ -129,7 +129,7 @@ func (l Lagged) worst(lags []driver.Lag) (driver.Lag, bool) {
 // describe says why a chunk is held back, naming the replica and the threshold it is judged against.
 func (l Lagged) describe(lag driver.Lag) string {
 	if !lag.Known() {
-		return fmt.Sprintf("replica lag unknown on %s: %v -- waiting, since a replica migr cannot read "+
+		return fmt.Sprintf("replica lag unknown on %s: %v -- waiting, since a replica migrasyon cannot read "+
 			"is treated as one too far behind", lag.Replica, lag.Err)
 	}
 

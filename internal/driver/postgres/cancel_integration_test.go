@@ -10,9 +10,9 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // cancelBound is how long a statement runs before its context ends, in every case here.

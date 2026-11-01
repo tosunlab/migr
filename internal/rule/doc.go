@@ -1,7 +1,7 @@
-// Package rule holds the lint rules migr validate runs, and what a project decides each is worth.
+// Package rule holds the lint rules migrasyon validate runs, and what a project decides each is worth.
 //
 // Status: the framework and two rules (M10-T4), then the three that complete the set (M10-T5). Each
-// rule's own doc comment states what it reports and what it declines to. migr config prints the five with their
+// rule's own doc comment states what it reports and what it declines to. migrasyon config prints the five with their
 // resolved severities, which is how an operator discovers them without reading this.
 //
 // # A rule is data with one function in it
@@ -32,7 +32,7 @@
 // Two things a rule deliberately cannot see:
 //
 // A database. not-null-without-default is about adding a NOT NULL column with no default to a
-// *non-empty* table, and a row count is not something migr validate has: --connect
+// *non-empty* table, and a row count is not something migrasyon validate has: --connect
 // buys the capability set and nothing else, and that migrations are asked over
 // driver.Offline. So the rule reports what it can see and says in its own detail that it could not
 // count the table's rows, which is what a warning is for. There is exactly one case where it does
@@ -55,18 +55,18 @@
 //
 // # The three severities
 //
-// error makes a finding a problem, so migr validate exits 2. warn makes it a warning, which is
+// error makes a finding a problem, so migrasyon validate exits 2. warn makes it a warning, which is
 // printed and changes no exit code. off stops the rule from running at all -- Judge is never
 // called, which a test holds with a rule that records being asked.
 //
 // Judgements come back sorted by rule id rather than in declaration order, so two runs over one
 // migration report in one order (invariant #8).
 //
-// # error is a weaker word here than elsewhere in migr
+// # error is a weaker word here than elsewhere in migrasyon
 //
 // Everything else that exits 2 is wrong: a filename the grammar refuses, an operation no server
 // will perform, a migration nothing can undo. A rule at error is something this project decided it
-// will not ship. That is deliberate: migr up never reads a rule at all, because the
+// will not ship. That is deliberate: migrasyon up never reads a rule at all, because the
 // run's gates -- drift, destruction, capability -- are each about whether an operation is correct or
 // permitted, and refusing a deploy over a missing primary key is how a project learns to switch
 // everything off.
@@ -81,9 +81,9 @@
 // the validator and by the run, so no severity can reach it.
 //
 // An unknown rule id fails the config load, naming every id that exists. The failure mode was never
-// a rule *about* destruction -- it was a line in migr.yaml that reads like permission and silently
+// a rule *about* destruction -- it was a line in migrasyon.yaml that reads like permission and silently
 // does nothing, and `rules: {drop_table: off}` is now a refusal.
 //
-// A test holds the sentence: every rule off, an unpermitted drop_table, and migr validate still
-// reports destructive while migr up still exits 2 having run nothing.
+// A test holds the sentence: every rule off, an unpermitted drop_table, and migrasyon validate still
+// reports destructive while migrasyon up still exits 2 having run nothing.
 package rule

@@ -10,21 +10,21 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/runtime"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
-	"github.com/emrebdr/migr/internal/source/golang"
-	"github.com/emrebdr/migr/internal/source/typescript"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/source/golang"
+	"github.com/tosunlab/migrasyon/internal/source/typescript"
 )
 
 // scriptVar names the behavior this binary plays when it is re-executed as a runtime.
-const scriptVar = "MIGR_CLI_FAKE_RUNTIME"
+const scriptVar = "MIGRASYON_CLI_FAKE_RUNTIME"
 
 // declareVar names what the re-executed runtime has its migrations declare, which is its own axis.
-const declareVar = "MIGR_CLI_FAKE_DECLARES"
+const declareVar = "MIGRASYON_CLI_FAKE_DECLARES"
 
 // TestMain re-executes this binary as a language runtime when the script variable is set.
 func TestMain(m *testing.M) {
@@ -92,7 +92,7 @@ const (
 	declaresStrayStep = "stray-step"
 	// declaresShadow has each migration declare it runs through a shadow table.
 	declaresShadow = "shadow"
-	// declaresStrayOnline has each migration declare an online strategy migr does not know.
+	// declaresStrayOnline has each migration declare an online strategy migrasyon does not know.
 	declaresStrayOnline = "stray-online"
 )
 
@@ -103,7 +103,7 @@ const steppedChange = "users.email"
 const strayVersion = "20991231T235959"
 
 // shutdownMarker opens the name a scripted runtime writes into the project root when it is stopped.
-const shutdownMarker = ".migr-shutdown-"
+const shutdownMarker = ".migrasyon-shutdown-"
 
 // askedOperation is the document actAsks asks the host to resolve, which every driver answers for.
 const askedOperation = `{"operation":{"op":"raw","driver":"fake","sql":"SELECT 1"}}`
@@ -586,7 +586,7 @@ func (a *scriptedAdapter) Command(_ context.Context, p runtime.Project) (runtime
 var _ runtime.Runtime = (*scriptedAdapter)(nil)
 
 // scripted are the languages a registry of scripted adapters answers for, which is every one
-// migr.yaml can name that needs a runtime at all.
+// migrasyon.yaml can name that needs a runtime at all.
 var scripted = []config.Language{config.LanguageGo, config.LanguageTypeScript}
 
 // scriptedRegistry returns a registry whose adapters start a process playing one script.

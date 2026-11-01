@@ -3,7 +3,7 @@ package mysql
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
 )
 
 func TestTheLockTablesAreWhatMySQLAndMariaDBDeclare(t *testing.T) {

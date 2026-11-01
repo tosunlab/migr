@@ -8,9 +8,9 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // relkindQuery reports what kind of relation holds a name, and no row when nothing holds it.
@@ -37,7 +37,7 @@ const partitionedTable = "p"
 const duplicateTable = "42P07"
 
 // uniqueViolation is the SQLSTATE a losing concurrent CREATE raises, on a pg_catalog index rather
-// than on anything migr declared -- so it means a race here and a duplicate run on a write, and is
+// than on anything migrasyon declared -- so it means a race here and a duplicate run on a write, and is
 // classified per call site rather than from one table.
 const uniqueViolation = "23505"
 
@@ -183,7 +183,7 @@ func (h pgHistory) describeLock() string {
 	}
 
 	return ". This session did hold the lock, so the other process locked on a different key -- " +
-		"which means the two migr.yaml files disagree about the schema or the history table"
+		"which means the two migrasyon.yaml files disagree about the schema or the history table"
 }
 
 // checkColumns reports a history table missing anything this build writes, extras being fine.

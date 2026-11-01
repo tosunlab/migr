@@ -11,15 +11,15 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
-// lockPrefix marks every name migr locks on, so one is recognizable in IS_USED_LOCK.
+// lockPrefix marks every name migrasyon locks on, so one is recognizable in IS_USED_LOCK.
 //
-// The 1 is the derivation's version and not migr's: a later release that hashed something else would
-// have to lock on a different name, and two migr builds locking on two names would not exclude each
+// The 1 is the derivation's version and not migrasyon's: a later release that hashed something else would
+// have to lock on a different name, and two migrasyon builds locking on two names would not exclude each
 // other. Changing it is therefore a breaking change to the lock itself.
-const lockPrefix = "migr1:"
+const lockPrefix = "migrasyon1:"
 
 // lockDigestBytes is how much of the digest the name carries, which decides the name's length.
 const lockDigestBytes = 16
@@ -50,7 +50,7 @@ const lockGranted = 1
 // may be negative or zero, which is PostgreSQL's millisecondsCeil rule in this engine's units.
 const shortestWait = time.Millisecond
 
-// lockName is the name one migr installation locks on, derived rather than spelled.
+// lockName is the name one migrasyon installation locks on, derived rather than spelled.
 type lockName string
 
 // String renders the name, so every failure carries what an operator passes to IS_USED_LOCK.
@@ -58,7 +58,7 @@ func (n lockName) String() string {
 	return string(n)
 }
 
-// namespaceLock derives the name one migr installation locks on, which is server-wide.
+// namespaceLock derives the name one migrasyon installation locks on, which is server-wide.
 func namespaceLock(database, table string) lockName {
 	digest := sha256.Sum256([]byte(database + nameSeparator + table))
 

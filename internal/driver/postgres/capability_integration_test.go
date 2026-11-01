@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // relfilenodeQuery reads a table's current storage, which a rewrite replaces.
@@ -21,7 +21,7 @@ import (
 const relfilenodeQuery = `SELECT relfilenode FROM pg_class WHERE oid = $1::regclass`
 
 // probeTable is the populated table every rewrite probe alters, so a rewrite has rows to copy.
-const probeTable = "migr_impact_probe"
+const probeTable = "migrasyon_impact_probe"
 
 // probeRows is enough rows that a rewrite is a real one rather than a metadata shuffle.
 const probeRows = 2000
@@ -287,7 +287,7 @@ func TestTheUUIDDefaultFunctionIsAskedAboutRatherThanAssumed(t *testing.T) {
 				t.Log("function asked about is one.")
 			}
 
-			absent, err := describeFunction(t.Context(), session.conn, "migr_no_such_function()")
+			absent, err := describeFunction(t.Context(), session.conn, "migrasyon_no_such_function()")
 			if err != nil {
 				t.Fatalf("describeFunction on a missing function: %v", err)
 			}

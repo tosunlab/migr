@@ -14,9 +14,9 @@ type CaptureResource struct {
 	Status string
 }
 
-// CaptureKeeper is a session that can list and release the change-stream resources its server holds for migr.
+// CaptureKeeper is a session that can list and release the change-stream resources its server holds for migrasyon.
 type CaptureKeeper interface {
-	// CaptureResources returns every resource migr's derived names cover on this database.
+	// CaptureResources returns every resource migrasyon's derived names cover on this database.
 	CaptureResources(ctx context.Context) ([]CaptureResource, error)
 	// ReleaseCapture drops one resource by name, and is nothing where it is already gone.
 	ReleaseCapture(ctx context.Context, name string) error

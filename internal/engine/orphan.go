@@ -6,21 +6,21 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // A change stream's server-side resource that nothing reads is not litter: PostgreSQL keeps every
 // byte of WAL for a replication slot until something advances it, so an abandoned one fills the
 // disk. A resource is orphaned when no copying or syncing shadow-table state owns it.
-// It is this project's own -- and migr up releases it under the migration lock -- where its state
+// It is this project's own -- and migrasyon up releases it under the migration lock -- where its state
 // cut over, so only a kill between the swap and the release can have left it, or where its derived
 // name is a version this project carries with no state at all, so only a start killed before its
-// record can have. Anything else carries a name like migr's and is someone else's to drop.
+// record can have. Anything else carries a name like migrasyon's and is someone else's to drop.
 
 // capturePrefix is how every derived capture name begins, which is what a keeper lists by.
-const capturePrefix = "migr_"
+const capturePrefix = "migrasyon_"
 
 // ErrCaptureRelease marks a run that could not release a change-stream resource it found orphaned.
 var ErrCaptureRelease = errors.New("an orphaned change-stream resource could not be released")
@@ -31,7 +31,7 @@ type Orphan struct {
 	Resource driver.CaptureResource
 	// Migration is the migration of this project its name derives from, zero where it names none.
 	Migration migration.Migration
-	// Ours reports a resource only this project's runs can have left, which migr up releases.
+	// Ours reports a resource only this project's runs can have left, which migrasyon up releases.
 	Ours bool
 	// Why says how it came to be left, as a sentence reads it.
 	Why string
@@ -73,7 +73,7 @@ func orphanOf(resource driver.CaptureResource, states []history.ShadowState,
 				"stopped before writing one"}, true
 	}
 
-	return Orphan{Resource: resource, Why: "it is named like migr's, for no migration this project " +
+	return Orphan{Resource: resource, Why: "it is named like migrasyon's, for no migration this project " +
 		"carries -- another project's, or a history this database no longer holds"}, true
 }
 

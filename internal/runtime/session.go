@@ -10,12 +10,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/runtime/host"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/runtime/host"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // Options are what a runtime session needs beyond the adapter that starts its process.
@@ -28,7 +28,7 @@ type Options struct {
 	Conn driver.Conn
 	// Log is where host.log's lines and the runtime's own stderr are filed.
 	Log *slog.Logger
-	// Timeouts are §8.2's bounds, each defaulted from the protocol's own where migr.yaml set none.
+	// Timeouts are §8.2's bounds, each defaulted from the protocol's own where migrasyon.yaml set none.
 	Timeouts Timeouts
 }
 

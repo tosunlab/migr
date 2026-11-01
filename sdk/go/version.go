@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	stdruntime "runtime"
@@ -6,10 +6,10 @@ import (
 )
 
 // Name is what this SDK reports itself as in the handshake, which the engine logs.
-const Name = "@migr/sdk-go"
+const Name = "@migrasyon/sdk-go"
 
 // module is this SDK's own import path, which is how it finds itself in the build's dependencies.
-const module = "github.com/emrebdr/migr/sdk/go"
+const module = "github.com/tosunlab/migrasyon/sdk/go"
 
 // unknownVersion is what a build that records no version for this module reports.
 const unknownVersion = "(devel)"
@@ -57,5 +57,5 @@ func LanguageRuntime() string {
 	return stdruntime.Version()
 }
 
-// Language is what the engine calls this runtime, spelled as migr.yaml spells migrations.language.
+// Language is what the engine calls this runtime, spelled as migrasyon.yaml spells migrations.language.
 const Language = "go"

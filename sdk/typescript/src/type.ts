@@ -5,7 +5,7 @@
 // cannot be passed where one is wanted. It needs no toJSON and no parser: what can only be
 // constructed by these functions can only be spelled one way.
 //
-// A bad type throws where it was written. The Go SDK defers -- migr.String(0) is a value carrying
+// A bad type throws where it was written. The Go SDK defers -- migrasyon.String(0) is a value carrying
 // the reason it has no spelling, surfaced at Apply -- because Go could not have a chain
 // return an error at each link. A type constructor is not a chain link, so this one need not.
 //
@@ -21,7 +21,7 @@ declare const LOGICAL: unique symbol;
 export type Type = string & { readonly [LOGICAL]: "logical type" };
 
 /** Refused is what an argument the type system rejects is asked to be, so the message reads. */
-type Refused<M extends string> = { readonly __migr_refused: M };
+type Refused<M extends string> = { readonly __migrasyon_refused: M };
 
 /** Whole rejects a literal that is not an integer, leaving a computed argument to the runtime. */
 type Whole<N extends number, M extends string> = number extends N

@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // searchPathQuery sets the session's schema as one identifier, through a bound parameter.
@@ -42,7 +42,7 @@ const stringGrammarQuery = `SELECT set_config('standard_conforming_strings', 'on
 // pg_settings then reports source "client" and RESET restores the pinned value rather than 0.
 const lockTimeoutParam = "lock_timeout"
 
-// applicationNameParam is how a migr session identifies itself to anyone reading pg_stat_activity.
+// applicationNameParam is how a migrasyon session identifies itself to anyone reading pg_stat_activity.
 //
 // It is what a holder report names beside the pid, so it is pinned after parsing and overrides one
 // the DSN carried -- the same precedence pinLockTimeout takes, for a related reason. A DSN that
@@ -57,12 +57,12 @@ const applicationNameParam = "application_name"
 // fits over the limit. Both measured on PostgreSQL 16 and 17.
 const applicationNameLimit = 63
 
-// keepaliveParams ask the server to notice a migr client that vanished without closing its socket.
+// keepaliveParams ask the server to notice a migrasyon client that vanished without closing its socket.
 //
 // This is the half of invariant #11 that PostgreSQL does not answer for free. A backend whose
 // client was killed with SIGKILL, OOM-killed, or partitioned away never sees a FIN: it stays
 // blocked in ReadCommand holding the advisory lock until TCP keepalives expire, which is two hours
-// by default on Linux. A crashed migr up would wedge every later run for that long. These three
+// by default on Linux. A crashed migrasyon up would wedge every later run for that long. These three
 // bring it to about ninety seconds. They are USERSET, they report 0 and are ignored without error
 // on a Unix socket or an unsupported platform, and they read back as set over TCP -- measured on
 // both servers, both transports.
@@ -92,7 +92,7 @@ func pinApplicationName(cfg *pgx.ConnConfig) {
 	cfg.RuntimeParams[applicationNameParam] = applicationName()
 }
 
-// applicationName is what a migr session calls itself, cut to what PostgreSQL will keep.
+// applicationName is what a migrasyon session calls itself, cut to what PostgreSQL will keep.
 func applicationName() string {
 	return clamp(printableOnly(version.Program+" "+version.Version), applicationNameLimit)
 }
@@ -133,7 +133,7 @@ func applyStringGrammar(ctx context.Context, conn *pgx.Conn) error {
 	return nil
 }
 
-// applySearchPath points the session at the configured schema, if migr.yaml named one.
+// applySearchPath points the session at the configured schema, if migrasyon.yaml named one.
 func applySearchPath(ctx context.Context, conn *pgx.Conn, schema string) error {
 	if strings.TrimSpace(schema) == "" {
 		return nil

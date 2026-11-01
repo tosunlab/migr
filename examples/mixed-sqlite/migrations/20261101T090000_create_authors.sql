@@ -1,8 +1,8 @@
--- migr:up
+-- migrasyon:up
 CREATE TABLE authors (
   id   INTEGER PRIMARY KEY,
   name TEXT NOT NULL
 );
 
--- migr:down
+-- migrasyon:down
 DROP TABLE authors;

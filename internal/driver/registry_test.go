@@ -183,7 +183,7 @@ func TestADriverNameIsRejectedRatherThanSilentlyLowercased(t *testing.T) {
 	if len(r.Names()) != 0 {
 		t.Errorf("the rejected name was registered anyway: %v", r.Names())
 		t.Log("Accepting a second spelling puts two names in the registry for one driver,")
-		t.Log("and migr.yaml deliberately has no driver whitelist -- this is the only place")
+		t.Log("and migrasyon.yaml deliberately has no driver whitelist -- this is the only place")
 		t.Log("a driver name is ever checked.")
 	}
 }

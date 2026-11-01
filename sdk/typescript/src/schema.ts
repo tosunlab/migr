@@ -131,7 +131,7 @@ function carried(ops: readonly Operation[], stated: number): void {
       throw new ProtocolError(
         UNSUPPORTED_IR,
         `operation ${at + 1} is ${describeSince(op)}, which needs irVersion ${needs}, and the ` +
-          `engine stated ${stated} -- upgrade migr to run it`,
+          `engine stated ${stated} -- upgrade migrasyon to run it`,
       );
     }
   });

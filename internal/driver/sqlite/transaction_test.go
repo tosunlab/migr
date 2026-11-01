@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // errWork is what a test's work returns when it wants the transaction discarded.

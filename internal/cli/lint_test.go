@@ -9,10 +9,10 @@ import (
 
 	"github.com/spf13/pflag"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/rule"
 )
 
 // linting stages a Go project whose one migration creates a keyless table with a text column.
@@ -72,7 +72,7 @@ func TestARuleSetToErrorFailsValidationAndOneSetToWarnDoesNot(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "validate")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr validate exited %d, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon validate exited %d, want %d: %v", got, ExitValidation, err)
 	}
 
 	for _, want := range []string{
@@ -117,7 +117,7 @@ func TestEveryRuleTurnedDownLeavesValidationPassingWithWarnings(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "validate")
 	if err != nil {
-		t.Fatalf("migr validate failed over warnings alone: %v", err)
+		t.Fatalf("migrasyon validate failed over warnings alone: %v", err)
 	}
 
 	for _, want := range []string{"no problems found, 2 warnings", "warnings — 2 warnings",
@@ -139,7 +139,7 @@ func TestEveryRuleTurnedOffLeavesNothingToReport(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "validate")
 	if err != nil {
-		t.Fatalf("migr validate failed with every rule off: %v", err)
+		t.Fatalf("migrasyon validate failed with every rule off: %v", err)
 	}
 
 	for _, unwanted := range []string{string(rule.MissingPrimaryKey), string(rule.UnboundedString),
@@ -159,7 +159,7 @@ func TestTheJSONDocumentSeparatesWarningsFromProblemsAndNamesTheRule(t *testing.
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "validate", "--json")
 	if ExitCode(err) != ExitValidation {
-		t.Fatalf("migr validate --json exited %d, want %d: %v", ExitCode(err), ExitValidation, err)
+		t.Fatalf("migrasyon validate --json exited %d, want %d: %v", ExitCode(err), ExitValidation, err)
 	}
 
 	var document struct {
@@ -233,7 +233,7 @@ func TestACleanRunStillRendersProblemsAsAList(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "validate", "--json")
 	if err != nil {
-		t.Fatalf("migr validate --json failed: %v", err)
+		t.Fatalf("migrasyon validate --json failed: %v", err)
 	}
 
 	if !strings.Contains(stdout, `"problems": []`) {
@@ -271,7 +271,7 @@ func TestARuleThisBuildDoesNotShipFailsBeforeAnythingRuns(t *testing.T) {
 
 	_, _, err := runScripted(t, dir, actTypes, drivers, "validate")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr validate exited %d, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon validate exited %d, want %d: %v", got, ExitValidation, err)
 	}
 
 	if !strings.Contains(err.Error(), "no rule is called") {
@@ -288,7 +288,7 @@ func TestNoSeverityCanPermitDestruction(t *testing.T) {
 
 	stdout, _, err := runWith(t, dir, noon, drivers, "validate")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr validate exited %d with every rule off, want %d: %v", got, ExitValidation,
+		t.Fatalf("migrasyon validate exited %d with every rule off, want %d: %v", got, ExitValidation,
 			err)
 	}
 
@@ -299,7 +299,7 @@ func TestNoSeverityCanPermitDestruction(t *testing.T) {
 
 	_, _, err = runWith(t, dir, noon, drivers, "up")
 	if got := ExitCode(err); got != ExitValidation {
-		t.Fatalf("migr up exited %d with every rule off, want %d: %v", got, ExitValidation, err)
+		t.Fatalf("migrasyon up exited %d with every rule off, want %d: %v", got, ExitValidation, err)
 	}
 
 	if len(f.statements) != 0 {
@@ -314,13 +314,13 @@ func TestLintChangesNothingAboutARunOrAPreview(t *testing.T) {
 		t.Run(strings.Join(args, " "), func(t *testing.T) {
 			stdout, _, err := runScripted(t, dir, actTypes, drivers, args...)
 			if err != nil {
-				t.Fatalf("migr %v failed: %v", args, err)
+				t.Fatalf("migrasyon %v failed: %v", args, err)
 			}
 
 			for _, unwanted := range []string{string(rule.MissingPrimaryKey),
 				string(rule.UnboundedString), "warning"} {
 				if strings.Contains(stdout, unwanted) {
-					t.Errorf("migr %v says %q, and lint is migr validate's alone:\n%s", args,
+					t.Errorf("migrasyon %v says %q, and lint is migrasyon validate's alone:\n%s", args,
 						unwanted, stdout)
 				}
 			}
@@ -328,13 +328,13 @@ func TestLintChangesNothingAboutARunOrAPreview(t *testing.T) {
 	}
 }
 
-func TestMigrConfigListsEveryRuleAndWhatItIsSetTo(t *testing.T) {
+func TestMigrasyonConfigListsEveryRuleAndWhatItIsSetTo(t *testing.T) {
 	dir, drivers := linting(t)
 	configuring(t, dir, map[rule.ID]rule.Severity{rule.UnboundedString: rule.SeverityOff})
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "config")
 	if err != nil {
-		t.Fatalf("migr config failed: %v", err)
+		t.Fatalf("migrasyon config failed: %v", err)
 	}
 
 	for _, want := range []string{
@@ -342,7 +342,7 @@ func TestMigrConfigListsEveryRuleAndWhatItIsSetTo(t *testing.T) {
 		string(rule.UnboundedString) + ": \"off\"",
 	} {
 		if !strings.Contains(stdout, want) {
-			t.Errorf("migr config does not say %q:\n%s", want, stdout)
+			t.Errorf("migrasyon config does not say %q:\n%s", want, stdout)
 		}
 	}
 }
@@ -352,7 +352,7 @@ func TestAMigrationWithNoDownAndAnUnfillableColumnWarnsTwiceAndFailsNothing(t *t
 
 	stdout, _, err := runScripted(t, dir, actLints, drivers, "validate")
 	if err != nil {
-		t.Fatalf("migr validate failed over warnings alone: %v\n%s", err, stdout)
+		t.Fatalf("migrasyon validate failed over warnings alone: %v\n%s", err, stdout)
 	}
 
 	for _, want := range []string{
@@ -377,7 +377,7 @@ func TestAMigrationThatSendsItsOwnStatementIsReportedWithNothingOpened(t *testin
 
 	stdout, _, err := runScripted(t, dir, actMixes, drivers, "validate")
 	if err != nil {
-		t.Fatalf("migr validate failed over a warning: %v\n%s", err, stdout)
+		t.Fatalf("migrasyon validate failed over a warning: %v\n%s", err, stdout)
 	}
 
 	for _, want := range []string{string(rule.MixedDataMigration), "1 statement",
@@ -388,7 +388,7 @@ func TestAMigrationThatSendsItsOwnStatementIsReportedWithNothingOpened(t *testin
 	}
 
 	if f.asked("open") {
-		t.Error("migr validate opened a database to read a statement it was only shown")
+		t.Error("migrasyon validate opened a database to read a statement it was only shown")
 	}
 
 	t.Log("The escape hatch's half of what a migration does, reaching a rule in a command that opened")
@@ -417,7 +417,7 @@ func TestARuleThatDefaultsToWarnFailsTheRunWhenAProjectSaysError(t *testing.T) {
 
 			stdout, _, err := runScripted(t, dir, c.act, drivers, "validate")
 			if got := ExitCode(err); got != ExitValidation {
-				t.Fatalf("migr validate exited %d, want %d:\n%s", got, ExitValidation, stdout)
+				t.Fatalf("migrasyon validate exited %d, want %d:\n%s", got, ExitValidation, stdout)
 			}
 
 			for _, id := range c.rules {
@@ -434,7 +434,7 @@ func TestTheRulesFlagIsRegisteredNowhere(t *testing.T) {
 
 	cmd.PersistentFlags().VisitAll(func(f *pflag.Flag) {
 		if strings.Contains(f.Name, "rule") || strings.Contains(f.Name, "lint") {
-			t.Errorf("--%s is a persistent flag, and rules are configured in migr.yaml alone",
+			t.Errorf("--%s is a persistent flag, and rules are configured in migrasyon.yaml alone",
 				f.Name)
 		}
 	})
@@ -442,7 +442,7 @@ func TestTheRulesFlagIsRegisteredNowhere(t *testing.T) {
 	for _, sub := range cmd.Commands() {
 		sub.Flags().VisitAll(func(f *pflag.Flag) {
 			if strings.Contains(f.Name, "rule") || strings.Contains(f.Name, "lint") {
-				t.Errorf("migr %s accepts --%s, and rules are configured in migr.yaml alone",
+				t.Errorf("migrasyon %s accepts --%s, and rules are configured in migrasyon.yaml alone",
 					sub.Name(), f.Name)
 			}
 		})

@@ -10,9 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // noon is the instant these tests create migrations at, in a zone two hours ahead of UTC.
@@ -71,7 +71,7 @@ func ticking(at time.Time) func() time.Time {
 // initialized runs init in a fresh directory with a DSN in the environment, ready for create.
 func initialized(t *testing.T) string {
 	t.Helper()
-	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migr")
+	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migrasyon")
 
 	dir := t.TempDir()
 
@@ -128,7 +128,7 @@ func TestTheScaffoldNamesEveryKeyThatHasNoDefaultAndNothingThatHasOne(t *testing
 			t.Errorf("the scaffold writes %q, which applyDefaults already owns:\n%s",
 				defaulted, written)
 			t.Log("A scaffold restating a default is a second definition of it, frozen into every")
-			t.Log("project ever created. `migr config` prints the resolved set instead.")
+			t.Log("project ever created. `migrasyon config` prints the resolved set instead.")
 		}
 	}
 }
@@ -144,7 +144,7 @@ func TestTheOneDefaultedKeyTheScaffoldWritesIsADecisionRatherThanARestatement(t 
 	if !strings.Contains(string(written), "allow_destructive: ["+string(ir.KindRaw)+"]") {
 		t.Errorf("the scaffold permits no destruction, so nothing it writes can run:\n%s", written)
 		t.Log("The scaffold names language: sql, and every statement in a .sql migration reaches")
-		t.Log("the database as a raw operation -- which migr cannot read and therefore refuses")
+		t.Log("the database as a raw operation -- which migrasyon cannot read and therefore refuses")
 		t.Log("until a project permits it. A scaffolded project that cannot run its own first")
 		t.Log("migration is the same failure as a dsn that requires a credential to write a file.")
 	}
@@ -189,7 +189,7 @@ func TestWritingAMigrationNeedsNoDatabaseCredential(t *testing.T) {
 		t.Errorf("create: %v", err)
 		t.Log("Every command loads the whole config, and expansion refuses a reference with no")
 		t.Log("value and no fallback -- so a scaffold naming a bare ${DATABASE_URL} makes writing")
-		t.Log("a text file require a credential. The fallback is why `migr init && migr create`")
+		t.Log("a text file require a credential. The fallback is why `migrasyon init && migrasyon create`")
 		t.Log("works in a directory where nobody has exported anything yet.")
 	}
 }
@@ -233,7 +233,7 @@ func TestInitRefusesAnExistingConfigAndLeavesNothingBehind(t *testing.T) {
 }
 
 func TestInitLeavesADirectoryThatIsAlreadyThereAlone(t *testing.T) {
-	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migr")
+	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migrasyon")
 
 	dir := t.TempDir()
 	existing := filepath.Join(dir, scaffoldDir)
@@ -262,7 +262,7 @@ func TestInitLeavesADirectoryThatIsAlreadyThereAlone(t *testing.T) {
 }
 
 func TestInitReportsBothPathsAndTheStepStillOwed(t *testing.T) {
-	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migr")
+	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migrasyon")
 
 	stdout, _, err := runIn(t, t.TempDir(), noon, "init")
 	if err != nil {
@@ -273,7 +273,7 @@ func TestInitReportsBothPathsAndTheStepStillOwed(t *testing.T) {
 		"created " + config.DefaultFilename,
 		"created " + scaffoldDir,
 		"DATABASE_URL",
-		"migr create",
+		"migrasyon create",
 	} {
 		if !strings.Contains(stdout, want) {
 			t.Errorf("init's report does not mention %q:\n%s", want, stdout)
@@ -282,7 +282,7 @@ func TestInitReportsBothPathsAndTheStepStillOwed(t *testing.T) {
 }
 
 func TestInitAnchorsTheDirectoryToItsConfigRatherThanToTheWorkingDirectory(t *testing.T) {
-	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migr")
+	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migrasyon")
 
 	dir := t.TempDir()
 	other := filepath.Join(dir, "other")
@@ -302,13 +302,13 @@ func TestInitAnchorsTheDirectoryToItsConfigRatherThanToTheWorkingDirectory(t *te
 
 	if exists(t, filepath.Join(dir, scaffoldDir)) {
 		t.Error("init created a migrations directory beside the operator instead of the config")
-		t.Log("`migr --config ../other/migr.yaml init` scaffolding into the current directory is")
+		t.Log("`migrasyon --config ../other/migrasyon.yaml init` scaffolding into the current directory is")
 		t.Log("the writing half of the mistake internal/config's anchor exists to prevent.")
 	}
 }
 
 func TestInitJSONIsValidAndNamesWhatItCreated(t *testing.T) {
-	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migr")
+	t.Setenv("DATABASE_URL", "postgres://localhost:5432/migrasyon")
 
 	dir := t.TempDir()
 

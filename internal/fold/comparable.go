@@ -1,6 +1,6 @@
 package fold
 
-import "github.com/emrebdr/migr/internal/schema"
+import "github.com/tosunlab/migrasyon/internal/schema"
 
 // Three things in a snapshot are engine text and a projection has never seen an engine,
 // so it holds what the migration wrote and the database holds what the server made of it. Measured

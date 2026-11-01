@@ -3,10 +3,10 @@ package postgres
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // composed16 is a PostgreSQL 16 as compose runs it, which declares what the 17 beside it does.

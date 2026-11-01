@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestUpRunsAMigrationOnlyARuntimeCanRead(t *testing.T) {
@@ -18,7 +18,7 @@ func TestUpRunsAMigrationOnlyARuntimeCanRead(t *testing.T) {
 	}
 
 	t.Log("A .go file carries no SQL, so every statement here crossed the wire as IR and was")
-	t.Log("compiled by the driver. That is the whole stack for a language migr does not read.")
+	t.Log("compiled by the driver. That is the whole stack for a language migrasyon does not read.")
 
 	if !slices.Contains(f.statements, "CREATE TABLE scripted (id bigint)") {
 		t.Errorf("the statements this run executed are %v, want the one the runtime emitted",
@@ -149,7 +149,7 @@ func TestAConnectionIsGivenBackWhenTheSourceWillNotStart(t *testing.T) {
 	}
 
 	t.Log("The source is built after the connection, so a source that will not start leaves one")
-	t.Log("open. A failed migr up must not leak a backend.")
+	t.Log("open. A failed migrasyon up must not leak a backend.")
 
 	if !slices.Contains(f.calls, "close") {
 		t.Errorf("the connection was never closed: %v", f.calls)
@@ -242,10 +242,10 @@ func (c *recordingConn) Close(context.Context) error {
 	return c.err
 }
 
-func TestALanguageMigrDoesNotKnowIsRefusedNamingTheOnesItDoes(t *testing.T) {
+func TestALanguageMigrasyonDoesNotKnowIsRefusedNamingTheOnesItDoes(t *testing.T) {
 	_, err := runnable("cobol", scriptedRegistry(t, actEmits))
 	if err == nil {
-		t.Fatal("runnable returned an adapter for a language migr does not know")
+		t.Fatal("runnable returned an adapter for a language migrasyon does not know")
 	}
 
 	t.Log("Config validation refuses this before a command reaches here, so nothing else can")

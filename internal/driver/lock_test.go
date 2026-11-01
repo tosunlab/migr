@@ -14,7 +14,7 @@ func busy() *LockBusyError {
 		Wait:   30 * time.Second,
 		Holder: &LockHolder{
 			Process:     "pid 4711",
-			Application: "migr 0.1.0",
+			Application: "migrasyon 0.1.0",
 			Elapsed:     4*time.Minute + 12*time.Second,
 			Measured:    "session age",
 		},
@@ -25,7 +25,7 @@ func busy() *LockBusyError {
 func TestABusyLockNamesTheHolderAndWhichDurationItMeasured(t *testing.T) {
 	message := busy().Error()
 
-	for _, want := range []string{"postgres", "30s", "pid 4711", "migr 0.1.0", "4m12s",
+	for _, want := range []string{"postgres", "30s", "pid 4711", "migrasyon 0.1.0", "4m12s",
 		"session age"} {
 		if !strings.Contains(message, want) {
 			t.Errorf("the report is %q and does not carry %q", message, want)

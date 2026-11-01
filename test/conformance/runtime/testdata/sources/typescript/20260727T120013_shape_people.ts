@@ -1,4 +1,4 @@
-import { defineMigration, literal, t } from "@migr/sdk";
+import { defineMigration, literal, t } from "@migrasyon/sdk";
 
 /** ShapePeople is the fixture that writes rows rather than schema, which irVersion 2 added. */
 export default defineMigration({

@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 func TestAShadowStateIsRecordedBesideTheHistoryAndASaveKeepsItsConfirmationOnBothServers(t *testing.T) {
@@ -29,7 +29,7 @@ func TestAShadowStateIsRecordedBesideTheHistoryAndASaveKeepsItsConfirmationOnBot
 		}
 
 		begun := history.ShadowState{Version: "20261020T130000", Table: "people", Shadow: "_people_new",
-			Retired: "_people_old", Capture: "migr_reader", Stage: history.StageCopying,
+			Retired: "_people_old", Capture: "migrasyon_reader", Stage: history.StageCopying,
 			Position: "binlog.000002:4711", UpdatedAt: time.Date(2026, 10, 20, 9, 30, 0, 123456000, time.UTC)}
 		saved := begun
 		saved.Stage, saved.Position, saved.Copied = history.StageSyncing, "binlog.000002:5000", 7
@@ -57,7 +57,7 @@ func TestAShadowStateIsRecordedBesideTheHistoryAndASaveKeepsItsConfirmationOnBot
 		}
 
 		if _, present := introspect(t, c).Table(held.shadowTable()); present {
-			t.Error("the snapshot holds the shadow-state table, which every migr diff would propose dropping")
+			t.Error("the snapshot holds the shadow-state table, which every migrasyon diff would propose dropping")
 		}
 	})
 }
@@ -87,7 +87,7 @@ func TestEachServerDeclaresBinlogCaptureAsItIsConfigured(t *testing.T) {
 			logged)
 	}
 
-	plain := openServer(t, server{name: "mysql80", dsn: "migr_plain:migr_plain@tcp(127.0.0.1:55480)/migr"},
+	plain := openServer(t, server{name: "mysql80", dsn: "migrasyon_plain:migrasyon_plain@tcp(127.0.0.1:55480)/migrasyon"},
 		driver.Options{HistoryTable: uniqueName(t)})
 
 	reason := plain.Capabilities().Capture().Reason()
@@ -102,8 +102,8 @@ func TestEachServerDeclaresBinlogCaptureAsItIsConfigured(t *testing.T) {
 	}
 }
 
-// sourceRoot is mysql80's root, which granting a privilege needs and migr never does.
-const sourceRoot = "root:migr@tcp(127.0.0.1:55480)/"
+// sourceRoot is mysql80's root, which granting a privilege needs and migrasyon never does.
+const sourceRoot = "root:migrasyon@tcp(127.0.0.1:55480)/"
 
 // asRoot runs one statement on mysql80 as its root.
 func asRoot(t *testing.T, stmt string) error {
@@ -123,16 +123,16 @@ func asRoot(t *testing.T, stmt string) error {
 
 func TestAUserWithTheReplicationGrantsIsPermittedCaptureOnMySQL(t *testing.T) {
 	for _, stmt := range []string{
-		"CREATE USER IF NOT EXISTS 'migr_capture'@'%' IDENTIFIED BY 'migr_capture'",
-		"GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'migr_capture'@'%'",
-		"GRANT ALL PRIVILEGES ON `migr`.* TO 'migr_capture'@'%'",
+		"CREATE USER IF NOT EXISTS 'migrasyon_capture'@'%' IDENTIFIED BY 'migrasyon_capture'",
+		"GRANT REPLICATION SLAVE, REPLICATION CLIENT ON *.* TO 'migrasyon_capture'@'%'",
+		"GRANT ALL PRIVILEGES ON `migrasyon`.* TO 'migrasyon_capture'@'%'",
 	} {
 		if err := asRoot(t, stmt); err != nil {
 			t.Fatalf("%s: %v", stmt, err)
 		}
 	}
 
-	granted := openServer(t, server{name: "mysql80", dsn: "migr_capture:migr_capture@tcp(127.0.0.1:55480)/migr"},
+	granted := openServer(t, server{name: "mysql80", dsn: "migrasyon_capture:migrasyon_capture@tcp(127.0.0.1:55480)/migrasyon"},
 		driver.Options{HistoryTable: uniqueName(t)})
 
 	if fact := granted.Capabilities().Capture(); !fact.Permitted {

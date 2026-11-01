@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // leftInvalid is the INVALID index the tests stage, as PostgreSQL would report one.

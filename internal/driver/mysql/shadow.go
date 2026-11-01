@@ -10,10 +10,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // A shadow is created LIKE the table, changed, filled a keyed chunk at a time, and swapped in under

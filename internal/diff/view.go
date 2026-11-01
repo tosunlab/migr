@@ -1,8 +1,8 @@
 package diff
 
 import (
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // A view's body is engine text and compares as the text it is, so two engines' renderings

@@ -1,8 +1,8 @@
 package fold
 
 import (
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Forward returns the schema a list of operations leaves, and every operation it could not fold.

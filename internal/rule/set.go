@@ -77,7 +77,7 @@ func checkRule(r Rule) error {
 	}
 
 	if strings.TrimSpace(r.Summary) == "" {
-		return fmt.Errorf("rule %q has no summary, so migr config cannot say what it checks", r.ID)
+		return fmt.Errorf("rule %q has no summary, so migrasyon config cannot say what it checks", r.ID)
 	}
 
 	if !r.Default.Valid() {

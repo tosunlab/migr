@@ -9,9 +9,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // guide is the document every lock table is held against, relative to the repository root.
@@ -19,8 +19,8 @@ var guide = filepath.Join("docs", "zero-downtime.md")
 
 // The two lines that bracket one engine's table in the guide; what lies between them is generated.
 const (
-	openMarker  = "<!-- migr:lock-table %s -->"
-	closeMarker = "<!-- /migr:lock-table -->"
+	openMarker  = "<!-- migrasyon:lock-table %s -->"
+	closeMarker = "<!-- /migrasyon:lock-table -->"
 )
 
 // LockCase is one row of a lock table: an operation, and the words the row names it by.
@@ -207,7 +207,7 @@ func (l LockTable) block(doc string) (before, table, after string, found bool) {
 func (l LockTable) Render() string {
 	var b strings.Builder
 
-	b.WriteString("| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |\n")
+	b.WriteString("| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |\n")
 	b.WriteString("|---|---|---|---|---|\n")
 
 	var refused []string

@@ -3,7 +3,7 @@ package postgres
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestAConcurrentStatementIsReadForTheIndexItTouches(t *testing.T) {

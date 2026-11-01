@@ -5,7 +5,7 @@
 // and the named-export style is unconstrainable by any type, since nothing relates one export of a
 // module to another. So every rule migration.ts states is stated again here.
 //
-// It takes a namespace rather than a path: importing files is migr-runtime-node's job (M7-T5), and
+// It takes a namespace rather than a path: importing files is migrasyon-runtime-node's job (M7-T5), and
 // keeping that out means all of this is testable with no import, no process, and no toolchain.
 
 import { MigrationError } from "./error.ts";
@@ -237,7 +237,7 @@ function checkOnline(file: string, value: unknown): void {
   throw new MigrationError(
     "bad_member",
     file,
-    `${file} exports online as ${describeType(value)}, and the one strategy migr knows is ` +
+    `${file} exports online as ${describeType(value)}, and the one strategy migrasyon knows is ` +
       JSON.stringify(SHADOW_TABLE),
   );
 }

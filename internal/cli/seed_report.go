@@ -7,20 +7,20 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
-// newSeedStatusCmd builds `migr seed status`, the seed history's own reconciliation.
+// newSeedStatusCmd builds `migrasyon seed status`, the seed history's own reconciliation.
 func newSeedStatusCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "status",
 		Short: "Show what each seed reconciled to",
 		Long: "Folds this database's seed history against the seeds this environment runs and\n" +
-			"prints one state per seed. Like migr status it takes no lock and writes nothing, and\n" +
-			"it lists no migration -- migr status lists those and no seed.",
+			"prints one state per seed. Like migrasyon status it takes no lock and writes nothing, and\n" +
+			"it lists no migration -- migrasyon status lists those and no seed.",
 		Args: argsOf(cobra.NoArgs),
 		RunE: func(cmd *cobra.Command, _ []string) error {
 			return runSeedStatus(cmd, opts)
@@ -28,12 +28,12 @@ func newSeedStatusCmd(opts *options) *cobra.Command {
 	}
 }
 
-// newSeedHistoryCmd builds `migr seed history`, the seed history's own execution log.
+// newSeedHistoryCmd builds `migrasyon seed history`, the seed history's own execution log.
 func newSeedHistoryCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "history",
 		Short: "Show every seed run recorded against this database",
-		Long: "Prints every row of this database's seed history, oldest first. Like migr history\n" +
+		Long: "Prints every row of this database's seed history, oldest first. Like migrasyon history\n" +
 			"it takes no lock and writes nothing.",
 		Args: argsOf(cobra.NoArgs),
 		RunE: func(cmd *cobra.Command, _ []string) error {
@@ -42,7 +42,7 @@ func newSeedHistoryCmd(opts *options) *cobra.Command {
 	}
 }
 
-// newSeedDownCmd builds `migr seed down`, which rolls seeds back without touching a migration.
+// newSeedDownCmd builds `migrasyon seed down`, which rolls seeds back without touching a migration.
 func newSeedDownCmd(opts *options) *cobra.Command {
 	narrow := &narrowing{}
 
@@ -67,14 +67,14 @@ func newSeedDownCmd(opts *options) *cobra.Command {
 	return cmd
 }
 
-// newSeedResolveCmd builds `migr seed resolve`, which settles a seed a stopped run left between states.
+// newSeedResolveCmd builds `migrasyon seed resolve`, which settles a seed a stopped run left between states.
 func newSeedResolveCmd(opts *options) *cobra.Command {
 	ask := &asking{}
 
 	cmd := &cobra.Command{
 		Use:   "resolve",
 		Short: "Settle a seed left between states",
-		Long: "Resolves the one seed a stopped run left between states, as migr resolve does for a\n" +
+		Long: "Resolves the one seed a stopped run left between states, as migrasyon resolve does for a\n" +
 			"migration: --resume runs on from where it stopped, and --applied or --rolled-back\n" +
 			"record what you did yourself. It prints what it is about to change before changing\n" +
 			"it, and --dry-run prints only.",
@@ -247,12 +247,12 @@ func settlingSeeds(ctx context.Context, opts *options, repair engine.Repair,
 
 // seedWords are the engine's own sentences naming a migration command, and the seed command each means.
 var seedWords = strings.NewReplacer(
-	"migr resolve", "migr seed resolve",
-	"migr status and migr history", "migr seed status and migr seed history",
-	"The next migr up", "The next migr seed",
-	"migr down refuses", "migr seed down refuses",
-	"Neither up nor down runs", "Neither migr seed nor migr seed down runs",
-	"Both up and down refuse", "Both migr seed and migr seed down refuse",
+	"migrasyon resolve", "migrasyon seed resolve",
+	"migrasyon status and migrasyon history", "migrasyon seed status and migrasyon seed history",
+	"The next migrasyon up", "The next migrasyon seed",
+	"migrasyon down refuses", "migrasyon seed down refuses",
+	"Neither up nor down runs", "Neither migrasyon seed nor migrasyon seed down runs",
+	"Both up and down refuse", "Both migrasyon seed and migrasyon seed down refuse",
 	"an applied migration has been edited since it was applied", "an applied seed has been edited since it ran",
 	"this migration", "this seed",
 	"about the migration", "about the seed",
@@ -261,11 +261,11 @@ var seedWords = strings.NewReplacer(
 
 // seedNexts are the engine's own remedies naming a migration command, and the seed command each means.
 var seedNexts = strings.NewReplacer(
-	"migr resolve", "migr seed resolve",
-	"migr down --to", "migr seed down --to",
-	"migr status", "migr seed status",
-	"run migr up again to carry on", "run migr seed again to carry on",
-	"make the change in a new migration with migr create", "make the change in a new seed",
+	"migrasyon resolve", "migrasyon seed resolve",
+	"migrasyon down --to", "migrasyon seed down --to",
+	"migrasyon status", "migrasyon seed status",
+	"run migrasyon up again to carry on", "run migrasyon seed again to carry on",
+	"make the change in a new migration with migrasyon create", "make the change in a new seed",
 	"author a down for this migration", "author a down for this seed",
 	"the migration between states", "the seed between states",
 )

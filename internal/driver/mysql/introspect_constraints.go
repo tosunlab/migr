@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Measured on 11.4: a json column is a longtext plus a check named after the column whose clause is

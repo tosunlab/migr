@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestTheConnectionStringFormsSQLiteReadsAllOpen(t *testing.T) {
@@ -40,7 +40,7 @@ func TestAnEmptyConnectionStringIsRefused(t *testing.T) {
 	}
 
 	t.Log("SQLite reads an empty filename as a private temporary database that is deleted when the")
-	t.Log("process exits -- measured, not assumed -- so migr up would apply every migration to a")
+	t.Log("process exits -- measured, not assumed -- so migrasyon up would apply every migration to a")
 	t.Log("file nobody can find afterwards and report success.")
 }
 

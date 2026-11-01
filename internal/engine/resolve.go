@@ -6,13 +6,13 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // RepairMode is what an operator asked be done about a migration left between states.
@@ -28,7 +28,7 @@ const (
 	RepairRolledBack RepairMode = "rolled-back"
 )
 
-// repairs lists every repair, from the one migr performs to the two an operator asserts.
+// repairs lists every repair, from the one migrasyon performs to the two an operator asserts.
 var repairs = []RepairMode{RepairResume, RepairApplied, RepairRolledBack}
 
 // Repairs returns every way a dirty migration may be resolved, as a copy.
@@ -213,7 +213,7 @@ func soleDirty(report history.Report) (history.Status, bool, error) {
 func noHistoryError() error {
 	return remedy.With(fmt.Errorf("%w, so nothing here is between states -- and a resolution creates "+
 		"nothing, since a command whose whole job is repair may not be the one that invents the record "+
-		"it repairs", history.ErrNoTable), "check that --database names the database you mean; migr up "+
+		"it repairs", history.ErrNoTable), "check that --database names the database you mean; migrasyon up "+
 		"is what creates a history table")
 }
 

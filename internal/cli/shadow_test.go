@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // shadowedProject stages one Go migration indexing users, declared to run through a shadow table.
@@ -83,7 +83,7 @@ func TestADetachedHoldExitsSixIsReportedWaitingAndCarriedOnByTheNextUp(t *testin
 
 	for _, want := range []string{"waiting  " + versionAt(0),
 		"held in sync through the shadow table " + usersShadow, "trailed the log by 0s",
-		"migr cutover --confirm " + versionAt(0), "1 waiting"} {
+		"migrasyon cutover --confirm " + versionAt(0), "1 waiting"} {
 		if !strings.Contains(status, want) {
 			t.Errorf("status does not say %q:\n%s", want, status)
 		}

@@ -7,7 +7,7 @@ import (
 
 	lib "github.com/go-sql-driver/mysql"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // reported builds the error the library reports for one server error number.
@@ -31,7 +31,7 @@ func TestTheTwoKeyRefusalsAPureCompileCannotPreventAreExplained(t *testing.T) {
 			says: []string{"3072", "768", "utf8mb4", "1071"},
 		},
 		"anything else passes through": {
-			err:   reported(1146, "Table 'migr.nope' doesn't exist"),
+			err:   reported(1146, "Table 'migrasyon.nope' doesn't exist"),
 			plain: true,
 		},
 		"an error the library did not report": {

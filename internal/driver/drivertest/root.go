@@ -10,7 +10,7 @@ import (
 )
 
 // modulePath is the root module, which is what distinguishes it from the nested sdk/go module.
-const modulePath = "module github.com/emrebdr/migr"
+const modulePath = "module github.com/tosunlab/migrasyon"
 
 // goldenDir is where committed golden files live, relative to the repository root.
 var goldenDir = filepath.Join("test", "golden")

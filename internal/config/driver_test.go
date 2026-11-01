@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // optionsFrom loads a fixture and resolves its default database into what a driver is built from.
@@ -24,7 +24,7 @@ func optionsFrom(t *testing.T, fixture string) driver.Options {
 	return cfg.DriverOptions(db)
 }
 
-func TestMigrYamlsLockBlockReachesTheDriverUnchanged(t *testing.T) {
+func TestMigrasyonYamlsLockBlockReachesTheDriverUnchanged(t *testing.T) {
 	opts := optionsFrom(t, "distinct_waits.yaml")
 
 	tests := []struct {
@@ -56,7 +56,7 @@ func TestTheTwoTimeoutKeysDoNotTradePlacesOnTheWayToADriver(t *testing.T) {
 			opts.LockWait, opts.StatementLockWait)
 		t.Log("lock.timeout bounds the wait for the migration lock; safety.lock_timeout bounds one")
 		t.Log("DDL statement's wait, which is what invariant #12 requires. Swapped, the second")
-		t.Log("becomes whatever an operator chose for waiting on other migr runs.")
+		t.Log("becomes whatever an operator chose for waiting on other migrasyon runs.")
 	}
 }
 
@@ -83,7 +83,7 @@ func TestConfigAndTheContractAgreeOnEveryDefaultTheyBothName(t *testing.T) {
 			if tt.got != tt.want {
 				t.Errorf("%s defaults to %v here and to %v on the contract", tt.key, tt.got, tt.want)
 				t.Log("Two defaults for one setting means an operator who configures nothing gets")
-				t.Log("one bound from migr.yaml and another from a driver built by hand. Taking")
+				t.Log("one bound from migrasyon.yaml and another from a driver built by hand. Taking")
 				t.Log("them from the contract is what makes the two unable to drift apart.")
 			}
 		})

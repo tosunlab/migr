@@ -7,7 +7,7 @@ import (
 
 	lib "github.com/go-sql-driver/mysql"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestEveryValueThisDriverRendersAndTheOneItRefuses(t *testing.T) {

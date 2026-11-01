@@ -40,7 +40,7 @@
 // # The table is a log, not a state
 //
 // Every run appends a row, including rollbacks and failures. Nothing is updated and nothing is
-// deleted, so migr history has an execution log to print (M5-T3) and a rollback does not erase
+// deleted, so migrasyon history has an execution log to print (M5-T3) and a rollback does not erase
 // the evidence that it happened. Current state is folded from the log by Reconcile, which is also
 // what invariant #6's "never silently rewrite" asks for.
 //
@@ -79,7 +79,7 @@
 // the database no longer carries is free to be edited. And a dirty migration whose file also
 // changed reports dirty, because that is the condition blocking everything and its repair needs the
 // recorded row; a Status carries both digests, so a renderer can note the drift alongside. M9-T6 is
-// where that mattered: migr resolve reads the recorded row, and an assertion over an edited file
+// where that mattered: migrasyon resolve reads the recorded row, and an assertion over an edited file
 // settles the dirty state and leaves the drift to be reported on its own.
 //
 // Drift compares Checksum.Source and nothing else, with a plain comparison. A recorded
@@ -91,7 +91,7 @@
 //
 // A version with no file is reported only when the fold leaves the database holding something
 // only a file could explain. A migration applied, rolled back, and then deleted emits no status:
-// it is fully undone, its file's absence is expected, and migr history still prints its rows. The
+// it is fully undone, its file's absence is expected, and migrasyon history still prints its rows. The
 // alarm missing exists to raise is that the database carries schema this repository can neither
 // describe nor roll back, and one permanent unactionable row per migration ever deleted is how an
 // operator learns to ignore it. A dirty run with no file reports dirty, since the schema being
@@ -119,7 +119,7 @@
 // # Order in, order out
 //
 // Discovered migrations keep the order the caller gave them, because that is migration.Order's
-// sequence and therefore what migr up will run; re-sorting here would show an order migr will not
+// sequence and therefore what migrasyon up will run; re-sorting here would show an order migrasyon will not
 // follow and would discard the dependency overlay (M4-T2). Versions no file describes are
 // appended, sorted among themselves: the file sequence is not version-sorted, so there is no
 // position to merge them into, and nothing will run them anyway.
@@ -137,15 +137,15 @@
 //
 // A log wants a monotonic key and ir.Column offers no serial, identity, or auto-increment — a
 // default is a literal or one of four neutral functions. applied_at cannot stand in: two rows can
-// share a millisecond, and migr down rolls back the last batch in reverse order (M4-T8), so a tie
+// share a millisecond, and migrasyon down rolls back the last batch in reverse order (M4-T8), so a tie
 // there reverses two migrations in the wrong order.
 //
-// A batch is one migr invocation and an ordinal is the position within it, both supplied by the
+// A batch is one migrasyon invocation and an ordinal is the position within it, both supplied by the
 // executor. That needs no clock, no randomness, and no engine feature, and it is exactly the
 // order a rollback reverses. Both number from one, so the zero value is not a valid position.
 //
 // M4-T5 settled what those numbers mean. A batch is one more than that database's own last recorded
-// run, read through Latest, so a batch belongs to one database: no lock spans two, migr down
+// run, read through Latest, so a batch belongs to one database: no lock spans two, migrasyon down
 // reverses one database's last batch, and a shared number could name a batch that database never
 // used. An ordinal numbers the runs an invocation actually performed rather than the migrations it
 // considered, so a queue that skipped two already-applied migrations still starts at one.
@@ -155,11 +155,11 @@
 // run that applied each migration — which is why this key rather than the clock is what a rollback
 // can be built on at all (M4-T6, engine.newestFirst).
 //
-// Which batch migr down acts on is a third question, and Latest cannot answer it. Latest has no
+// Which batch migrasyon down acts on is a third question, and Latest cannot answer it. Latest has no
 // WHERE clause: a down row, a failed row and a dirty row each count as the most recent run, which is
 // correct for allocating the next batch and wrong for selecting one to undo. The batch a bare
 // rollback acts on is the highest Batch among the anchor runs of the migrations the database still
-// carries — Status.Recorded, which is also the batch migr status prints (M4-T8).
+// carries — Status.Recorded, which is also the batch migrasyon status prints (M4-T8).
 //
 // # This package reads no clock
 //
@@ -168,7 +168,7 @@
 // consumer buys nothing: M4-T5 already owns the run, so it owns the instant the run started.
 // Tests here use fixed instants, which is what invariant #8 would have required anyway.
 //
-// Stamp fills the two fields that describe the build rather than the run — the migr version and
+// Stamp fills the two fields that describe the build rather than the run — the migrasyon version and
 // the IR version — because a caller has no business supplying either. Validate requires both, so
 // a driver that forgot to call Stamp fails before it writes rather than recording a blank column.
 //
@@ -182,11 +182,11 @@
 // Resolved is the fourth outcome and arrived in M9-T6. It is a row an operator asked for about a
 // migration a dirty run left between states: they finished it or undid it themselves, and this records
 // which. The fold reads it exactly as Applied — carried going up, given back going down — so what it
-// changes is not the state but what the history says produced it: nothing here claims migr ran
-// statements a person ran. A resume records Applied instead, because migr did run them. The reason
+// changes is not the state but what the history says produced it: nothing here claims migrasyon ran
+// statements a person ran. A resume records Applied instead, because migrasyon did run them. The reason
 // lives in the error column, which is why Validate's "an error is required" covers this outcome too,
 // and the column being string(16) rather than an enum is why a fourth value changed no table.
-// An older migr meeting one reports ErrCorrupt, which is this package's rule for a recorded value a
+// An older migrasyon meeting one reports ErrCorrupt, which is this package's rule for a recorded value a
 // build cannot read working as designed.
 //
 // Record is called inside the migration's transaction and MarkFailed after its rollback, which is
@@ -214,8 +214,8 @@
 // The cause a write method is given is what stopped the run, not a description of the state it left.
 // Nothing here can check that, and until M9-T5 the engine handed MarkDirty the paragraph describing
 // the window: the error column held ten lines of it, including advice about resolving the state and a
-// statement index already sitting in the column beside it. A row is read by migr history, by
-// migr status --json and by the refusal the next run gets, so a presentation stored inside it is a
+// statement index already sitting in the column beside it. A row is read by migrasyon history, by
+// migrasyon status --json and by the refusal the next run gets, so a presentation stored inside it is a
 // second copy to keep in agreement.
 //
 // # Ensure cannot be idempotent through IR alone
@@ -232,8 +232,8 @@
 // Column.Validate rejects, and a package test walks every emitted operation.
 //
 // direction and outcome are string columns rather than enums. schema.Enum exists, but a fourth
-// outcome would then require an ALTER on migr's own history table — the same reasoning that sizes
-// checksum loosely at string(255) rather than to the 135 characters migr1 happens to need.
+// outcome would then require an ALTER on migrasyon's own history table — the same reasoning that sizes
+// checksum loosely at string(255) rather than to the 135 characters migrasyon1 happens to need.
 //
 // # A corrupt row is not drift
 //
@@ -254,19 +254,19 @@
 // # A store decodes on read; it does not validate
 //
 // Validate is a write-side precondition, and a store must not apply it to a row it read back.
-// Every driver has to agree on that, or migr status answers differently per engine — which is
+// Every driver has to agree on that, or migrasyon status answers differently per engine — which is
 // the framework's central claim rather than a driver's detail.
 //
 // CorruptError covers a value this build cannot decode: a checksum that will not parse, a
 // direction or outcome naming something this build does not know. It does not cover a row that
-// decodes cleanly and would fail Validate. A newer migr writing a fourth outcome, or an
+// decodes cleanly and would fail Validate. A newer migrasyon writing a fourth outcome, or an
 // engine_version this build never emitted, or a batch someone repaired by hand, must still read
-// back — migr history is the command an operator runs to inspect exactly that table, and a store
+// back — migrasyon history is the command an operator runs to inspect exactly that table, and a store
 // that refuses to read it has removed the tool they were reaching for. ir_version and
 // engine_version are provenance about the build that wrote the row and are never checked on read.
 //
 // A store selects its columns by name rather than all of them, for the same reason: a table a
-// newer migr extended must stay readable, and a positional read would shift its scan targets
+// newer migrasyon extended must stay readable, and a positional read would shift its scan targets
 // silently rather than ignore what it does not know.
 //
 // # Import direction, now enforced by the thing it warned about

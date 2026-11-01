@@ -4,8 +4,8 @@ title: SQLite
 
 # SQLite
 
-`driver: sqlite`. The engine is linked into the `migr` binary (pure Go, no C library), so the SQLite
-version is a fact about the build rather than about your database, and every session migr opens has
+`driver: sqlite`. The engine is linked into the `migrasyon` binary (pure Go, no C library), so the SQLite
+version is a fact about the build rather than about your database, and every session migrasyon opens has
 it.
 
 ```yaml
@@ -23,7 +23,7 @@ migration would apply to a file nobody can find. `:memory:` is allowed, for test
 - **One transaction per migration, begun `IMMEDIATE`.** SQLite's DDL is transactional. Taking the
   write lock at `BEGIN` waits for it under `busy_timeout`, where a deferred transaction in WAL mode
   could fail at its first write.
-- **migr owns three pragmas, sets them on every session, and reads them back:**
+- **migrasyon owns three pragmas, sets them on every session, and reads them back:**
   - `foreign_keys = ON`, so a migration that breaks referential integrity fails rather than leaving
     dangling rows;
   - `busy_timeout = safety.lock_timeout`, so every statement waits for the write lock, but never
@@ -34,15 +34,15 @@ migration would apply to a file nobody can find. `:memory:` is allowed, for test
 - **`journal_mode` is left as you set it.** WAL lets readers keep reading during a migration, but
   it's a durable change to your database file, so it's yours to make.
 - **The migration lock is an `flock`** on a lock file beside the database. The kernel releases it if
-  migr dies, so a crash never wedges the database. The placeholder is `?`.
+  migrasyon dies, so a crash never wedges the database. The placeholder is `?`.
 
 ## Emulated operations
 
 SQLite can't alter a column or add or drop a constraint in place, so seven operations are performed
 by a **table rebuild**: create the new shape, copy every row, drop the old table, rename. Each
 rebuild is compiled against the table as it stands at that point in the run, so it preserves the
-checks, foreign keys and indexes nothing in the operation mentions. `migr plan` marks each
-emulated operation `→` and expands the first one exactly. `migr validate` reports them `unchecked`,
+checks, foreign keys and indexes nothing in the operation mentions. `migrasyon plan` marks each
+emulated operation `→` and expands the first one exactly. `migrasyon validate` reports them `unchecked`,
 because it opens no database. A migration holding one can't be resumed part way.
 
 ## What it can't do
@@ -55,15 +55,15 @@ because it opens no database. A migration holding one can't be resumed part way.
 ## What the catalog can't say
 
 - **`int16`, `int32` and `int64`** all declare as `integer`, and **`float32`** as a real, so a column
-  read back is a guess between them, and `migr diff` refuses to act on a guess.
+  read back is a guess between them, and `migrasyon diff` refuses to act on a guess.
 - **A `decimal` reads back as a float** in a migration's own read, because SQLite stores it with REAL
   affinity.
 - **An `enum`** is an unnamed `CHECK (c IN (…))`, which is how it is recognized again.
 
 ## What it costs: capabilities and lock impact
 
-<!-- migr:lock-table sqlite -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table sqlite -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `brief_exclusive` | `brief_exclusive` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -99,4 +99,4 @@ because it opens no database. A migration holding one can't be resumed part way.
 Refused on this server:
 
 - **add_column, default evaluated per row (uuid)**: column "nickname" defaults to uuid(), and SQLite links no UUID function: the extension that provides one is not compiled into this library. The hex(randomblob()) idiom would write a generator into the schema rather than name one, so this driver refuses instead -- generate the value in the application, or use string(36)
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->

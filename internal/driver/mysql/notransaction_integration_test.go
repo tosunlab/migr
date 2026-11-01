@@ -5,9 +5,9 @@ package mysql
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestAStatementDeclaringNoTransactionRunsBareAndTheMigrationApplies(t *testing.T) {

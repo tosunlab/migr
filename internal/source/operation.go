@@ -1,6 +1,6 @@
 package source
 
-import "github.com/emrebdr/migr/internal/ir"
+import "github.com/tosunlab/migrasyon/internal/ir"
 
 // chainOf returns the calls one operation is written as, or why no source expresses it.
 func chainOf(op ir.Operation) (Chain, error) {

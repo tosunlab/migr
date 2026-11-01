@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // warned is a host that keeps every operation document and every warning a phase sends.
@@ -179,7 +179,7 @@ func TestOnlyTheUnsafeStepsWarnAndEachNamesWhatItBreaks(t *testing.T) {
 		}
 	}
 
-	t.Log("The warning is sent in plan mode too, so migr plan shows it before migr up does -- the")
+	t.Log("The warning is sent in plan mode too, so migrasyon plan shows it before migrasyon up does -- the")
 	t.Log("step is marked where an operator reads the plan, not only where it runs.")
 }
 
@@ -224,7 +224,7 @@ func TestAReplacementThatCannotBeCarriedOutIsRefusedByEveryPhase(t *testing.T) {
 				}
 
 				if v, ok := phase.(Validator); !ok || v.Validate() == nil {
-					t.Errorf("%T does not refuse it at migr validate", phase)
+					t.Errorf("%T does not refuse it at migrasyon validate", phase)
 				}
 			}
 		})

@@ -3,8 +3,8 @@ package mysql
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // fsp is the fractional-seconds precision every temporal type this driver emits carries.

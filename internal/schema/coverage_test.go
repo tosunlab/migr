@@ -3,8 +3,8 @@ package schema_test
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // This file is the external test package on purpose: it is the one test that reads ir.Kinds(), and

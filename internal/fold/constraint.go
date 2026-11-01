@@ -3,8 +3,8 @@ package fold
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Every constraint an operation adds is checked against the columns the schema so far actually
@@ -149,7 +149,7 @@ func (f *folder) addPrimaryKey(at int32, op ir.AddPrimaryKey) {
 
 // Every engine makes a primary key's columns NOT NULL whether the migration said so or not, which
 // is the implied change M9-T7 measured and engine.Unrestorable refuses over. A projection that left
-// them nullable would describe a schema no server would produce, and would then have migr diff
+// them nullable would describe a schema no server would produce, and would then have migrasyon diff
 // propose tightening columns the engine had already tightened.
 
 // keyed returns a table whose primary key columns no longer accept null, as every engine leaves them.

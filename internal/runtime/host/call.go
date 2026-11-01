@@ -5,9 +5,9 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // Call is one engine request in flight, and the only window in which callbacks are valid.

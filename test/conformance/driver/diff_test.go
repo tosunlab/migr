@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // diffSuite returns a diff suite over a session that answers one staged snapshot.

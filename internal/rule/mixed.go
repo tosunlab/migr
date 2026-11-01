@@ -3,7 +3,7 @@ package rule
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // MixedDataMigration is the id of the rule that reports one migration changing schema and data at once.

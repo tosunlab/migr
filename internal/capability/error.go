@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // ErrNoDriver reports a capability set built without naming the driver it describes.

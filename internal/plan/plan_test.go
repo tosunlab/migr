@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // errRefused is what a test compiler returns when it is asked to refuse an operation.
@@ -290,7 +290,7 @@ func TestAMalformedOperationIsRefusedBeforeTheDriverSeesIt(t *testing.T) {
 		t.Fatalf("the driver was asked to compile an operation that is not valid")
 	}
 
-	t.Log("Validating first is what lets migr plan find a malformed migration with no database,")
+	t.Log("Validating first is what lets migrasyon plan find a malformed migration with no database,")
 	t.Log("rather than turning it into SQL a server rejects at apply time.")
 }
 
@@ -339,7 +339,7 @@ func TestCompilingTheSameMigrationTwiceProducesTheSamePlan(t *testing.T) {
 	}
 
 	t.Log("Invariant #8: planning paths are deterministic. Golden tests, checksums and the")
-	t.Log("agreement between migr plan and migr up all rest on this.")
+	t.Log("agreement between migrasyon plan and migrasyon up all rest on this.")
 }
 
 // equal reports whether two compiled statement lists are the same statements in the same order.

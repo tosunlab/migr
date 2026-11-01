@@ -11,7 +11,7 @@ import (
 
 	lib "github.com/go-sql-driver/mysql"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // hexPrefix opens the rendering of a bytes value, which is the one PostgreSQL gives a bytea.
@@ -31,7 +31,7 @@ var binaryTypes = map[string]bool{
 	"BINARY": true, "VARBINARY": true, "GEOMETRY": true, "BIT": true, "VECTOR": true,
 }
 
-// Query runs a migration's own read with the session refused writes, so the server refuses, not migr.
+// Query runs a migration's own read with the session refused writes, so the server refuses, not migrasyon.
 func (c *mysqlConn) Query(ctx context.Context, q driver.Query) (driver.Rows, error) {
 	var out driver.Rows
 

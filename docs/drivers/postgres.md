@@ -14,7 +14,7 @@ databases:
   default:
     driver: postgres
     dsn: ${DATABASE_URL}        # postgres://user:password@host:5432/db?sslmode=verify-full
-    schema: public              # the one namespace migr reads and changes
+    schema: public              # the one namespace migrasyon reads and changes
 ```
 
 ## How a migration runs
@@ -31,7 +31,7 @@ databases:
 
 ## Rewrites: safer forms of the same change
 
-A session performs these operations as a sequence that blocks no write, and `migr plan` marks each
+A session performs these operations as a sequence that blocks no write, and `migrasyon plan` marks each
 one `↳ rewritten`. Each has a switch under `safety.rewrites`, and `safety.auto_rewrite: false` turns
 them all off.
 
@@ -49,7 +49,7 @@ them all off.
   `safety.concurrent_timeout` (unset: no bound), not the 30 s `statement_timeout`.
 - **A failed concurrent build leaves an INVALID index, and the next run cleans it up.** It drops the
   leftover and retries, or rebuilds it with `REINDEX INDEX CONCURRENTLY` on a resume, and reports
-  `repaired: …`. `migr status`, `migr plan` and `migr validate --connect` list any INVALID index left
+  `repaired: …`. `migrasyon status`, `migrasyon plan` and `migrasyon validate --connect` list any INVALID index left
   with both remedies.
 
 ## Shadow tables
@@ -59,7 +59,7 @@ by **logical decoding**: a replication slot and a publication of the one table, 
 migration. The copy is swapped in by rename after you confirm it (see the
 [zero-downtime guide](../zero-downtime.md#_5-the-cutover)).
 
-**The server must permit capture**, and `migr plan` names every missing prerequisite at once:
+**The server must permit capture**, and `migrasyon plan` names every missing prerequisite at once:
 - `wal_level = logical`;
 - a role with the `REPLICATION` attribute, or superuser;
 - a free replication slot.
@@ -72,8 +72,8 @@ migration. The copy is swapped in by rename after you confirm it (see the
 - a `REPLICA IDENTITY` other than `DEFAULT` or `FULL`.
 
 **No slot outlives its migration.** The cutover's transaction drops it, and an orphan, a slot whose
-migration cut over or never recorded a state, is dropped by the next `migr up`. `migr status`,
-`migr cutover` and `migr plan` name every slot holding WAL, with the WAL it retains.
+migration cut over or never recorded a state, is dropped by the next `migrasyon up`. `migrasyon status`,
+`migrasyon cutover` and `migrasyon plan` name every slot holding WAL, with the WAL it retains.
 
 ## Replica lag
 
@@ -84,12 +84,12 @@ for this driver.
 
 ## What it costs: capabilities and lock impact
 
-*Declared cost* is the driver's verdict for the operation. *Cost as migr runs it* is what a session
+*Declared cost* is the driver's verdict for the operation. *Cost as migrasyon runs it* is what a session
 pays after the rewrites above. The four drops that delete storage are `long_exclusive` because the
 files are unlinked before the lock is released.
 
-<!-- migr:lock-table postgres -->
-| Operation | Support | Declared cost | Cost as migr runs it | Zero-downtime |
+<!-- migrasyon:lock-table postgres -->
+| Operation | Support | Declared cost | Cost as migrasyon runs it | Zero-downtime |
 |---|---|---|---|---|
 | create_table | native | `lock_free` | `lock_free` | yes |
 | drop_table | native | `long_exclusive` | `long_exclusive` | **no** |
@@ -121,4 +121,4 @@ files are unlinked before the lock is released.
 | data_copy | native | `long_exclusive` | `long_exclusive` | **no** |
 | data_backfill | native | `table_rewrite` | `table_rewrite` | **no** |
 | data_transform | native | `table_rewrite` | `table_rewrite` | **no** |
-<!-- /migr:lock-table -->
+<!-- /migrasyon:lock-table -->

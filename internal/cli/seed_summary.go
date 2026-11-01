@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // seedSummary is what one seed run did against one database, in the form --json reports it.
 type seedSummary struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Environment is the one this database runs under, which chose the seeds it ran.
 	Environment string `json:"environment"`
@@ -27,7 +27,7 @@ type seedSummary struct {
 
 // seedPlan is what one seed run would have done, having taken the lock and executed nothing.
 type seedPlan struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string `json:"database"`
 	// Environment is the one this database runs under.
 	Environment string `json:"environment"`
@@ -94,7 +94,7 @@ func (s seedPlan) String() string {
 		s.Database, s.Environment, describeBatch(s.Batch))
 
 	if !s.Recorded {
-		fmt.Fprintf(&b, "\nthis database has no seed history table yet; migr %s would create it\n",
+		fmt.Fprintf(&b, "\nthis database has no seed history table yet; migrasyon %s would create it\n",
 			seedCommand(s.Direction))
 	}
 
@@ -119,7 +119,7 @@ func (s seedPlan) String() string {
 	return b.String()
 }
 
-// writeUnsupported says what this server will not perform, which migr seed refuses before sending anything.
+// writeUnsupported says what this server will not perform, which migrasyon seed refuses before sending anything.
 func (s seedPlan) writeUnsupported(b *strings.Builder) {
 	unsupported := 0
 	for _, step := range s.Steps {
@@ -130,11 +130,11 @@ func (s seedPlan) writeUnsupported(b *strings.Builder) {
 		return
 	}
 
-	fmt.Fprintf(b, "\n%s this server declares it cannot perform, so migr %s refuses the seed "+
+	fmt.Fprintf(b, "\n%s this server declares it cannot perform, so migrasyon %s refuses the seed "+
 		"they are in.\n", describeUnpermitted(unsupported), seedCommand(s.Direction))
 }
 
-// seedCommand names the command that runs seeds this way, as an operator types it after migr.
+// seedCommand names the command that runs seeds this way, as an operator types it after migrasyon.
 func seedCommand(dir ir.Direction) string {
 	if dir == ir.Down {
 		return "seed down"

@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // columnParts is one column definition taken apart far enough to change what alter_column changes.

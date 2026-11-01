@@ -8,17 +8,17 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // program is the toolchain binary this adapter looks for and runs, and the only one it knows.
 const program = "node"
 
-// MinimumNode is the major release @migr/sdk's engines.node requires, which a test holds it to.
+// MinimumNode is the major release @migrasyon/sdk's engines.node requires, which a test holds it to.
 const MinimumNode = 24
 
 // marker opens the one line of the probe's output this adapter reads, whatever else reached stdout.
-const marker = "migr-node"
+const marker = "migrasyon-node"
 
 // probe is the script node answers both of Command's questions with, written so it cannot throw.
 //
@@ -47,7 +47,7 @@ type probed struct {
 	path string
 	// version is the release it reported itself as.
 	version version
-	// manifest is the @migr/sdk package.json it resolved, empty when it resolved none.
+	// manifest is the @migrasyon/sdk package.json it resolved, empty when it resolved none.
 	manifest string
 }
 
@@ -56,7 +56,7 @@ func find() (string, error) {
 	path, err := exec.LookPath(program)
 	if err != nil {
 		return "", remedy.With(fmt.Errorf("%w: %w", ErrNoToolchain, err),
-			fmt.Sprintf("install node %d or newer and put it on the PATH migr runs with", MinimumNode))
+			fmt.Sprintf("install node %d or newer and put it on the PATH migrasyon runs with", MinimumNode))
 	}
 
 	return path, nil

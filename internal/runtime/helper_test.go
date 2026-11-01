@@ -13,11 +13,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // scriptVar names the environment variable a re-executed test binary reads its script out of.
-const scriptVar = "MIGR_FAKE_RUNTIME"
+const scriptVar = "MIGRASYON_FAKE_RUNTIME"
 
 // TestMain re-executes this binary as a fake runtime when the script variable is set.
 func TestMain(m *testing.M) {

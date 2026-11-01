@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // readable is a server whose binary log a reader can stream, as the given user.
@@ -61,8 +61,8 @@ func TestCaptureRefusesARequestItCannotServeBeforeConnecting(t *testing.T) {
 		says string
 	}{
 		"no resource": {capture.Request{Tables: []string{"people"}}, "names no resource"},
-		"no table":    {capture.Request{Name: "migr_x"}, "names no table"},
-		"two tables":  {capture.Request{Name: "migr_x", Tables: []string{"people", "pets"}}, "one table's changes per stream"},
+		"no table":    {capture.Request{Name: "migrasyon_x"}, "names no table"},
+		"two tables":  {capture.Request{Name: "migrasyon_x", Tables: []string{"people", "pets"}}, "one table's changes per stream"},
 	} {
 		t.Run(name, func(t *testing.T) {
 			_, err := (&mysqlDriver{}).Capture(context.Background(), "nowhere", tc.req)
@@ -72,7 +72,7 @@ func TestCaptureRefusesARequestItCannotServeBeforeConnecting(t *testing.T) {
 		})
 	}
 
-	_, err := (&mysqlDriver{}).Capture(context.Background(), "", capture.Request{Name: "migr_x", Tables: []string{"people"}})
+	_, err := (&mysqlDriver{}).Capture(context.Background(), "", capture.Request{Name: "migrasyon_x", Tables: []string{"people"}})
 	if !errors.As(err, new(*DSNError)) {
 		t.Errorf("Capture over an empty connection string returned %v, want the DSN refusal", err)
 	}

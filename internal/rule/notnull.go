@@ -3,7 +3,7 @@ package rule
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // NotNullWithoutDefault is the id of the rule that reports a NOT NULL column added with no default.
@@ -32,7 +32,7 @@ func judgeNotNullWithoutDefault(s Subject) []Finding {
 		}
 
 		found = append(found, op.Finding(fmt.Sprintf("column %q is added to %q as %s NOT NULL with "+
-			"no default, and migr opened no database to count that table's rows: against a table "+
+			"no default, and migrasyon opened no database to count that table's rows: against a table "+
 			"holding any, the server refuses the statement -- give the column a default, or add it "+
 			"nullable, backfill it, and tighten it in a later migration", added.Column.Name,
 			added.Table, added.Column.Type)))

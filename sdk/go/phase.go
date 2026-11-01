@@ -1,11 +1,11 @@
-package migr
+package migrasyon
 
 import (
 	"errors"
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // ErrInvalidPhase marks a migration declaring a phase that names no change, no step, or itself.
@@ -21,7 +21,7 @@ type Phase struct {
 	After string
 }
 
-// Phased is a migration that is one step of a change across deploys, which migr runs a release apart.
+// Phased is a migration that is one step of a change across deploys, which migrasyon runs a release apart.
 type Phased interface {
 	// Phase returns the step this migration is, as a fixed declaration.
 	Phase() Phase

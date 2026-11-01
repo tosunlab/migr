@@ -3,10 +3,10 @@ package runner
 import (
 	"os"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-// Main serves this program as a migr runtime and exits with the status docs/protocol.md §9 gives.
+// Main serves this program as a migrasyon runtime and exits with the status docs/protocol.md §9 gives.
 func Main() {
-	os.Exit(migr.Run())
+	os.Exit(migrasyon.Run())
 }

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 func TestARenameIsNotProposedUntilSomebodyConfirmsIt(t *testing.T) {
@@ -43,7 +43,7 @@ func TestARenameIsNotProposedUntilSomebodyConfirmsIt(t *testing.T) {
 	t.Log("Two snapshots differing by a rename record the same thing as two differing by a drop and")
 	t.Log("an unrelated create, so a differ that guessed would destroy data whenever it guessed")
 	t.Log("wrong. What makes the unconfirmed reading safe is invariant #7: both of these are")
-	t.Log("destructive, so migr up refuses the generated migration until the project permits them.")
+	t.Log("destructive, so migrasyon up refuses the generated migration until the project permits them.")
 }
 
 func TestAConfirmedRenameReplacesTheDropAndTheCreate(t *testing.T) {

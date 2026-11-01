@@ -11,7 +11,7 @@
 //
 // GET_LOCK takes a lock that is global to the *server* rather than scoped to a database, lives on a
 // session, and dies with it. So the name carries the database as well as the history table, or two
-// migr installations on one server would exclude each other: it is migr1: and 32 lowercase hex
+// migrasyon installations on one server would exclude each other: it is migrasyon1: and 32 lowercase hex
 // characters of a digest over the two (M9-T4). Readable names were measured and rejected --
 // MySQL refuses a name over 64 characters with error 4163 where MariaDB accepts one, and MySQL
 // compares names case-insensitively where MariaDB does not, so two 64-character identifiers neither
@@ -34,10 +34,10 @@
 // for a production grant. So the id is always named and the rest is optional, where PostgreSQL's
 // holder is one row and no row means no holder.
 //
-// # What a crashed migr costs, and the one case this engine cannot bound
+// # What a crashed migrasyon costs, and the one case this engine cannot bound
 //
 // A user-level lock dies with its session, so there is no stale lock to reclaim and no staleness rule
-// to write -- SQLite's file lock owes one and this does not. A crashed migr on a reachable host costs
+// to write -- SQLite's file lock owes one and this does not. A crashed migrasyon on a reachable host costs
 // the length of the statement that was in flight: the kernel closes the dead process's sockets and the
 // server reaps the session as soon as it next touches one. Measured at the CLI on both servers, with
 // SIGKILL mid-migration: the lock was still held one second later and free by four, which is when the
@@ -48,7 +48,7 @@
 // keepalive a client can pin -- which is what PostgreSQL's tcp_keepalives_* in the startup packet buys.
 // Shortening wait_timeout for the session was rejected rather than deferred: this
 // connection is idle whenever a language runtime is deciding what a migration does, so a short bound
-// would disconnect migr mid-run. What a blocked run gets instead is the connection id to KILL.
+// would disconnect migrasyon mid-run. What a blocked run gets instead is the connection id to KILL.
 //
 // # Lock impact, and the two things this server says about its own ALTER
 //
@@ -99,7 +99,7 @@
 // information_schema.TABLES and the indexes from STATISTICS, which any user may read; the row-version
 // count is in INNODB_TABLES, which refuses a session without PROCESS with 1227. So from 8.0.29 a
 // session without that grant never lowers the verdict: the fact it would need is unread, and
-// unread is pessimistic. migr never asks for the grant. A table not yet created is assessed at its
+// unread is pessimistic. migrasyon never asks for the grant. A table not yet created is assessed at its
 // worst, there being nothing to read.
 //
 // An empty table is rebuilt by MySQL's ADD COLUMN instead of being changed instantly, and a rebuild
@@ -181,7 +181,7 @@
 // A connection string naming no database is refused. MySQL resolves every unqualified name against
 // one, so without it the first statement of the first migration fails -- after the migration lock
 // has been taken and the history table has been asked for. MySQL's SCHEMA is a synonym for its
-// DATABASE, so migr.yaml's schema and the connection string name the same thing: a schema that
+// DATABASE, so migrasyon.yaml's schema and the connection string name the same thing: a schema that
 // restates the database is accepted and one that names another is refused, two sources for one
 // namespace being able only to disagree.
 //
@@ -316,7 +316,7 @@
 //
 // Every table declares DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_bin, and so does every column
 // whose type accepts one. Both halves are needed and the column half is the load-bearing one: a
-// column migr adds to a table migr did not create would otherwise inherit that table's character
+// column migrasyon adds to a table migrasyon did not create would otherwise inherit that table's character
 // set, which changes what the column can hold, how many bytes wide it is, and whether it fits in a
 // key.
 //
@@ -347,7 +347,7 @@
 // The server's own refusal is therefore what an operator sees for those three, and Exec states the
 // rule beside it: what the limit is, that the operation carries no field for it, and that MariaDB
 // indexes a longtext without a prefix so the same migration succeeds there. Inventing a prefix was
-// rejected. It would make every index Emulated and unchecked by migr validate, and a prefixed
+// rejected. It would make every index Emulated and unchecked by migrasyon validate, and a prefixed
 // add_unique is not the constraint the migration declared -- uniqueness on the first 255 bytes
 // refuses two distinct values that happen to share a prefix, which is exactly the silent degradation
 // a capability model exists to prevent.
@@ -423,7 +423,7 @@
 // unbounded bytes where MySQL's TEXT and BLOB stop at 65535 bytes.
 //
 // timestamp and timestamptz both map to datetime(6). MySQL's one zone-aware type, TIMESTAMP, spans
-// 1970 to 2038 and so cannot carry a column migr writes forever; DATETIME has the range and no zone
+// 1970 to 2038 and so cannot carry a column migrasyon writes forever; DATETIME has the range and no zone
 // semantics. This driver chooses the range, renders every instant as UTC, and pins the session's
 // time_zone to +00:00 so the two are the same thing for anything it writes. The cost is that two
 // logical types map to one native type, which M11-T1's Introspect will not be able to tell apart.
@@ -549,7 +549,7 @@
 // nothing: engine_integration_test.go drives engine.Apply, engine.Rollback and engine.Resolve over a
 // real session on both servers and reads the row the stopped run wrote, where what internal/cli adds
 // above that -- config, discovery, source digests, rendering, exit codes -- names no engine and is
-// covered by cmd/migr's fake-driver suite and its PostgreSQL and SQLite legs. Paying for it would
+// covered by cmd/migrasyon's fake-driver suite and its PostgreSQL and SQLite legs. Paying for it would
 // mean a third driver child package and the paired depguard rule sets one owes.
 //
 // Status: connection handling, the two methods a migration's own SQL needs, transactions, the
@@ -614,7 +614,7 @@
 // the shadow and the shadow state, the catch-up bounded by safety.lock_timeout, AUTO_INCREMENT carried
 // over, RENAME TABLE of both and UNLOCK TABLES -- measured, a writer queued on the lock lands in the
 // new table. MySQL holds no server resource for a reader, so retention is what a detached hold rests
-// on, and migr plan prints it.
+// on, and migrasyon plan prints it.
 //
 // # The same on MariaDB
 //

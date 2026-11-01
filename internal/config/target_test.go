@@ -63,7 +63,7 @@ func TestTargetRefusesToGuessBetweenSeveralDatabases(t *testing.T) {
 		}
 	}
 
-	t.Log("A migr.yaml holding a development target and a production one is an ordinary file.")
+	t.Log("A migrasyon.yaml holding a development target and a production one is an ordinary file.")
 	t.Log("Fanning out across both, or picking whichever the map yields first, is a command")
 	t.Log("reaching production because nobody typed a flag.")
 }

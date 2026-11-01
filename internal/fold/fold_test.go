@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // What the round trip cannot reach is tested here, and the two kinds are worth telling apart. A
@@ -86,7 +86,7 @@ func TestAPrimaryKeyTightensTheColumnsItCovers(t *testing.T) {
 		t.Log("Every engine makes a primary key's columns NOT NULL whether the migration said so")
 		t.Log("or not -- M9-T7 measured it, and engine.Unrestorable refuses over it. A projection")
 		t.Log("that left them nullable would describe a schema no server produces, and would have")
-		t.Log("migr diff propose tightening columns the engine had already tightened.")
+		t.Log("migrasyon diff propose tightening columns the engine had already tightened.")
 	}
 
 	t.Log("internal/diff refuses to propose a key over a column the target schema calls nullable,")
@@ -545,7 +545,7 @@ func TestAnEngineTextBodyIsComparedForPresenceAndNotForContent(t *testing.T) {
 	}
 
 	t.Log("Measured on four servers: one check expression `id > 0` reads back four ways and one")
-	t.Log("view body reads back three. Compared as written, every migr diff over a database that is")
+	t.Log("view body reads back three. Compared as written, every migrasyon diff over a database that is")
 	t.Log("exactly up to date would propose replacing every view and every check it can see.")
 	t.Log("An element only one side holds keeps its own text, which is what lets the operation that")
 	t.Log("creates it carry the real body.")

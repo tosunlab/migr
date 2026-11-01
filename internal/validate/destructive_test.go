@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // dropping is a migration that destroys three different things, one operation each.
@@ -125,7 +125,7 @@ func TestADerivedInverseIsNotJudgedDestructive(t *testing.T) {
 		t.Errorf("creating a table was reported as destructive: %+v", report.Problems())
 		t.Log("ir.CreateTable inverts to DropTable, so a run that judged the down half would")
 		t.Log("report every migration that ever created a table, and --allow-destructive would be")
-		t.Log("mandatory for migr down outright. The up half is what applying a migration does.")
+		t.Log("mandatory for migrasyon down outright. The up half is what applying a migration does.")
 	}
 }
 

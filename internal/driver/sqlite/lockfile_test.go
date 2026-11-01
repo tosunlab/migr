@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestTheLockFileSitsBesideTheDatabaseItLocks(t *testing.T) {
-	if got := lockPath("/srv/app.db"); got != "/srv/app.db-migr.lock" {
+	if got := lockPath("/srv/app.db"); got != "/srv/app.db-migrasyon.lock" {
 		t.Errorf("the lock file for /srv/app.db is %q", got)
 	}
 
-	if got := lockPath("/srv/app"); got != "/srv/app-migr.lock" {
+	if got := lockPath("/srv/app"); got != "/srv/app-migrasyon.lock" {
 		t.Errorf("a database with no extension locks on %q", got)
 	}
 }
@@ -23,7 +23,7 @@ func TestTheLockFileSitsBesideTheDatabaseItLocks(t *testing.T) {
 func TestOneDatabaseFileIsOneLockWhateverTheHistoryTableIsCalled(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "app.db")
 
-	first := open(t, path, driver.Options{HistoryTable: "migr_migrations", LockWait: impatient})
+	first := open(t, path, driver.Options{HistoryTable: "migrasyon_migrations", LockWait: impatient})
 	second := open(t, path, driver.Options{HistoryTable: "other_migrations", LockWait: impatient})
 
 	held(t, first)
@@ -37,7 +37,7 @@ func TestOneDatabaseFileIsOneLockWhateverTheHistoryTableIsCalled(t *testing.T) {
 }
 
 func TestARecordIsOverwrittenWithNothingOfTheOldOneLeftBehind(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "app.db-migr.lock")
+	path := filepath.Join(t.TempDir(), "app.db-migrasyon.lock")
 
 	file, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, lockMode)
 	if err != nil {
@@ -46,13 +46,13 @@ func TestARecordIsOverwrittenWithNothingOfTheOldOneLeftBehind(t *testing.T) {
 
 	defer file.Close()
 
-	long := record{PID: 4242, Host: strings.Repeat("a", 200), Application: "migr dev",
+	long := record{PID: 4242, Host: strings.Repeat("a", 200), Application: "migrasyon dev",
 		Acquired: "2026-09-28T19:00:00.000Z"}
 	if err := writeRecord(file, long); err != nil {
 		t.Fatalf("writing the long record: %v", err)
 	}
 
-	short := record{PID: 7, Host: "b", Application: "migr dev", Acquired: "2026-09-28T19:00:01.000Z"}
+	short := record{PID: 7, Host: "b", Application: "migrasyon dev", Acquired: "2026-09-28T19:00:01.000Z"}
 	if err := writeRecord(file, short); err != nil {
 		t.Fatalf("writing the short record: %v", err)
 	}
@@ -107,7 +107,7 @@ func TestAProcessIdThatCouldNotBeOneIsNotAlive(t *testing.T) {
 	}
 }
 
-func TestTheSessionCarriesTheWaitMigrYamlConfigured(t *testing.T) {
+func TestTheSessionCarriesTheWaitMigrasyonYamlConfigured(t *testing.T) {
 	c := open(t, memory, driver.Options{LockWait: 7 * time.Second})
 	if c.lockWait != 7*time.Second {
 		t.Errorf("the session waits %s, want 7s", c.lockWait)

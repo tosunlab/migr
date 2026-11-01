@@ -1,6 +1,6 @@
 # Visualizing migrations
 
-`migr graph` draws a project's migrations in two ways:
+`migrasyon graph` draws a project's migrations in two ways:
 
 - **the dependency DAG**: every migration in the order a run uses, with the dependencies they declare
   and the deploy steps of a change across deploys;
@@ -8,15 +8,15 @@
   from nothing, and the schema they leave.
 
 ```bash
-migr graph                                 # the DAG, as text
-migr graph --format mermaid                # ... as a Mermaid flowchart
-migr graph --format dot                    # ... as a Graphviz digraph
-migr graph --schema                        # what each migration changes, as text
-migr graph --schema --to VER --format dot  # the schema at VER, as an ER diagram
-migr --json graph --schema                 # either view as a JSON document
+migrasyon graph                                 # the DAG, as text
+migrasyon graph --format mermaid                # ... as a Mermaid flowchart
+migrasyon graph --format dot                    # ... as a Graphviz digraph
+migrasyon graph --schema                        # what each migration changes, as text
+migrasyon graph --schema --to VER --format dot  # the schema at VER, as an ER diagram
+migrasyon --json graph --schema                 # either view as a JSON document
 ```
 
-`migr graph` opens no database and takes no lock. It reads the migrations the way `migr validate`
+`migrasyon graph` opens no database and takes no lock. It reads the migrations the way `migrasyon validate`
 does: it starts each language's runtime and asks every migration what it does, with no database
 behind the answers.
 
@@ -31,7 +31,7 @@ This is the [zero-downtime example](../examples/zero-downtime/README.md), which 
 four steps:
 
 ```console
-$ migr graph --format mermaid
+$ migrasyon graph --format mermaid
 flowchart TD
   m20261101T120000["20261101T120000_create_users.go"]
   m20261101T120100["20261101T120100_expand_user_email.go<br/>step users.email: expand"]
@@ -48,7 +48,7 @@ flowchart TD
 ```
 
 To draw it, paste the output into a fenced `mermaid` block in a GitHub issue, pull request or
-markdown file, or render it with mermaid-cli. For DOT output, use Graphviz: `migr graph --format
+markdown file, or render it with mermaid-cli. For DOT output, use Graphviz: `migrasyon graph --format
 dot | dot -Tsvg > migrations.svg`. Both diagram formats link each migration invisibly to the next
 one in run order. That keeps a migration with no dependencies in its place in the sequence.
 
@@ -59,7 +59,7 @@ adds (`+`) and removes (`-`). This is the [Go on PostgreSQL example](../examples
 stopped at its second migration:
 
 ```console
-$ migr graph --schema --to 20261101T100100
+$ migrasyon graph --schema --to 20261101T100100
 1  20261101T100000_create_accounts.go
    create_table      accounts
    + table       accounts
@@ -89,7 +89,7 @@ entity-relationship diagram. The diagram shows tables, columns with their logica
 primary key, unique columns, and one edge per foreign key:
 
 ```console
-$ migr graph --schema --to 20261101T100100 --format mermaid
+$ migrasyon graph --schema --to 20261101T100100 --format mermaid
 erDiagram
   accounts {
     timestamptz created_at
@@ -105,12 +105,12 @@ diagram shows the type's kind, and the attribute's comment carries the full type
 
 ## Where the schema stops being known
 
-The evolution never guesses. It stops at the first migration whose effect on the schema migr can't
+The evolution never guesses. It stops at the first migration whose effect on the schema migrasyon can't
 read:
 
-- **A raw operation** is engine SQL. migr can't read what it does to the schema, so a `.sql` project
+- **A raw operation** is engine SQL. migrasyon can't read what it does to the schema, so a `.sql` project
   stops at its first migration.
-- **A migration that reaches the database** can't be read, because `migr graph` opens no database.
+- **A migration that reaches the database** can't be read, because `migrasyon graph` opens no database.
   A Go or TypeScript migration that queries the server before it decides what to do stops the
   schema here. In the Go example above that is `add_accounts_tier`, which is why the example stops
   at `--to 20261101T100100`.

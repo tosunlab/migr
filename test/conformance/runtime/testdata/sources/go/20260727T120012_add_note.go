@@ -3,17 +3,17 @@ package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(AddNote{}) }
+func init() { migrasyon.Register(AddNote{}) }
 
 // AddNote is the fixture that authors no undo at all, which the engine derives one for.
 type AddNote struct{}
 
 // Up adds one column and writes no Down, so the engine is asked to invert what it emitted.
-func (m AddNote) Up(ctx context.Context, s *migr.Schema) error {
+func (m AddNote) Up(ctx context.Context, s *migrasyon.Schema) error {
 	return s.Table("people").
-		AddColumn("note", migr.Text()).Null().
+		AddColumn("note", migrasyon.Text()).Null().
 		Apply(ctx)
 }

@@ -6,7 +6,7 @@ import "errors"
 var ErrNoConn = errors.New("a host callback server needs an open session")
 
 // ErrNoDatabase marks a server built without the name host.info reports.
-var ErrNoDatabase = errors.New("a host callback server needs the name migr.yaml holds the target under")
+var ErrNoDatabase = errors.New("a host callback server needs the name migrasyon.yaml holds the target under")
 
 // ErrNoLog marks a server built without somewhere to file host.log's lines.
 var ErrNoLog = errors.New("a host callback server needs a logger for host.log")

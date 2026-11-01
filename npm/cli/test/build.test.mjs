@@ -10,12 +10,12 @@ const targets = ["darwin-amd64", "darwin-arm64", "linux-amd64", "linux-arm64", "
 
 // release writes a goreleaser dist holding a fake binary for each target given, at one version.
 function release(t, version, built = targets) {
-  const dist = mkdtempSync(path.join(tmpdir(), "migr-dist-"));
+  const dist = mkdtempSync(path.join(tmpdir(), "migrasyon-dist-"));
   t.after(() => rmSync(dist, { recursive: true, force: true }));
 
   const artifacts = built.map((target) => {
     const [goos, goarch] = target.split("-");
-    const file = path.join(dist, `migr_${target}`, goos === "windows" ? "migr.exe" : "migr");
+    const file = path.join(dist, `migrasyon_${target}`, goos === "windows" ? "migrasyon.exe" : "migrasyon");
     mkdirSync(path.dirname(file), { recursive: true });
     writeFileSync(file, `binary for ${target}`);
 
@@ -41,13 +41,13 @@ test("a release becomes seven packages at its version, the wrapper pinning each 
   assert.equal(packages.length, 7);
 
   const wrapper = manifest(out, "cli");
-  assert.equal(wrapper.name, "@migr/cli");
+  assert.equal(wrapper.name, "@migrasyon/cli");
   assert.equal(wrapper.version, "1.2.3");
-  assert.deepEqual(wrapper.bin, { migr: "bin/migr.js" });
+  assert.deepEqual(wrapper.bin, { migrasyon: "bin/migrasyon.js" });
   assert.equal(wrapper.scripts, undefined);
   assert.deepEqual(
     wrapper.optionalDependencies,
-    Object.fromEntries(targets.map((target) => [`@migr/cli-${target}`, "1.2.3"])),
+    Object.fromEntries(targets.map((target) => [`@migrasyon/cli-${target}`, "1.2.3"])),
   );
 });
 
@@ -56,17 +56,17 @@ test("each platform package is gated to its platform in Node's names and holds a
   build(path.dirname(out), out);
 
   const want = {
-    "darwin-amd64": ["darwin", "x64", "migr"],
-    "darwin-arm64": ["darwin", "arm64", "migr"],
-    "linux-amd64": ["linux", "x64", "migr"],
-    "linux-arm64": ["linux", "arm64", "migr"],
-    "windows-amd64": ["win32", "x64", "migr.exe"],
-    "windows-arm64": ["win32", "arm64", "migr.exe"],
+    "darwin-amd64": ["darwin", "x64", "migrasyon"],
+    "darwin-arm64": ["darwin", "arm64", "migrasyon"],
+    "linux-amd64": ["linux", "x64", "migrasyon"],
+    "linux-arm64": ["linux", "arm64", "migrasyon"],
+    "windows-amd64": ["win32", "x64", "migrasyon.exe"],
+    "windows-arm64": ["win32", "arm64", "migrasyon.exe"],
   };
 
   for (const [target, [os, cpu, binary]] of Object.entries(want)) {
     const pkg = manifest(out, `cli-${target}`);
-    assert.equal(pkg.name, `@migr/cli-${target}`);
+    assert.equal(pkg.name, `@migrasyon/cli-${target}`);
     assert.equal(pkg.version, "1.2.3-rc.1");
     assert.deepEqual([pkg.os, pkg.cpu], [[os], [cpu]], target);
 

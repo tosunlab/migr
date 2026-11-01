@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Replaces users.email with users.email_address over five deploys while the app keeps serving.
 #
-# Each deploy runs `migr up --release dN` while the previous app version is serving, then rolls the
+# Each deploy runs `migrasyon up --release dN` while the previous app version is serving, then rolls the
 # app forward, starting the new version before stopping the old one, as a rolling deploy does. The
 # contract is the exception: it runs after the last app version is serving, because the version
 # before it still writes the old column. Every app version counts its failed queries, and this
@@ -44,20 +44,20 @@ roll() {
   stop
 }
 
-# held runs migr up and checks it applied one migration and held at the next step.
+# held runs migrasyon up and checks it applied one migration and held at the next step.
 held() {
   local out
-  out=$(migr up --release "$1")
+  out=$(migrasyon up --release "$1")
   printf '%s\n' "$out"
   if ! grep -q '⏸ held' <<<"$out"; then
-    echo "walkthrough: migr up --release $1 was expected to hold at the next step" >&2
+    echo "walkthrough: migrasyon up --release $1 was expected to hold at the next step" >&2
     exit 1
   fi
 }
 
 trap 'for app in $serving; do kill -TERM "${app%%:*}" 2>/dev/null || true; done' EXIT
 
-if [ "$(migr status --json | grep -c '"state": *"applied"' || true)" -ne 0 ]; then
+if [ "$(migrasyon status --json | grep -c '"state": *"applied"' || true)" -ne 0 ]; then
   echo "walkthrough: the database already holds applied migrations; start from an empty one" >&2
   exit 1
 fi
@@ -65,10 +65,10 @@ fi
 go build -o .bin/app ./app
 
 say "the gate CI runs on every pull request"
-migr validate --require-safe
+migrasyon validate --require-safe
 
 say "deploy 0: the app as it is, serving from users.email"
-migr up --to 20261101T120000 --release d0
+migrasyon up --to 20261101T120000 --release d0
 start 0
 
 say "deploy 1: expand"
@@ -85,11 +85,11 @@ roll 3
 
 say "deploy 4: the app first, then contract"
 roll 4
-migr up --release d4
+migrasyon up --release d4
 
 say "done"
 stop
-migr status
+migrasyon status
 
 if [ "$failed" -ne 0 ]; then
   echo "walkthrough: $failed app version(s) saw failed queries" >&2

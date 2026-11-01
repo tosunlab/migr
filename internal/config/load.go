@@ -13,18 +13,18 @@ import (
 	"github.com/goccy/go-yaml/ast"
 	"github.com/goccy/go-yaml/parser"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/rule"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // DefaultFilename is the config file looked for when --config is not given.
-const DefaultFilename = "migr.yaml"
+const DefaultFilename = "migrasyon.yaml"
 
-// DefaultSeedsDir is where seeds live when migr.yaml names no other directory.
+// DefaultSeedsDir is where seeds live when migrasyon.yaml names no other directory.
 const DefaultSeedsDir = "./seeds"
 
 // DefaultCutoverLag is how far a stream may trail and an unattended cutover still count it caught up, at most half of lock_timeout.
@@ -36,7 +36,7 @@ func Load(path string) (*Config, error) {
 	if err != nil {
 		if errors.Is(err, fs.ErrNotExist) {
 			return nil, remedy.With(fmt.Errorf("no config file at %s: %w", path, err),
-				"create one with migr init, or pass --config the path of the one you mean")
+				"create one with migrasyon init, or pass --config the path of the one you mean")
 		}
 
 		return nil, fmt.Errorf("reading %s: %w", path, err)
@@ -70,7 +70,7 @@ func parse(src []byte, source string, lookup func(string) (string, bool)) (*Conf
 	cfg := &Config{}
 	if err := decode(file, cfg); err != nil {
 		return nil, remedy.With(fmt.Errorf("loading %s:\n%s", source, yaml.FormatError(err, false, true)),
-			fmt.Sprintf("fix the value named above in %s; migr config prints the file as resolved once "+
+			fmt.Sprintf("fix the value named above in %s; migrasyon config prints the file as resolved once "+
 				"it loads", source))
 	}
 

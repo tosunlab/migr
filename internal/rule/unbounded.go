@@ -3,8 +3,8 @@ package rule
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // UnboundedString is the id of the rule that reports a column declared with no length at all.

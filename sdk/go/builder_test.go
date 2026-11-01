@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // built is one operation expressed twice: as a builder chain, and constructed by hand.

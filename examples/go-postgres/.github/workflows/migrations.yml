@@ -30,11 +30,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24
-      - name: Install migr
-        run: npm install --global @migr/cli
+      - name: Install migrasyon
+        run: npm install --global @migrasyon/cli
       - name: Test
         run: go test ./...
       - name: Gate on lock cost
-        run: migr validate --require-safe
+        run: migrasyon validate --require-safe
       - name: Apply to an empty database
-        run: migr up
+        run: migrasyon up

@@ -9,17 +9,17 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestTheLockNameIsTheSameEveryTime(t *testing.T) {
-	first, second := namespaceLock("app", "migr_migrations"), namespaceLock("app", "migr_migrations")
+	first, second := namespaceLock("app", "migrasyon_migrations"), namespaceLock("app", "migrasyon_migrations")
 
 	if first != second {
 		t.Errorf("one installation derived %s and %s", first, second)
 	}
 
-	t.Log("Two migr processes agree on a lock only by deriving the same name from the same two")
+	t.Log("Two migrasyon processes agree on a lock only by deriving the same name from the same two")
 	t.Log("identifiers, so a derivation that varied would be two locks that exclude nobody.")
 }
 
@@ -29,8 +29,8 @@ func TestDifferentInstallationsLockOnDifferentNames(t *testing.T) {
 	for _, c := range []struct {
 		database, table string
 	}{
-		{"app", "migr_migrations"},
-		{"other", "migr_migrations"},
+		{"app", "migrasyon_migrations"},
+		{"other", "migrasyon_migrations"},
 		{"app", "schema_history"},
 		{"a", "bc"},
 		{"ab", "c"},
@@ -61,7 +61,7 @@ func TestEveryLockNameFitsWhatMySQLKeepsAndSaysWhoseItIs(t *testing.T) {
 	}
 
 	if !strings.HasPrefix(name, lockPrefix) {
-		t.Errorf("the name is %q and carries no migr prefix", name)
+		t.Errorf("the name is %q and carries no migrasyon prefix", name)
 	}
 
 	if name != strings.ToLower(name) {
@@ -73,8 +73,8 @@ func TestEveryLockNameFitsWhatMySQLKeepsAndSaysWhoseItIs(t *testing.T) {
 	t.Log("widest possible namespace must still fit it, which a digest does and two 64-character")
 	t.Log("identifiers do not.")
 	t.Log("")
-	t.Log("Lowercase matters for a second measured reason: GET_LOCK('migr:abc') is the same lock as")
-	t.Log("IS_USED_LOCK('migr:ABC') on MySQL and a different one on MariaDB. Hex in one case cannot")
+	t.Log("Lowercase matters for a second measured reason: GET_LOCK('migrasyon:abc') is the same lock as")
+	t.Log("IS_USED_LOCK('migrasyon:ABC') on MySQL and a different one on MariaDB. Hex in one case cannot")
 	t.Log("mean two things on either.")
 }
 
@@ -110,13 +110,13 @@ func TestNoWaitThisDriverRendersCanMeanWaitForever(t *testing.T) {
 	t.Log("Measured, and the engines disagree: GET_LOCK with a negative timeout waits indefinitely")
 	t.Log("on MySQL -- it waited three seconds for a holder and then took the lock -- and answers")
 	t.Log("NULL at once on MariaDB. Neither is a bound, and the MySQL half is the worse failure")
-	t.Log("available here: a migr that never gives up and never says why. Options.Waits already")
+	t.Log("available here: a migrasyon that never gives up and never says why. Options.Waits already")
 	t.Log("substitutes the default for a non-positive wait, so this is the second line of defense")
 	t.Log("rather than the first -- PostgreSQL's millisecondsCeil in this engine's units.")
 }
 
 func TestASecondAcquireOnOneSessionIsRefusedRatherThanCounted(t *testing.T) {
-	c := &mysqlConn{lock: namespaceLock("app", "migr_migrations"), locked: true}
+	c := &mysqlConn{lock: namespaceLock("app", "migrasyon_migrations"), locked: true}
 
 	_, err := c.Lock(t.Context())
 	if !errors.Is(err, ErrLockHeld) {
@@ -139,7 +139,7 @@ func TestASecondAcquireOnOneSessionIsRefusedRatherThanCounted(t *testing.T) {
 }
 
 func TestReleasingASessionThatNeverHeldTheLockIsNotAFailure(t *testing.T) {
-	c := &mysqlConn{lock: namespaceLock("app", "migr_migrations")}
+	c := &mysqlConn{lock: namespaceLock("app", "migrasyon_migrations")}
 
 	if err := c.releaser()(t.Context()); err != nil {
 		t.Errorf("releasing an unheld lock returned %v", err)
@@ -147,7 +147,7 @@ func TestReleasingASessionThatNeverHeldTheLockIsNotAFailure(t *testing.T) {
 }
 
 func TestAReleaseThatCannotRunBecauseTheSessionIsGoneIsTheReleaseItAlreadyWas(t *testing.T) {
-	c := &mysqlConn{lock: namespaceLock("app", "migr_migrations")}
+	c := &mysqlConn{lock: namespaceLock("app", "migrasyon_migrations")}
 
 	for _, err := range []error{sqlErrConnDone(), badConn()} {
 		if got := c.classifyRelease(err); got != nil {
@@ -190,7 +190,7 @@ func TestAHolderWhoseSessionThisConnectionCannotSeeIsStillNamed(t *testing.T) {
 }
 
 func TestTheAccountRendersWhoConnectedAndNothingWhenTheServerSaidNothing(t *testing.T) {
-	if got := account("migr", "10.0.0.4:51234"); got != "migr@10.0.0.4:51234" {
+	if got := account("migrasyon", "10.0.0.4:51234"); got != "migrasyon@10.0.0.4:51234" {
 		t.Errorf("the account renders as %q", got)
 	}
 
@@ -266,6 +266,6 @@ func TestTheSeedTableNamesNoLockOfItsOwn(t *testing.T) {
 	if d.table != driver.DefaultHistoryTable || d.seeds != "fixtures" {
 		t.Errorf("the driver locks on %q and records seeds in %q", d.table, d.seeds)
 		t.Log("The lock name is derived from the history table alone, so seeds recorded beside it")
-		t.Log("run under the lock migr up takes rather than one of their own.")
+		t.Log("run under the lock migrasyon up takes rather than one of their own.")
 	}
 }

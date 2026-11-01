@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // update rewrites testdata/failures.txt from what every failure now renders, for make golden-update.
@@ -49,7 +49,7 @@ func endings(t *testing.T) []ending {
 			runtimes: registryFor(t, c.scripted, c.declares)},
 			append(strings.Fields(c.command), c.args...)...)
 
-		found = append(found, ending{title: fmt.Sprintf("migr %s: %s (exit %d)",
+		found = append(found, ending{title: fmt.Sprintf("migrasyon %s: %s (exit %d)",
 			strings.Join(append(strings.Fields(c.command), c.args...), " "), c.name, ExitCode(err)),
 			rendered: placeless(dir, Rendered(err)), err: err})
 	}
@@ -58,7 +58,7 @@ func endings(t *testing.T) []ending {
 		dir, _, drivers := c.stage(t)
 		_, _, err := runWith(t, dir, noon, drivers, c.args...)
 
-		found = append(found, ending{title: fmt.Sprintf("migr %s: %s (exit %d)",
+		found = append(found, ending{title: fmt.Sprintf("migrasyon %s: %s (exit %d)",
 			strings.Join(c.args, " "), c.name, ExitCode(err)),
 			rendered: placeless(dir, Rendered(err)), err: err})
 	}

@@ -59,7 +59,7 @@ func scan(section string) ([]statement, *misplaced) {
 	return out, nil
 }
 
-// unmarked removes the marker line from the statement it declared, since it is migr's and not the server's.
+// unmarked removes the marker line from the statement it declared, since it is migrasyon's and not the server's.
 func unmarked(sql string) string {
 	lines := strings.Split(sql, "\n")
 

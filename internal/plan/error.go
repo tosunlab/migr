@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // ErrNoCompiler marks a planner asked to compile with no driver to compile through, for errors.Is.

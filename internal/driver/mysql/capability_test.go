@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // declaredFor builds the capability set Open would build for one server, with no server present.
@@ -71,7 +71,7 @@ func TestTheColumnChangeIsDeclaredEmulatedAndNamesItsStrategy(t *testing.T) {
 	}
 
 	t.Log("The declaration and the compiler are one statement of one fact, which the conformance suite")
-	t.Log("asserts as a biconditional. migr plan prints the strategy, because a capability is never")
+	t.Log("asserts as a biconditional. migrasyon plan prints the strategy, because a capability is never")
 	t.Log("silently degraded.")
 }
 

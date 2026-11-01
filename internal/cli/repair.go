@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
 // repairerOf returns the session as a driver.Repairer, nil where it cleans up nothing.
@@ -17,7 +17,7 @@ func repairerOf(conn driver.Conn) driver.Repairer {
 	return nil
 }
 
-// logRepair warns of every repair a run made, since migr changing the database on its own must never be quiet.
+// logRepair warns of every repair a run made, since migrasyon changing the database on its own must never be quiet.
 func logRepair(log *slog.Logger) func(engine.Cleanup) {
 	return func(c engine.Cleanup) {
 		attrs := []any{"migration", c.Migration.Filename(), "statement", c.Position, "when", string(c.When)}

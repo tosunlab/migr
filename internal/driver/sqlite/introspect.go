@@ -7,15 +7,15 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The reads one snapshot is built from: one catalog table and four pragmas, plus what they omit.
 //
 // Everything SQLite names for itself is excluded -- sqlite_sequence, sqlite_stat1 -- and so are the
-// tables migr records its own runs and checkpoints in, which a differ would otherwise propose
+// tables migrasyon records its own runs and checkpoints in, which a differ would otherwise propose
 // dropping. tbl_name is what excludes a table and everything attached to it in one predicate.
 const (
 	objectsQuery = `SELECT type, name, coalesce(sql, '') FROM sqlite_schema ` +
@@ -48,7 +48,7 @@ const originPrimaryKey = "pk"
 // expressionColumn is the pragma_index_xinfo cid of a key entry that is not a column at all.
 const expressionColumn = -2
 
-// Introspect reads this database's one namespace back, less the table migr records its own runs in.
+// Introspect reads this database's one namespace back, less the table migrasyon records its own runs in.
 func (c *sqliteConn) Introspect(ctx context.Context) (*schema.Snapshot, error) {
 	objects, err := c.readObjects(ctx)
 	if err != nil {
@@ -404,7 +404,7 @@ func pragmaNumber(value *string, column string) (int, error) {
 	return parsed, nil
 }
 
-// owned is every table migr keeps for this session's migrations and seeds, which Introspect never reports.
+// owned is every table migrasyon keeps for this session's migrations and seeds, which Introspect never reports.
 func (c *sqliteConn) owned() []any {
 	var names []any
 	for _, name := range slices.Concat(history.Owned(c.table), history.Owned(c.seeds)) {

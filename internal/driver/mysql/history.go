@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // historyColumns is the order this store binds and scans, and the only place that order is stated.
@@ -50,7 +50,7 @@ const (
 // mysqlHistory is one session's view of the migration history, bound to it at Open.
 type mysqlHistory struct {
 	session *mysqlConn
-	// table is where runs are recorded, as migr.yaml spelled it and as every statement names it.
+	// table is where runs are recorded, as migrasyon.yaml spelled it and as every statement names it.
 	table string
 	// stored is that name as this server's catalog holds it, which is the only thing a lookup matches.
 	stored string

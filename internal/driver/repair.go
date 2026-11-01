@@ -3,7 +3,7 @@ package driver
 import (
 	"context"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // RepairTime is when a repair is asked for: straight after a statement outside any transaction failed, or before a resume reruns it.

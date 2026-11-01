@@ -3,7 +3,7 @@ package engine
 import (
 	"slices"
 
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // scopeKind names how a scope decides where the prefix it selects ends.

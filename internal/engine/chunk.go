@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // A data-only migration runs one keyed chunk at a time, each chunk its own transaction.
@@ -21,7 +21,7 @@ import (
 
 // errChunking is what the row a chunked run writes at its first chunk records, until the run finishes.
 var errChunking = errors.New("running in chunks: each chunk commits on its own, and the " +
-	"checkpoint beside the history records how far it got -- the next migr up resumes from it")
+	"checkpoint beside the history records how far it got -- the next migrasyon up resumes from it")
 
 // errNoSnapshot is a session that answered a read of its schema with nothing at all.
 var errNoSnapshot = errors.New("the session reported no schema at all")
@@ -464,7 +464,7 @@ func checkChunkResume(ready prepared, recorded history.Record, cp history.Checkp
 	if ready.compiled.Chunked() == 0 {
 		return fmt.Errorf("%w: it stopped partway through running in chunks, and this run would "+
 			"not run it in chunks -- safety.chunk_rows is 0 here. Set it again to carry on from "+
-			"the checkpoint, or finish the change yourself and record what you did with migr "+
+			"the checkpoint, or finish the change yourself and record what you did with migrasyon "+
 			"resolve --applied or --rolled-back", ErrNotResumable)
 	}
 

@@ -9,12 +9,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // runRuntime is what the migrations these tests stage are written in, as a history row records it.
@@ -398,7 +398,7 @@ func TestAnAssertedRepairAgainstARealServerRecordsTheFourthOutcome(t *testing.T)
 		}
 
 		t.Log("A fourth outcome survives the string(16) column and the read path on both servers.")
-		t.Log("An older migr meeting one reports history.ErrCorrupt naming the column and the")
+		t.Log("An older migrasyon meeting one reports history.ErrCorrupt naming the column and the")
 		t.Log("value, which is the designed answer to a database a newer build has resolved.")
 	})
 }
@@ -496,7 +496,7 @@ func TestTheDeclarationAndTheRunNeverDisagreeAboutWhatThisServerPerforms(t *test
 		t.Log("Measured before the gate existed: this same run applied the first operation, sent")
 		t.Log("the second, and was refused by the server with error 1674 -- leaving the table in")
 		t.Log("the catalog and the migration recorded dirty at statement 1, which then refused")
-		t.Log("both directions until migr resolve. That is what reading the declaration first buys.")
+		t.Log("both directions until migrasyon resolve. That is what reading the declaration first buys.")
 	})
 }
 

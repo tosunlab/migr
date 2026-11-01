@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // pollInterval is how often the wait re-offers, flock having no form that takes a deadline.

@@ -6,7 +6,7 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // releaseColumns is the order the release store binds and scans, held to history.ReleaseSchema.

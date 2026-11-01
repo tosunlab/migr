@@ -10,7 +10,7 @@ import (
 	"testing"
 	"testing/fstest"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // dir builds a migrations directory holding one empty file per name.
@@ -217,7 +217,7 @@ func TestAFileThatIsNotAMigrationStopsTheCommand(t *testing.T) {
 
 	t.Log("The last of these is the case that decides the policy. Hyphens where the grammar")
 	t.Log("wants underscores is a migration someone wrote and expects to run; skipped quietly,")
-	t.Log("`migr up` reports nothing to do and the change is found missing in production.")
+	t.Log("`migrasyon up` reports nothing to do and the change is found missing in production.")
 	t.Log("A README failing loudly is by a wide margin the cheaper of the two mistakes.")
 }
 
@@ -284,7 +284,7 @@ func TestAMissingDirectoryIsNotAnEmptyOne(t *testing.T) {
 		t.Errorf("the refusal does not unwrap to the cause: %v", err)
 	}
 
-	if !strings.Contains(remedy.Of(err), "migr init") {
+	if !strings.Contains(remedy.Of(err), "migrasyon init") {
 		t.Errorf("the refusal does not say what to do about it:\n  %v\n  next: %s", err, remedy.Of(err))
 	}
 

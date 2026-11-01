@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // contradicting stages a Go project whose one migration creates a table this database already holds.
@@ -47,11 +47,11 @@ func TestUpRefusesAMigrationThisDatabasesSchemaContradicts(t *testing.T) {
 	_, stderr, err := runScripted(t, dir, actTypes, drivers, "up")
 
 	if got := ExitCode(err); got != ExitRuntime {
-		t.Fatalf("migr up exited %d, want %d: %v", got, ExitRuntime, err)
+		t.Fatalf("migrasyon up exited %d, want %d: %v", got, ExitRuntime, err)
 	}
 
 	if !errors.Is(err, engine.ErrUnrestorable) {
-		t.Fatalf("migr up returned %v, want the refusal", err)
+		t.Fatalf("migrasyon up returned %v, want the refusal", err)
 	}
 
 	for _, want := range []string{"already holds a table", scriptedTable} {
@@ -77,7 +77,7 @@ func TestARefusedMigrationIsOneJSONDocumentOnStderr(t *testing.T) {
 
 	stdout, stderr, err := runScripted(t, dir, actTypes, drivers, "up", "--json")
 	if !errors.Is(err, engine.ErrUnrestorable) {
-		t.Fatalf("migr up --json returned %v, want the refusal", err)
+		t.Fatalf("migrasyon up --json returned %v, want the refusal", err)
 	}
 
 	if strings.TrimSpace(stdout) != "" {
@@ -134,7 +134,7 @@ func TestPlanMarksWhatUpWillRefuseAndExitsZero(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "plan")
 	if err != nil {
-		t.Fatalf("migr plan returned %v, and a preview refuses nothing", err)
+		t.Fatalf("migrasyon plan returned %v, and a preview refuses nothing", err)
 	}
 
 	for _, want := range []string{"~", "already holds a table", "marked ~ above"} {
@@ -143,8 +143,8 @@ func TestPlanMarksWhatUpWillRefuseAndExitsZero(t *testing.T) {
 		}
 	}
 
-	t.Log("Invariant #7's rule applied without exception: migr plan says what migr up will refuse")
-	t.Log("and exits 0, as migr status reports drift at 0 while migr up exits 4.")
+	t.Log("Invariant #7's rule applied without exception: migrasyon plan says what migrasyon up will refuse")
+	t.Log("and exits 0, as migrasyon status reports drift at 0 while migrasyon up exits 4.")
 }
 
 func TestPlanJSONCarriesTheDisagreementsAsFields(t *testing.T) {
@@ -152,7 +152,7 @@ func TestPlanJSONCarriesTheDisagreementsAsFields(t *testing.T) {
 
 	stdout, _, err := runScripted(t, dir, actTypes, drivers, "plan", "--json")
 	if err != nil {
-		t.Fatalf("migr plan --json: %v", err)
+		t.Fatalf("migrasyon plan --json: %v", err)
 	}
 
 	var found struct {
@@ -177,7 +177,7 @@ func TestPlanJSONCarriesTheDisagreementsAsFields(t *testing.T) {
 	}
 }
 
-// M10-T2 asserted the opposite of this: that migr validate --connect never introspects, because the
+// M10-T2 asserted the opposite of this: that migrasyon validate --connect never introspects, because the
 // projection that makes reading the live schema honest had no task. M10-T3 is that task, so the
 // command does read it now -- and the half that mattered is unchanged. A migration whose
 // create_table the live schema contradicts is still not reported, because the contradiction is in
@@ -191,7 +191,7 @@ func TestValidateDoesNotJudgeAMigrationTheLiveSchemaAloneContradicts(t *testing.
 
 	for _, unwanted := range []string{"already holds a table", "reference"} {
 		if strings.Contains(stdout, unwanted) {
-			t.Errorf("migr validate judged a migration against the live schema alone:\n%s", stdout)
+			t.Errorf("migrasyon validate judged a migration against the live schema alone:\n%s", stdout)
 			t.Log("A check reading the live catalog alone calls a correct migration broken whenever")
 			t.Log("the migration that creates its table has not run yet. Reporting")
 			t.Log("only what both projections refuse is what makes reading it safe at all.")
@@ -199,7 +199,7 @@ func TestValidateDoesNotJudgeAMigrationTheLiveSchemaAloneContradicts(t *testing.
 	}
 
 	if !f.asked("introspect") {
-		t.Error("migr validate --connect did not read the schema, which the reference check needs")
+		t.Error("migrasyon validate --connect did not read the schema, which the reference check needs")
 	}
 }
 
@@ -207,7 +207,7 @@ func TestAMigrationNothingContradictsRunsUntouched(t *testing.T) {
 	dir, f, drivers := goProject(t, "add_scripted")
 
 	if _, _, err := runScripted(t, dir, actTypes, drivers, "up"); err != nil {
-		t.Fatalf("migr up: %v", err)
+		t.Fatalf("migrasyon up: %v", err)
 	}
 
 	if len(f.runs) != 1 {

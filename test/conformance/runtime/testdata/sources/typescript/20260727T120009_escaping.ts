@@ -1,4 +1,4 @@
-import { defineMigration } from "@migr/sdk";
+import { defineMigration } from "@migrasyon/sdk";
 
 /** expression carries every character two SDKs are most likely to render differently. */
 const expression = "total >= 0 AND note <> 'a&b' AND label <> 'naïve — \"ok\"'";

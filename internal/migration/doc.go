@@ -32,7 +32,7 @@
 // # The version stays a string
 //
 // Parsing is validation and nothing more: the value kept is the text the filename carried.
-// history.Record.Version stores that string, `migr down --to <version>` compares against it, and
+// history.Record.Version stores that string, `migrasyon down --to <version>` compares against it, and
 // the format is fixed width and zero padded, so lexical order is chronological order. Holding a
 // time.Time beside it would be a second representation of one fact, and the two can disagree.
 //
@@ -49,7 +49,7 @@
 // through one, and handing either a graph would leave both re-deriving this.
 //
 // An edge names a version, because that is the key discovery proves unique, the one a history row
-// joins on, and the one `migr down --to` names. Every message renders a filename instead, since a
+// joins on, and the one `migrasyon down --to` names. Every message renders a filename instead, since a
 // loop printed as three fifteen-digit timestamps is the least useful form of the one error this
 // exists to produce. A declaration is read from a migration
 // rather than computed by one — a graph that could branch on live query results would let plan and
@@ -64,7 +64,7 @@
 // # Everything wrong with a graph, in one pass
 //
 // GraphError carries every unknown dependency and every cycle rather than the first of either,
-// because M5-T5's `migr validate` asks for exactly that and a graph with four broken edges is
+// because M5-T5's `migrasyon validate` asks for exactly that and a graph with four broken edges is
 // otherwise four commands.
 //
 // Reporting both together is sound rather than convenient: an edge naming a version nothing carries
@@ -80,7 +80,7 @@
 // # A stray file is an error, and a near miss is why
 //
 // 20260727T153000-add-users.ts — hyphens where the grammar wants underscores — is a migration
-// someone wrote, committed, and expects to run. Skipped quietly, `migr up` reports nothing to do
+// someone wrote, committed, and expects to run. Skipped quietly, `migrasyon up` reports nothing to do
 // and the schema change is found missing in production. So the only entries this package passes
 // over are dotfiles: a .gitkeep or a .DS_Store was never meant to be a migration, and everything
 // else in the directory has to parse or the command fails naming the file. A README.md that fails
@@ -94,7 +94,7 @@
 // history keys a run by (batch, ordinal), but M4-T3 joins the file to the row by version and
 // `--to` names one. Two files with one timestamp make both questions unanswerable, so a duplicate
 // is refused at discovery naming both files, rather than resolved by a tiebreak nobody can
-// predict. `migr create` uses second resolution, so two creates in one second is the way this
+// predict. `migrasyon create` uses second resolution, so two creates in one second is the way this
 // happens.
 //
 // # Discovery takes a filesystem, not a path
@@ -114,7 +114,7 @@
 // # The layout lives here
 //
 // versionLayout is Go's reference instant for the timestamp, and it is deliberately in this
-// package rather than in the CLI that will format one. M5-T1's `migr create` has to produce
+// package rather than in the CLI that will format one. M5-T1's `migrasyon create` has to produce
 // exactly what Parse accepts, and a layout string written down in two places is a file format
 // with two definitions. Build a Migration and call Filename; do not restate the layout.
 //

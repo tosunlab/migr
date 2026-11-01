@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // carried stages a history in which the first n migrations were applied, in the order given.
@@ -297,7 +297,7 @@ func TestAVersionOnlyTheDatabaseCarriesRefusesTheWholeRollback(t *testing.T) {
 		t.Fatalf("the session was asked for %v before the refusal", conn.calls)
 	}
 
-	t.Log("migr up skips such a version because it has nothing to run for it. A rollback runs")
+	t.Log("migrasyon up skips such a version because it has nothing to run for it. A rollback runs")
 	t.Log("newest first, so this one sits in front of every migration older than it and stepping")
 	t.Log("around it would undo them while it stays.")
 }
@@ -314,7 +314,7 @@ func TestARollbackWithNoMigrationsOnDiskRefusesRatherThanReportingNothingToUndo(
 		t.Fatalf("Rollback returned %v, want a refusal reporting ErrMissing", err)
 	}
 
-	t.Log("This is migr down run against a misconfigured migrations.dir, and it is the case that")
+	t.Log("This is migrasyon down run against a misconfigured migrations.dir, and it is the case that")
 	t.Log("decides the rule: under a skip rule it reports nothing to undo against a fully")
 	t.Log("migrated database, and the operator concludes the tool works.")
 }
@@ -393,7 +393,7 @@ func TestARollbackWithNothingAppliedRunsNothingAndAllocatesNoBatch(t *testing.T)
 			conn.calls, src.asked)
 	}
 
-	t.Log("migr down against a database carrying nothing must not open a transaction, allocate a")
+	t.Log("migrasyon down against a database carrying nothing must not open a transaction, allocate a")
 	t.Log("batch, or ask a runtime what any migration undoes.")
 }
 
@@ -679,7 +679,7 @@ func TestAFailedRollbackRecordsADownRunAfterItsTransactionRolledBack(t *testing.
 		t.Fatalf("the last row is %s %s, want a failed down", failed.Direction, failed.Outcome)
 	}
 
-	t.Log("migr history is what an operator reads after an incident, and a rollback that could")
+	t.Log("migrasyon history is what an operator reads after an incident, and a rollback that could")
 	t.Log("not complete is exactly the event worth looking up.")
 }
 

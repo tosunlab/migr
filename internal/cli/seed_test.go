@@ -8,19 +8,19 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/source/golang"
-	"github.com/emrebdr/migr/internal/source/sql"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/source/golang"
+	"github.com/tosunlab/migrasyon/internal/source/sql"
 )
 
-// seedsDir is where these tests stage seeds, which is the default seeds.dir beside migr.yaml.
+// seedsDir is where these tests stage seeds, which is the default seeds.dir beside migrasyon.yaml.
 const seedsDir = "seeds"
 
 // seedingConfig is the project config declaring the two environments a seeds directory may hold.
@@ -68,7 +68,7 @@ func seededProject(t *testing.T) (string, *fake, *driver.Registry) {
 	return dir, f, drivers
 }
 
-// migrated runs migr up, which is what every seed run needs to have happened first.
+// migrated runs migrasyon up, which is what every seed run needs to have happened first.
 func migrated(t *testing.T, dir string, drivers *driver.Registry) {
 	t.Helper()
 
@@ -140,7 +140,7 @@ func TestASeedRunTakesTheMigrationLockAndRecordsInsideItsTransaction(t *testing.
 	if !slices.Equal(f.calls, want) {
 		t.Errorf("the session was asked for %q, want %q", f.calls, want)
 		t.Log("A seed is recorded in the seed table, inside the transaction that ran it, under the")
-		t.Log("one migration lock -- a lock of its own would let a seed run beside a migr up.")
+		t.Log("one migration lock -- a lock of its own would let a seed run beside a migrasyon up.")
 	}
 }
 
@@ -197,7 +197,7 @@ func TestSeedRefusesADatabaseTheMigrationsHaveNotAllRunAgainst(t *testing.T) {
 		want  string
 	}{
 		{name: "none has run", setup: func(*testing.T, string, *driver.Registry) {},
-			want: "migr up"},
+			want: "migrasyon up"},
 		{name: "one is pending", setup: func(t *testing.T, dir string, drivers *driver.Registry) {
 			t.Helper()
 
@@ -239,8 +239,8 @@ func TestSeedRefusesADatabaseLeftBetweenStates(t *testing.T) {
 	f.runs[len(f.runs)-1].Error = "stopped"
 
 	_, _, err := runWith(t, dir, noon, drivers, "seed")
-	if err == nil || !strings.Contains(said(err), "migr resolve") {
-		t.Fatalf("seed over a dirty migration returned %v, want a refusal naming migr resolve", err)
+	if err == nil || !strings.Contains(said(err), "migrasyon resolve") {
+		t.Fatalf("seed over a dirty migration returned %v, want a refusal naming migrasyon resolve", err)
 	}
 }
 
@@ -311,7 +311,7 @@ func TestNoOtherCommandSeesASeedOrItsHistory(t *testing.T) {
 
 		for _, seed := range []string{seedAt(0), seedAt(1)} {
 			if strings.Contains(stdout, seed) {
-				t.Errorf("migr %s reports the seed %s:\n%s", args[0], seed, stdout)
+				t.Errorf("migrasyon %s reports the seed %s:\n%s", args[0], seed, stdout)
 			}
 		}
 	}
@@ -333,7 +333,7 @@ func TestASeedThatChangesTheSchemaIsRefused(t *testing.T) {
 
 	if len(f.seedRuns) != 0 {
 		t.Errorf("a seed that changes the schema was recorded: %q", seeded(f))
-		t.Log("A table a seed creates is one no migration knows about, which migr diff would then")
+		t.Log("A table a seed creates is one no migration knows about, which migrasyon diff would then")
 		t.Log("propose dropping -- the schema is the migrations', and only theirs.")
 	}
 }
@@ -714,8 +714,8 @@ func TestSeedDownRefusesADatabaseTheMigrationsHaveNotAllRunAgainst(t *testing.T)
 	rows := len(f.seedRuns)
 
 	_, _, err := runWith(t, dir, noon, drivers, "seed", "down")
-	if ExitCode(err) != ExitRuntime || !strings.Contains(said(err), "migr up") {
-		t.Fatalf("seed down returned %v (exit %d), want exit 1 naming migr up", err, ExitCode(err))
+	if ExitCode(err) != ExitRuntime || !strings.Contains(said(err), "migrasyon up") {
+		t.Fatalf("seed down returned %v (exit %d), want exit 1 naming migrasyon up", err, ExitCode(err))
 	}
 
 	if len(f.seedRuns) != rows {
@@ -784,10 +784,10 @@ func TestADirtySeedsRefusalNamesTheSeedCommandsThatSettleIt(t *testing.T) {
 	}
 
 	message := said(err)
-	if !strings.Contains(message, "migr seed resolve") ||
-		strings.Contains(strings.ReplaceAll(message, "migr seed resolve", ""), "migr resolve") {
-		t.Errorf("the refusal does not send the operator to migr seed resolve:\n%s", message)
-		t.Log("migr resolve reads the migration history, where this seed's row is not, so it")
+	if !strings.Contains(message, "migrasyon seed resolve") ||
+		strings.Contains(strings.ReplaceAll(message, "migrasyon seed resolve", ""), "migrasyon resolve") {
+		t.Errorf("the refusal does not send the operator to migrasyon seed resolve:\n%s", message)
+		t.Log("migrasyon resolve reads the migration history, where this seed's row is not, so it")
 		t.Log("would report nothing between states and leave the seed dirty for good.")
 	}
 }

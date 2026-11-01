@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // expandingConn is a session that can produce statements for an operation its compiler cannot.
@@ -62,7 +62,7 @@ func TestAnEmulationDeclaredNativeIsADisagreement(t *testing.T) {
 		t.Errorf("declaring an emulation native went unreported: %v", problems)
 	}
 
-	t.Log("This is the direction that reaches production: migr plan reports the operation as")
+	t.Log("This is the direction that reaches production: migrasyon plan reports the operation as")
 	t.Log("performed directly, and a table rebuild happens anyway. A capability is never")
 	t.Log("silently degraded (CLAUDE.md §4.2), so the strategy has to be declared.")
 }

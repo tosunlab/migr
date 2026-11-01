@@ -7,11 +7,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/visual"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/visual"
 )
 
 // update rewrites every golden file here from what the renderings now produce, for make golden-update.
@@ -187,7 +187,7 @@ func books(t *testing.T, withISBN bool) schema.Table {
 	return table
 }
 
-// between returns the operations that change one schema into the next, as migr diff would write them.
+// between returns the operations that change one schema into the next, as migrasyon diff would write them.
 func between(t *testing.T, from, to schema.Snapshot) ir.Operations {
 	t.Helper()
 
@@ -247,7 +247,7 @@ func TestARawOperationEndsTheProjectionAndLaterMigrationsAreStillListed(t *testi
 
 func TestAMigrationThatReachesTheDatabaseEndsTheProjectionThere(t *testing.T) {
 	reads := building(t)
-	reads[1] = visual.Read{Migration: reads[1].Migration, Unread: "it reaches the database, and migr graph opens none"}
+	reads[1] = visual.Read{Migration: reads[1].Migration, Unread: "it reaches the database, and migrasyon graph opens none"}
 
 	e := visual.Evolve(reads)
 

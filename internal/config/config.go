@@ -4,16 +4,16 @@ import (
 	"slices"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/rule"
 )
 
-// Version is the only supported migr.yaml schema version.
+// Version is the only supported migrasyon.yaml schema version.
 const Version = 1
 
-// Config is a parsed, defaulted, validated migr.yaml.
+// Config is a parsed, defaulted, validated migrasyon.yaml.
 type Config struct {
 	Version    int                 `yaml:"version"    json:"version"`
 	Migrations Migrations          `yaml:"migrations" json:"migrations"`

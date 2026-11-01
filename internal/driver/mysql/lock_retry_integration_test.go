@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // retryLockWait is safety.lock_timeout for these runs: lock_wait_timeout counts whole seconds.
@@ -177,7 +177,7 @@ func addedTo(t *testing.T, table string) ir.AddColumn {
 		Nullable: true}}
 }
 
-// retried builds the run's options with a real backoff and a real sleep, as migr up has.
+// retried builds the run's options with a real backoff and a real sleep, as migrasyon up has.
 func retried(t *testing.T, retries int, ops ...ir.Operation) engine.Options {
 	t.Helper()
 

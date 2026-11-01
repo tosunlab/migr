@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestTheSeverityVocabularyIsTheThreeMigrYamlNames(t *testing.T) {
+func TestTheSeverityVocabularyIsTheThreeMigrasyonYamlNames(t *testing.T) {
 	const declared = 3
 
 	if len(Severities()) != declared {

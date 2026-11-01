@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Runs every project in examples/ the way its README does (M14-T6): each against its own compose.yaml,
-# with this commit's migr first on PATH, every exit code checked. `make test-examples` builds migr and
+# with this commit's migrasyon first on PATH, every exit code checked. `make test-examples` builds migrasyon and
 # the TypeScript SDK first.
 #
 #   EXAMPLES   the examples to run, default all four
@@ -8,8 +8,8 @@ set -euo pipefail
 
 root=$(cd "$(dirname "$0")/../.." && pwd)
 export PATH="$root/bin:$PATH"
-export MIGR_BIN="$root/bin/migr"
-unset DATABASE_URL MIGR_RELEASE MIGR_UNATTENDED
+export MIGRASYON_BIN="$root/bin/migrasyon"
+unset DATABASE_URL MIGRASYON_RELEASE MIGRASYON_UNATTENDED
 
 failures=0
 work=$(mktemp -d)
@@ -49,12 +49,12 @@ mixed_sqlite() {
   export DATABASE_URL="$work/mixed.db"
   expect 0 "mixed-sqlite: npm ci" npm ci --no-audit --no-fund
   expect 0 "mixed-sqlite: go vet" go vet ./...
-  expect 0 "mixed-sqlite: plan" migr plan
+  expect 0 "mixed-sqlite: plan" migrasyon plan
   says "mixed-sqlite: the foreign key is a table rebuild" "emulated: table rebuild"
-  expect 0 "mixed-sqlite: validate" migr validate
-  expect 0 "mixed-sqlite: up" migr up
+  expect 0 "mixed-sqlite: validate" migrasyon validate
+  expect 0 "mixed-sqlite: up" migrasyon up
   says "mixed-sqlite: all three languages ran" "applied 3 migrations"
-  expect 0 "mixed-sqlite: down" migr down --step 3
+  expect 0 "mixed-sqlite: down" migrasyon down --step 3
   says "mixed-sqlite: all three rolled back" "rolled back 3 migrations"
   unset DATABASE_URL
 }
@@ -63,12 +63,12 @@ go_postgres() {
   expect 0 "go-postgres: go vet" go vet ./...
   expect 0 "go-postgres: go test" go test ./...
   database
-  expect 0 "go-postgres: validate --require-safe" migr validate --require-safe
-  expect 0 "go-postgres: plan --safety --to" migr plan --safety --to 20261101T100100
+  expect 0 "go-postgres: validate --require-safe" migrasyon validate --require-safe
+  expect 0 "go-postgres: plan --safety --to" migrasyon plan --safety --to 20261101T100100
   says "go-postgres: the index is built concurrently" "CREATE INDEX CONCURRENTLY"
-  expect 0 "go-postgres: up" migr up
+  expect 0 "go-postgres: up" migrasyon up
   says "go-postgres: all three applied" "applied 3 migrations"
-  expect 1 "go-postgres: down refuses the irreversible tier" migr down
+  expect 1 "go-postgres: down refuses the irreversible tier" migrasyon down
   says "go-postgres: with the migration's own reason" "cannot be undone"
   release
 }
@@ -77,13 +77,13 @@ ts_mysql() {
   expect 0 "ts-mysql: npm ci" npm ci --no-audit --no-fund
   expect 0 "ts-mysql: npm test" npm test
   database
-  expect 5 "ts-mysql: validate --require-safe declares add_column at its worst" migr validate --require-safe
-  expect 0 "ts-mysql: validate --connect" migr validate --connect
-  expect 0 "ts-mysql: plan --safety" migr plan --safety
+  expect 5 "ts-mysql: validate --require-safe declares add_column at its worst" migrasyon validate --require-safe
+  expect 0 "ts-mysql: validate --connect" migrasyon validate --connect
+  expect 0 "ts-mysql: plan --safety" migrasyon plan --safety
   says "ts-mysql: the backfill costs one chunk" "brief_exclusive (declared table_rewrite, one chunk at a time)"
-  expect 0 "ts-mysql: up" migr up
+  expect 0 "ts-mysql: up" migrasyon up
   says "ts-mysql: the backfill ran in chunks" "1 chunk"
-  expect 0 "ts-mysql: down" migr down --step 3
+  expect 0 "ts-mysql: down" migrasyon down --step 3
   says "ts-mysql: all three rolled back" "rolled back 3 migrations"
   release
 }

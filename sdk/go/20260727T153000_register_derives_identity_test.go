@@ -4,7 +4,7 @@
 // to prove that end to end is from a file the grammar accepts. Every other test in this package
 // lives in a file the grammar refuses, which is what TestRegisteringFromAFileThatIsNotAMigration
 // asserts from the other side.
-package migr
+package migrasyon
 
 import "testing"
 

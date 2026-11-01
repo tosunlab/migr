@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // briefWait is short enough that a blocked acquire gives up promptly and long enough not to be flaky.
@@ -25,10 +25,10 @@ const terminateQuery = `SELECT pg_terminate_backend($1)`
 // keepaliveQuery reads back what the startup packet asked the server to do about a vanished client.
 const keepaliveQuery = `SELECT name, setting FROM pg_settings WHERE name LIKE 'tcp_keepalives%'`
 
-// foreignLockQuery takes the single-key advisory lock whose halves decompose to migr's own.
+// foreignLockQuery takes the single-key advisory lock whose halves decompose to migrasyon's own.
 //
 // pg_advisory_lock(bigint) lands in pg_locks with classid and objid taken from the high and low
-// halves of its argument, so this row is identical to migr's in every column but objsubid, which
+// halves of its argument, so this row is identical to migrasyon's in every column but objsubid, which
 // is 1 rather than 2. Measured on PostgreSQL 16 and 17. It is the one way the two advisory key
 // spaces -- which PostgreSQL otherwise keeps rigorously apart -- can be confused by a reader.
 const foreignLockQuery = `SELECT pg_advisory_lock(($1::bigint << 32) | $2::bigint)`
@@ -104,7 +104,7 @@ func TestTheFailureNamesThePidAndApplicationOfTheSessionHoldingIt(t *testing.T) 
 		t.Run(server.name, func(t *testing.T) {
 			dsn := dsnFor(server.env, server.dsn)
 
-			busy, holder := blockedAcquire(t, dsn, "migr_lock_probe_holder")
+			busy, holder := blockedAcquire(t, dsn, "migrasyon_lock_probe_holder")
 
 			if busy.Holder == nil {
 				t.Fatalf("the report names no holder: %v", busy)
@@ -133,7 +133,7 @@ func TestTheFailureNamesThePidAndApplicationOfTheSessionHoldingIt(t *testing.T) 
 
 func TestTheReportNamesTheHolderRatherThanAFellowWaiter(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
-	table := "migr_lock_probe_queued"
+	table := "migrasyon_lock_probe_queued"
 
 	queued := lockedConnWaiting(t, dsn, table, 10*time.Second)
 	waiter := lockedConnWaiting(t, dsn, table, briefWait)
@@ -167,7 +167,7 @@ func TestTheReportNamesTheHolderRatherThanAFellowWaiter(t *testing.T) {
 		t.Errorf("with a lower-numbered session queued, the report names %v", busy.Holder)
 		t.Log("The holder is deliberately opened last, so it has the highest pid of the three.")
 		t.Log("granted is then the only thing separating it from the sessions queued behind it:")
-		t.Log("ordering by pid alone would name a waiter, and migr would tell an operator to")
+		t.Log("ordering by pid alone would name a waiter, and migrasyon would tell an operator to")
 		t.Log("terminate a session that is itself waiting.")
 	}
 
@@ -182,7 +182,7 @@ func TestTheReportNamesTheHolderRatherThanAFellowWaiter(t *testing.T) {
 
 func TestAWaitHonorsTheTimeoutItWasConfiguredWith(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
-	table := "migr_lock_probe_configured"
+	table := "migrasyon_lock_probe_configured"
 
 	holder := lockedConn(t, dsn, table)
 	patient := lockedConnWaiting(t, dsn, table, 10*time.Second)
@@ -221,7 +221,7 @@ func TestAWaitHonorsTheTimeoutItWasConfiguredWith(t *testing.T) {
 
 func TestTheHolderReportIgnoresAnUnrelatedAdvisoryLock(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
-	table := "migr_lock_probe_foreign"
+	table := "migrasyon_lock_probe_foreign"
 	key := namespaceKey("", table)
 
 	foreign := openSession(t, dsn)
@@ -235,7 +235,7 @@ func TestTheHolderReportIgnoresAnUnrelatedAdvisoryLock(t *testing.T) {
 	if err != nil {
 		t.Log("PostgreSQL keeps the one-key and two-key advisory spaces apart, so this acquire")
 		t.Log("must succeed. If it does not, the driver is taking the wrong kind of lock.")
-		t.Fatalf("migr's own key was blocked by a lock in the other key space: %v", err)
+		t.Fatalf("migrasyon's own key was blocked by a lock in the other key space: %v", err)
 	}
 
 	if err := release(t.Context()); err != nil {
@@ -255,14 +255,14 @@ func TestTheHolderReportIgnoresAnUnrelatedAdvisoryLock(t *testing.T) {
 	if holder != nil {
 		t.Errorf("the report names %v for a lock only the other key space holds", holder)
 		t.Log("pg_advisory_lock(bigint) decomposes to the same classid and objid, differing only")
-		t.Log("in objsubid. Dropping that clause makes migr tell an operator to terminate a")
-		t.Log("session that has nothing to do with migr.")
+		t.Log("in objsubid. Dropping that clause makes migrasyon tell an operator to terminate a")
+		t.Log("session that has nothing to do with migrasyon.")
 	}
 }
 
 func TestTheHolderReportIgnoresAnotherToolsAdvisoryLock(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
-	table := "migr_lock_probe_foreign_class"
+	table := "migrasyon_lock_probe_foreign_class"
 	key := namespaceKey("", table)
 
 	foreign := openSession(t, dsn)
@@ -284,9 +284,9 @@ func TestTheHolderReportIgnoresAnotherToolsAdvisoryLock(t *testing.T) {
 	}
 
 	if holder != nil {
-		t.Errorf("a lock under class id %d is reported as migr's, which locks under %d",
+		t.Errorf("a lock under class id %d is reported as migrasyon's, which locks under %d",
 			key.class+1, key.class)
-		t.Log("The class id is what makes migr's locks migr's. Without it any application using")
+		t.Log("The class id is what makes migrasyon's locks migrasyon's. Without it any application using")
 		t.Log("two-key advisory locks on a colliding object id is reported as holding the")
 		t.Log("migration lock, and an operator terminates a session that was never involved.")
 	}
@@ -294,7 +294,7 @@ func TestTheHolderReportIgnoresAnotherToolsAdvisoryLock(t *testing.T) {
 
 func TestAHolderReadOnACanceledContextStillAnswers(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
-	table := "migr_lock_probe_canceled"
+	table := "migrasyon_lock_probe_canceled"
 
 	holder := lockedConn(t, dsn, table)
 	waiter := lockedConnWaiting(t, dsn, table, briefWait)
@@ -339,7 +339,7 @@ func TestAHolderReadOnACanceledContextStillAnswers(t *testing.T) {
 func TestAHolderReadThatFailsIsReportedAsItselfRatherThanAsTheFailure(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 
-	waiter := lockedConnWaiting(t, dsn, "migr_lock_probe_unreadable", briefWait)
+	waiter := lockedConnWaiting(t, dsn, "migrasyon_lock_probe_unreadable", briefWait)
 
 	session, ok := waiter.(*pgConn)
 	if !ok {
@@ -374,8 +374,8 @@ func TestAHolderReadThatFailsIsReportedAsItselfRatherThanAsTheFailure(t *testing
 func TestTheHolderReportIgnoresAnotherInstallationsLock(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 
-	held := lockedConn(t, dsn, "migr_lock_probe_installation_a")
-	other := lockedConn(t, dsn, "migr_lock_probe_installation_b")
+	held := lockedConn(t, dsn, "migrasyon_lock_probe_installation_a")
+	other := lockedConn(t, dsn, "migrasyon_lock_probe_installation_b")
 
 	release, err := held.Lock(t.Context())
 	if err != nil {
@@ -406,7 +406,7 @@ func TestTheHolderReportIgnoresAnotherInstallationsLock(t *testing.T) {
 func TestTheReportedSessionAgeIsTheSessionsAndNotItsTransactions(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 
-	busy, _ := blockedAcquire(t, dsn, "migr_lock_probe_age")
+	busy, _ := blockedAcquire(t, dsn, "migrasyon_lock_probe_age")
 
 	if busy.Holder == nil {
 		t.Fatalf("the report names no holder: %v", busy)
@@ -424,7 +424,7 @@ func TestALockHeldByATerminatedBackendIsTakenByTheNextRun(t *testing.T) {
 	for _, server := range servers {
 		t.Run(server.name, func(t *testing.T) {
 			dsn := dsnFor(server.env, server.dsn)
-			table := "migr_lock_probe_terminated"
+			table := "migrasyon_lock_probe_terminated"
 
 			holder := lockedConn(t, dsn, table)
 			observer := openSession(t, dsn)
@@ -456,7 +456,7 @@ func TestALockHeldByATerminatedBackendIsTakenByTheNextRun(t *testing.T) {
 
 func TestTheReportedPidIsTheOneAnOperatorCanTerminate(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
-	table := "migr_lock_probe_actionable"
+	table := "migrasyon_lock_probe_actionable"
 
 	busy, _ := blockedAcquire(t, dsn, table)
 	if busy.Holder == nil {
@@ -499,7 +499,7 @@ func TestTheReportedPidIsTheOneAnOperatorCanTerminate(t *testing.T) {
 func TestTheSessionThatGaveUpIsWhatMakesTheHolderAnswerable(t *testing.T) {
 	dsn := dsnFor(servers[0].env, servers[0].dsn)
 
-	busy, _ := blockedAcquire(t, dsn, "migr_lock_probe_answerable")
+	busy, _ := blockedAcquire(t, dsn, "migrasyon_lock_probe_answerable")
 
 	if busy.Holder == nil {
 		t.Errorf("the wait gave up and could not then say who held it: %v", busy)
@@ -509,7 +509,7 @@ func TestTheSessionThatGaveUpIsWhatMakesTheHolderAnswerable(t *testing.T) {
 	}
 }
 
-func TestEveryMigrSessionIdentifiesItselfInPgStatActivity(t *testing.T) {
+func TestEveryMigrasyonSessionIdentifiesItselfInPgStatActivity(t *testing.T) {
 	for _, server := range servers {
 		t.Run(server.name, func(t *testing.T) {
 			session := openSession(t, dsnFor(server.env, server.dsn))
@@ -523,15 +523,15 @@ func TestEveryMigrSessionIdentifiesItselfInPgStatActivity(t *testing.T) {
 			}
 
 			if name != applicationName() {
-				t.Errorf("a migr session calls itself %q, want %q", name, applicationName())
+				t.Errorf("a migrasyon session calls itself %q, want %q", name, applicationName())
 				t.Log("This is what a holder report names beside the pid. Unset, every report says")
-				t.Log("only \"pid 4711\" and an operator has no way to tell migr from anything else.")
+				t.Log("only \"pid 4711\" and an operator has no way to tell migrasyon from anything else.")
 			}
 		})
 	}
 }
 
-func TestABackendMigrOpenedAsksToBeReapedWhenItsClientVanishes(t *testing.T) {
+func TestABackendMigrasyonOpenedAsksToBeReapedWhenItsClientVanishes(t *testing.T) {
 	for _, server := range servers {
 		t.Run(server.name, func(t *testing.T) {
 			session := openSession(t, dsnFor(server.env, server.dsn))

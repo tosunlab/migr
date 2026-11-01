@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // ErrUnsupported marks an operation a driver refuses to compile, for errors.Is.

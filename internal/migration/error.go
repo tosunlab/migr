@@ -64,7 +64,7 @@ func (e *DuplicateError) Error() string {
 
 // Next says to give one of them a version of its own.
 func (e *DuplicateError) Next() string {
-	return "rename the one not yet applied to a version of its own, as migr create would stamp it"
+	return "rename the one not yet applied to a version of its own, as migrasyon create would stamp it"
 }
 
 // Unwrap reports the sentinel so errors.Is(err, ErrDuplicateVersion) succeeds.

@@ -1,8 +1,8 @@
 package drivertest
 
 import (
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // rawFixture is a SQL comment rather than a statement, so no engine SQL is authored above a

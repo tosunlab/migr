@@ -10,7 +10,7 @@ import (
 )
 
 // Scheme is the checksum scheme this build computes; it names the whole construction.
-const Scheme = "migr1"
+const Scheme = "migrasyon1"
 
 // separator joins the scheme and the two hex digests, and cannot occur inside either.
 const separator = ":"
@@ -40,7 +40,7 @@ type SchemeError struct {
 
 // Error names both the recorded scheme and the ones this build computes.
 func (e *SchemeError) Error() string {
-	return fmt.Sprintf("unsupported checksum scheme %q: this build of migr computes %s",
+	return fmt.Sprintf("unsupported checksum scheme %q: this build of migrasyon computes %s",
 		e.Received, describeSchemes(e.Supported))
 }
 

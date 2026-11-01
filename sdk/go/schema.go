@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/emrebdr/migr/sdk/go/internal/wire"
+	"github.com/tosunlab/migrasyon/sdk/go/internal/wire"
 )
 
 // Mode is whether this call runs the migration or asks it what it would do.
@@ -166,7 +166,7 @@ func (s *Schema) carried(ops []Operation) error {
 	for i, op := range ops {
 		if op != nil && since(op) > stated {
 			return fmt.Errorf("%w: operation %d is %s, which needs irVersion %d, and the engine "+
-				"stated %d -- upgrade migr to run it", ErrNewerIR, i+1, describeSince(op), since(op),
+				"stated %d -- upgrade migrasyon to run it", ErrNewerIR, i+1, describeSince(op), since(op),
 				stated)
 		}
 	}
@@ -292,7 +292,7 @@ func (s *Schema) Capability(ctx context.Context, op Operation) (Verdict, error) 
 
 // Info is what this run is against, which a migration may branch on.
 type Info struct {
-	// Database is the name migr.yaml holds the target under.
+	// Database is the name migrasyon.yaml holds the target under.
 	Database string
 	// Driver is the engine that will compile the operations.
 	Driver string

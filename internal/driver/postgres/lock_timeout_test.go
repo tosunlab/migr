@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
-func TestEveryDurationMigrCanSpellIsOneSettingPostgreSQLAccepts(t *testing.T) {
+func TestEveryDurationMigrasyonCanSpellIsOneSettingPostgreSQLAccepts(t *testing.T) {
 	tests := []struct {
 		name string
 		wait time.Duration
@@ -127,7 +127,7 @@ func TestAWaitPostgreSQLCouldNotStoreIsRefusedAtConstruction(t *testing.T) {
 
 			if !strings.Contains(err.Error(), tt.key) {
 				t.Errorf("the refusal is %q and does not name %s", err, tt.key)
-				t.Log("An operator edits a migr.yaml key, so the message names that key rather than")
+				t.Log("An operator edits a migrasyon.yaml key, so the message names that key rather than")
 				t.Log("the GUC underneath it. Failing at acquire time instead would report a config")
 				t.Log("typo at the worst possible moment.")
 			}

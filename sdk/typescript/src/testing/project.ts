@@ -1,12 +1,12 @@
 // A throwaway database, and one place the config cannot be put.
 //
 // The config has to live inside the project rather than in a temporary directory somewhere, and that
-// is measured rather than tidy: docs/protocol.md §9 makes the directory holding migr.yaml the
+// is measured rather than tidy: docs/protocol.md §9 makes the directory holding migrasyon.yaml the
 // runtime's working directory, and both adapters probe from it -- the Node one asks Node to resolve
-// @migr/sdk from there, the Go one runs go list -m. A config in /tmp therefore fails before a
+// @migrasyon/sdk from there, the Go one runs go list -m. A config in /tmp therefore fails before a
 // migration is ever loaded.
 //
-// So it goes under <project>/.migr/, which is the directory migr already owns inside a project and
+// So it goes under <project>/.migrasyon/, which is the directory migrasyon already owns inside a project and
 // which ignores itself from the inside with a .gitignore holding "*". The database does
 // not: it goes in a temporary directory of its own, and remove() takes both away.
 //
@@ -23,13 +23,13 @@ import { LANGUAGE } from "../index.ts";
 
 import { found } from "./binary.ts";
 
-/** CACHE_DIR is the directory migr already owns inside a project, which ignores itself. */
-export const CACHE_DIR = ".migr";
+/** CACHE_DIR is the directory migrasyon already owns inside a project, which ignores itself. */
+export const CACHE_DIR = ".migrasyon";
 
 /** LOCK_TIMEOUT keeps a wedged run failing in seconds rather than waiting out the 30s default. */
 const LOCK_TIMEOUT = "5s";
 
-/** EXIT_VALIDATION is what migr validate leaves when it found problems, which is a report. */
+/** EXIT_VALIDATION is what migrasyon validate leaves when it found problems, which is a report. */
 const EXIT_VALIDATION = 2;
 
 /** Options is the throwaway a migration is run against: a database removed with the project. */
@@ -44,11 +44,11 @@ export interface Options {
   dsn?: string;
   /** The table the runs are recorded in, and one named for this project by default. */
   history?: string;
-  /** The operation kinds this project permits, which migr up refuses otherwise. */
+  /** The operation kinds this project permits, which migrasyon up refuses otherwise. */
   destructive?: string[];
-  /** The whole migr.yaml to write instead, for a project the fields above cannot describe. */
+  /** The whole migrasyon.yaml to write instead, for a project the fields above cannot describe. */
   config?: string;
-  /** The migr to run, and whatever found() resolves by default. */
+  /** The migrasyon to run, and whatever found() resolves by default. */
   binary?: string;
 }
 
@@ -74,9 +74,9 @@ export interface Skipped {
   state: string;
 }
 
-/** Run is what one migr up or migr down did. */
+/** Run is what one migrasyon up or migrasyon down did. */
 export interface Run {
-  /** The name migr.yaml holds the target under. */
+  /** The name migrasyon.yaml holds the target under. */
   database: string;
   /** Which way the invocation ran. */
   direction: string;
@@ -124,7 +124,7 @@ export interface Unchecked {
   reason: string;
 }
 
-/** Report is what migr validate found, which is its product rather than its failure. */
+/** Report is what migrasyon validate found, which is its product rather than its failure. */
 export interface Report {
   /** The engine every migration was compiled for. */
   driver: string;
@@ -156,7 +156,7 @@ export interface Counts {
   pending: number;
 }
 
-/** Entry is one migration migr status printed a row for. */
+/** Entry is one migration migrasyon status printed a row for. */
 export interface Entry {
   /** The migration's UTC timestamp. */
   version: string;
@@ -166,7 +166,7 @@ export interface Entry {
   state: string;
 }
 
-/** Status is what migr status reported, which takes no migration lock and promises no action. */
+/** Status is what migrasyon status reported, which takes no migration lock and promises no action. */
 export interface Status {
   /** Whether this database has a migration history table at all. */
   history_table: boolean;
@@ -180,25 +180,25 @@ export interface Status {
   counts: Counts;
 }
 
-/** Failure is what migr reported when a command failed, which --json makes one document. */
+/** Failure is what migrasyon reported when a command failed, which --json makes one document. */
 export interface Failure {
   /** The exit code, which CLAUDE.md §5 gives seven meanings. */
   code: number;
   /** What went wrong, as the one line a failing command writes. */
   error: string;
-  /** What migr says to do about it, which every failure carries. */
+  /** What migrasyon says to do about it, which every failure carries. */
   next?: string;
 }
 
 /** Project is a staged project with a database of its own, and the commands run against it. */
 export interface Project {
-  /** The migr.yaml this project is driven through, for a test that reads or extends it. */
+  /** The migrasyon.yaml this project is driven through, for a test that reads or extends it. */
   readonly config: string;
   /** How the throwaway database is reached, for a test that inspects it with its own driver. */
   readonly dsn: string;
-  /** Applies this project's migrations, throwing with what migr reported if it could not. */
+  /** Applies this project's migrations, throwing with what migrasyon reported if it could not. */
   up(...args: string[]): Run;
-  /** Rolls them back, throwing with what migr reported if it could not. */
+  /** Rolls them back, throwing with what migrasyon reported if it could not. */
   down(...args: string[]): Run;
   /** Reports what the checks found, problems being this command's product and not a failure. */
   validate(...args: string[]): Report;
@@ -206,7 +206,7 @@ export interface Project {
   status(...args: string[]): Status;
   /** Runs any command and returns the document it printed, for one this helper does not type. */
   output(...args: string[]): string;
-  /** Runs a command expecting it to fail, and reports the failure migr wrote on stderr. */
+  /** Runs a command expecting it to fail, and reports the failure migrasyon wrote on stderr. */
   refused(...args: string[]): Failure;
   /** Applies and rolls back twice, which is what says a rollback left nothing behind. */
   roundTrip(): void;
@@ -218,10 +218,10 @@ export interface Project {
 export function project(options: Options): Project {
   const dir = absolute(options.dir);
   const home = inside(dir);
-  const scratch = mkdtempSync(join(tmpdir(), "migr-test-"));
+  const scratch = mkdtempSync(join(tmpdir(), "migrasyon-test-"));
   const dsn = target(options, scratch);
   const binary = options.binary ?? found();
-  const config = join(home, "migr.yaml");
+  const config = join(home, "migrasyon.yaml");
 
   writeFileSync(config, render(options, dir, dsn, table(options, home)));
 
@@ -266,7 +266,7 @@ export function project(options: Options): Project {
   };
 }
 
-/** into runs one command, throws if migr did, and reads the document it printed. */
+/** into runs one command, throws if migrasyon did, and reads the document it printed. */
 function into<T>(binary: string, config: string, args: string[]): T {
   return JSON.parse(printed(binary, config, args)) as T;
 }
@@ -286,9 +286,9 @@ function validated(binary: string, config: string, args: string[]): Report {
 }
 
 /**
- * document reports the one document a command printed, throwing where migr printed none.
+ * document reports the one document a command printed, throwing where migrasyon printed none.
  *
- * A blank answer is never a report, and `migr validate` is why this is a check rather than an
+ * A blank answer is never a report, and `migrasyon validate` is why this is a check rather than an
  * assumption: exit 2 is both "the checks found problems", whose report is on stdout, and "this
  * command was given something it refuses" -- a filename the grammar will not take, say -- whose
  * message is on stderr. Which of the two happened is decided by whether a document was printed.
@@ -301,12 +301,12 @@ function document(
   tolerated: number,
 ): string {
   if (code !== 0 && code !== tolerated) {
-    throw new Error(`migr ${args.join(" ")} exited ${code}: ${stderr.trim()}`);
+    throw new Error(`migrasyon ${args.join(" ")} exited ${code}: ${stderr.trim()}`);
   }
 
   if (out.trim() === "") {
     throw new Error(
-      `migr ${args.join(" ")} exited ${code} and printed no document: ${stderr.trim()}`,
+      `migrasyon ${args.join(" ")} exited ${code} and printed no document: ${stderr.trim()}`,
     );
   }
 
@@ -318,7 +318,7 @@ function refusal(binary: string, config: string, args: string[]): Failure {
   const { stderr, code } = run(binary, config, args);
 
   if (code === 0) {
-    throw new Error(`migr ${args.join(" ")} succeeded, and this case is about how it fails`);
+    throw new Error(`migrasyon ${args.join(" ")} succeeded, and this case is about how it fails`);
   }
 
   const lines = stderr.trim().split("\n");
@@ -327,7 +327,7 @@ function refusal(binary: string, config: string, args: string[]): Failure {
     return JSON.parse(lines[lines.length - 1] ?? "") as Failure;
   } catch {
     throw new Error(
-      `migr ${args.join(" ")} exited ${code} and wrote no failure document: ${stderr.trim()}`,
+      `migrasyon ${args.join(" ")} exited ${code} and wrote no failure document: ${stderr.trim()}`,
     );
   }
 }
@@ -349,7 +349,7 @@ function run(
   return { out: spawned.stdout, stderr: spawned.stderr, code: spawned.status ?? -1 };
 }
 
-/** render builds the whole migr.yaml, or returns the one a project supplied instead of the fields. */
+/** render builds the whole migrasyon.yaml, or returns the one a project supplied instead of the fields. */
 export function render(options: Options, dir: string, dsn: string, history: string): string {
   if (options.config !== undefined) {
     return options.config;
@@ -372,7 +372,7 @@ export function render(options: Options, dir: string, dsn: string, history: stri
   return body + permitted(options.destructive ?? []);
 }
 
-/** permitted renders which kinds this project lets a migration destroy, which migr up reads. */
+/** permitted renders which kinds this project lets a migration destroy, which migrasyon up reads. */
 function permitted(kinds: string[]): string {
   if (kinds.length === 0) {
     return "";
@@ -394,7 +394,7 @@ function target(options: Options, scratch: string): string {
 
 /** table reports which history table the runs go in, one per project rather than per file. */
 export function table(options: Options, home: string): string {
-  return options.history ?? `migr_${identifier(home.slice(home.lastIndexOf("test-")))}`;
+  return options.history ?? `migrasyon_${identifier(home.slice(home.lastIndexOf("test-")))}`;
 }
 
 /** identifier renders something every engine accepts as a table name. */
@@ -429,7 +429,7 @@ function inside(dir: string): string {
   return mkdtempSync(join(base, "test-"));
 }
 
-/** ignore writes the self-ignore migr's own cache directory carries, where there is not one already. */
+/** ignore writes the self-ignore migrasyon's own cache directory carries, where there is not one already. */
 function ignore(base: string): void {
   const path = join(base, ".gitignore");
 

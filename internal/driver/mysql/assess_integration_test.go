@@ -8,13 +8,13 @@ import (
 
 	lib "github.com/go-sql-driver/mysql"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // unprivilegedUser is test/initdb/unprivileged-user.sql's: its own database and no PROCESS.
-const unprivilegedUser = "migr_plain"
+const unprivilegedUser = "migrasyon_plain"
 
 // shape is one way a table can be built, and whether each server can still change it instantly.
 type shape struct {
@@ -185,10 +185,10 @@ func TestWithoutPROCESSOnlyTheRowVersionCountGoesUnread(t *testing.T) {
 	t.Log("information_schema answers the row format and the indexes to any user, and refuses")
 	t.Log("INNODB_TABLES with 1227 without PROCESS -- measured. MySQL from 8.0.29 needs that table")
 	t.Log("for the row-version count, so there an add stays a rewrite; MariaDB keeps no count and")
-	t.Log("is lowered either way. migr never needs the grant: lacking it costs a flag, not a refusal.")
+	t.Log("is lowered either way. migrasyon never needs the grant: lacking it costs a flag, not a refusal.")
 }
 
-// openUnprivileged connects as the user that holds what a migr deployment holds and nothing more.
+// openUnprivileged connects as the user that holds what a migrasyon deployment holds and nothing more.
 func openUnprivileged(t *testing.T, s server) driver.Conn {
 	t.Helper()
 

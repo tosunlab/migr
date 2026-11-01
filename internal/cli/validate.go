@@ -9,16 +9,16 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/rule"
-	"github.com/emrebdr/migr/internal/source/sql"
-	"github.com/emrebdr/migr/internal/validate"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/source/sql"
+	"github.com/tosunlab/migrasyon/internal/validate"
 )
 
 // noDatabase is what an offline validation run says for itself, since the claim is the command's point.
@@ -32,9 +32,9 @@ const noDatabase = "no database was opened"
 // its two bases is sound alone, so a run with one of them judges no references at all. The remedy
 // is in the sentence, since the flag is what closes both gaps.
 const missedCheck = "Neither what this server refuses nor the references the migrations make was " +
-	"checked;\n--connect asks the one migr.yaml names."
+	"checked;\n--connect asks the one migrasyon.yaml names."
 
-// newValidateCmd builds the `migr validate` subcommand.
+// newValidateCmd builds the `migrasyon validate` subcommand.
 func newValidateCmd(opts *options) *cobra.Command {
 	var required bool
 
@@ -139,7 +139,7 @@ func finish(cmd *cobra.Command, opts *options, result validation) error {
 	}
 
 	return NewExitError(ExitValidation, remedy.With(errValidationFailed,
-		"fix each problem listed above, then run migr validate again"))
+		"fix each problem listed above, then run migrasyon validate again"))
 }
 
 // A broken migration is the argument being wrong, so it is fixed first and exits 2 whatever else the
@@ -216,7 +216,7 @@ type unchecked struct {
 
 // validation is what one validation run found, in the form --json reports it.
 type validation struct {
-	// Database is the name migr.yaml holds the target under, whose driver the compiling was for.
+	// Database is the name migrasyon.yaml holds the target under, whose driver the compiling was for.
 	Database string `json:"database"`
 	// Driver is the engine every migration was compiled for.
 	Driver string `json:"driver"`
@@ -484,7 +484,7 @@ func (v validation) describeLintRemedy() string {
 	}
 
 	return fmt.Sprintf("A lint rule is worth what this project says it is. Set one to %s in "+
-		"migr.yaml:\n\n  validation:\n    rules:\n%s", rule.JoinSeverities(),
+		"migrasyon.yaml:\n\n  validation:\n    rules:\n%s", rule.JoinSeverities(),
 		strings.Join(lines, "\n"))
 }
 
@@ -509,7 +509,7 @@ func (v validation) describeReverseRemedy() string {
 		return ""
 	}
 
-	return fmt.Sprintf("A %s migration reaches the database as a raw operation, whose effect migr\n"+
+	return fmt.Sprintf("A %s migration reaches the database as a raw operation, whose effect migrasyon\n"+
 		"cannot read, so nothing can invert it: write a %q section, or declare\n"+
 		"%s <why it cannot be undone>.", sql.Ext, sql.MarkerDown, sql.MarkerIrreversible)
 }
@@ -521,8 +521,8 @@ func (v validation) describeDestructiveRemedy() string {
 		return ""
 	}
 
-	return fmt.Sprintf("%smigr up refuses these. Permit them for one run with --allow-destructive, "+
-		"or for\nthis project by naming their kinds in migr.yaml:\n\n  validation:\n"+
+	return fmt.Sprintf("%smigrasyon up refuses these. Permit them for one run with --allow-destructive, "+
+		"or for\nthis project by naming their kinds in migrasyon.yaml:\n\n  validation:\n"+
 		"    allow_destructive: [%s]", v.describeRawFormat(), strings.Join(needed, ", "))
 }
 
@@ -533,7 +533,7 @@ func (v validation) describeRawFormat() string {
 	}
 
 	return fmt.Sprintf("Every statement in a %s migration reaches the database as a raw operation, "+
-		"whose\neffect migr cannot read -- so a SQL project permits that kind once or runs "+
+		"whose\neffect migrasyon cannot read -- so a SQL project permits that kind once or runs "+
 		"nothing.\n\n", sql.Ext)
 }
 

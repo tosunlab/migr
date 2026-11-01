@@ -3,14 +3,14 @@ package diff
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Tables, columns and views are matched by name, because add_column, drop_column, alter_column and
 // create_view ... or_replace exist: a matched pair can be changed rather than replaced. A rename
 // therefore reaches the operations as a drop and a create, which is what M11-T4 exists to fix; until
-// then invariant #7 is the net, since drop_table and drop_column are destructive and migr up refuses
+// then invariant #7 is the net, since drop_table and drop_column are destructive and migrasyon up refuses
 // a migration that destroys what the project has not permitted.
 
 // planTables emits what the two schemas' tables and columns differ by, and runs first.

@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestOnlyTheFourTypesMySQLAcceptsACharacterSetOnCarryOne(t *testing.T) {
@@ -77,8 +77,8 @@ func TestACollatedColumnStatesTheCharacterSetAndAnUncollatedOneStatesNothing(t *
 		t.Errorf("a table declares %q", tableOptions())
 	}
 
-	t.Log("Both halves are needed and the column one is load-bearing: a column migr adds to a table")
-	t.Log("migr did not create inherits that table's character set otherwise, which changes what the")
+	t.Log("Both halves are needed and the column one is load-bearing: a column migrasyon adds to a table")
+	t.Log("migrasyon did not create inherits that table's character set otherwise, which changes what the")
 	t.Log("column can hold, how wide it is in bytes, and whether it fits in a key.")
 }
 

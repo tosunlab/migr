@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // lagging answers each read with the next scripted reading, the last repeated once it runs out.
@@ -87,7 +87,7 @@ func TestALagNobodyCouldReadHoldsTheChunk(t *testing.T) {
 		}
 	}
 
-	t.Log("Throttling exists to protect the replicas, so one migr cannot read is one it must assume")
+	t.Log("Throttling exists to protect the replicas, so one migrasyon cannot read is one it must assume")
 	t.Log("is too far behind; the wait is bounded by safety.migration_timeout and Ctrl-C.")
 }
 

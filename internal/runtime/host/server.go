@@ -8,15 +8,15 @@ import (
 	"slices"
 	"sync"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // Options are what a server needs to answer the callbacks a migration makes.
 type Options struct {
 	// Conn is the session every database callback reaches, already opened.
 	Conn driver.Conn
-	// Database is the key migr.yaml holds the target under, which host.info reports.
+	// Database is the key migrasyon.yaml holds the target under, which host.info reports.
 	Database string
 	// Log is where host.log's lines are filed.
 	Log *slog.Logger

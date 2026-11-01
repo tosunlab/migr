@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // chunkedPeople stages a keyed table of n rows with NULL nicknames, and an empty archive beside it.
@@ -192,7 +192,7 @@ func TestTheCheckpointTableIsCreatedBesideTheHistoryAndKeptOutOfTheSnapshot(t *t
 			history.ProgressTable(session.history.table), history.ProgressTable(session.seeds.table),
 			history.ReleaseTable(session.history.table), history.ReleaseTable(session.seeds.table)} {
 			if _, held := snapshot.Table(name); held {
-				t.Errorf("the snapshot holds %q, which every migr diff would then propose dropping",
+				t.Errorf("the snapshot holds %q, which every migrasyon diff would then propose dropping",
 					name)
 			}
 		}

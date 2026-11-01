@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // Backoff decides whether a statement that gave up waiting for a lock is tried again, and after how long.
@@ -108,7 +108,7 @@ func (e *LockRetryError) Error() string {
 // Next says to clear what holds the table, or to wait longer for it, which is two settings.
 func (e *LockRetryError) Next() string {
 	return "find the session holding the table and let it finish, then run the command again; " +
-		"safety.lock_retries and safety.lock_timeout in migr.yaml set how long a run waits"
+		"safety.lock_retries and safety.lock_timeout in migrasyon.yaml set how long a run waits"
 }
 
 // Unwrap reports the last attempt's failure, so the statement and the lock timeout stay reachable.

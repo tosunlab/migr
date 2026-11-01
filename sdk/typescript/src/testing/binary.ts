@@ -1,32 +1,32 @@
-// Where migr is, and why finding it is a failure rather than a skip.
+// Where migrasyon is, and why finding it is a failure rather than a skip.
 //
 // Nothing in this SDK can compile an operation into SQL -- the drivers are the engine's, and will
 // stay there -- so running a migration against a real database means running the real binary. A
 // helper that quietly skipped itself when the binary was missing would report a pass it did not
-// earn, which migr validate refuses to do too; so this throws and names both rungs.
+// earn, which migrasyon validate refuses to do too; so this throws and names both rungs.
 // found() is exported for a suite that would rather decide for itself.
 //
-// MIGR_BIN set to something that is not an executable is an error and not a fall-through to PATH:
+// MIGRASYON_BIN set to something that is not an executable is an error and not a fall-through to PATH:
 // whoever set it meant it, and silently running a different binary is how a suite starts measuring
 // something nobody chose.
 
 import { accessSync, constants, statSync } from "node:fs";
 import { delimiter, join } from "node:path";
 
-/** BINARY_VAR is the environment variable naming which migr to run. */
-export const BINARY_VAR = "MIGR_BIN";
+/** BINARY_VAR is the environment variable naming which migrasyon to run. */
+export const BINARY_VAR = "MIGRASYON_BIN";
 
 /** BINARY_NAME is what the second rung looks for on PATH. */
-export const BINARY_NAME = "migr";
+export const BINARY_NAME = "migrasyon";
 
-/** NoBinaryError is a machine with no migr to run, which no project helper can work without. */
+/** NoBinaryError is a machine with no migrasyon to run, which no project helper can work without. */
 export class NoBinaryError extends Error {
   /** name is what a suite matches on when it would rather skip than fail. */
   override readonly name = "NoBinaryError";
 
   /** Builds the refusal, which names what was looked at rather than only that nothing was found. */
   constructor(message: string) {
-    super(`no migr binary: ${message}`);
+    super(`no migrasyon binary: ${message}`);
   }
 }
 
@@ -38,7 +38,7 @@ export interface Environment {
   path: string[];
 }
 
-/** found reports where migr is, or throws saying why this machine has none, starting nothing. */
+/** found reports where migrasyon is, or throws saying why this machine has none, starting nothing. */
 export function found(environment: Environment = ambient()): string {
   if (environment.named !== undefined) {
     return stated(environment.named);

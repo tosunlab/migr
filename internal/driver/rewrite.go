@@ -3,8 +3,8 @@ package driver
 import (
 	"slices"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // RewriteName names one way a driver performs an operation more safely, which safety.rewrites switches.

@@ -3,7 +3,7 @@
 import path from "node:path";
 import { defineConfig } from "vitepress";
 
-const repository = "https://github.com/emrebdr/migr";
+const repository = "https://github.com/tosunlab/migrasyon";
 
 // outbound points a link that leaves docs/ at the repository on GitHub, where the file it names lives.
 function outbound(href: string, page: string): string | undefined {
@@ -27,9 +27,9 @@ function literal(html: string): boolean {
 }
 
 export default defineConfig({
-  title: "migr",
+  title: "migrasyon",
   description: "Polyglot, database-agnostic migrations, safe on a live database.",
-  base: "/migr/",
+  base: "/migrasyon/",
   cleanUrls: true,
   lastUpdated: false,
   srcExclude: ["**/node_modules/**"],
@@ -43,7 +43,7 @@ export default defineConfig({
       md.renderer.rules.text = (tokens, i, options, env, self) =>
         text(tokens, i, options, env, self).replaceAll("{{", "&#123;&#123;");
 
-      md.core.ruler.push("migr-outbound-links", (state) => {
+      md.core.ruler.push("migrasyon-outbound-links", (state) => {
         const page: string = state.env.relativePath ?? "";
         for (const token of state.tokens) {
           if (token.type === "html_block" && literal(token.content)) {

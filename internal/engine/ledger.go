@@ -1,7 +1,7 @@
 package engine
 
 import (
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // separator joins the parts of one identity, and is a byte no identifier can hold.

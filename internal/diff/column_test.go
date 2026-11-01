@@ -3,8 +3,8 @@ package diff
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // altered returns the one alter_column a case proposes, failing on anything else.

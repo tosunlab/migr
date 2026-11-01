@@ -7,12 +7,12 @@ import (
 	"io"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // failure is what a command failed with, as fields, so --json never carries a paragraph.
@@ -47,7 +47,7 @@ type failure struct {
 
 // overLimit is the ceiling a gate held a plan to, and every operation that exceeded it.
 type overLimit struct {
-	// Ceiling is safety.max_lock_impact as migr.yaml sets it.
+	// Ceiling is safety.max_lock_impact as migrasyon.yaml sets it.
 	Ceiling capability.LockImpact `json:"max_lock_impact"`
 	// Operations is every operation over it, in the order they would run.
 	Operations []exceeding `json:"operations"`
@@ -202,10 +202,10 @@ func reportFailure(w io.Writer, opts *options, err error) error {
 func Rendered(err error) string {
 	next := remedy.Of(err)
 	if next == "" {
-		return fmt.Sprintf("migr: %v\n", err)
+		return fmt.Sprintf("migrasyon: %v\n", err)
 	}
 
-	return fmt.Sprintf("migr: %v\n  next: %s\n", err, next)
+	return fmt.Sprintf("migrasyon: %v\n  next: %s\n", err, next)
 }
 
 // writeFailure renders a failure as the one JSON object per line stderr carries under --json.

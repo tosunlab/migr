@@ -32,13 +32,13 @@ go.work.sum
 # .vscode/
 
 # Build output
-# Anchored to the root: an unanchored bin/ also ignored npm/cli/bin/, so @migr/cli's launcher was
-# never committed and CI found no npm/cli/bin/migr.js.
+# Anchored to the root: an unanchored bin/ also ignored npm/cli/bin/, so @migrasyon/cli's launcher was
+# never committed and CI found no npm/cli/bin/migrasyon.js.
 /bin/
 dist/
 /completions/
 docs/.vitepress/cache/
-.migr/
+.migrasyon/
 
 # Node dependencies. package-lock.json is committed: npm ci is what the Makefile and CI
 # run, so a build never resolves a version the lockfile did not pin.

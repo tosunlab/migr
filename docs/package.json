@@ -1,8 +1,8 @@
 {
-  "name": "migr-docs",
+  "name": "migrasyon-docs",
   "private": true,
   "type": "module",
-  "description": "The migr documentation site, built by VitePress from this directory.",
+  "description": "The migrasyon documentation site, built by VitePress from this directory.",
   "scripts": {
     "docs:build": "vitepress build",
     "docs:dev": "vitepress dev",

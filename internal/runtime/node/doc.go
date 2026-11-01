@@ -1,8 +1,8 @@
 // Package node is the runtime adapter for migrations written in TypeScript and
 // JavaScript.
 //
-// It finds node, asks it what it is and where this project's @migr/sdk is, and
-// hands back the migr-runtime-node the package installs. Starting it is not this
+// It finds node, asks it what it is and where this project's @migrasyon/sdk is, and
+// hands back the migrasyon-runtime-node the package installs. Starting it is not this
 // package's: an adapter returns a Command description and internal/runtime.Session
 // owns the pipes, the process group, §8.2's timers and the kill.
 //
@@ -10,7 +10,7 @@
 //
 // Command runs node once, with the project root as its working directory, and reads
 // two facts off one marked line: what node reports itself as, and what
-// require.resolve("@migr/sdk/package.json") finds. Resolution is Node's own rather
+// require.resolve("@migrasyon/sdk/package.json") finds. Resolution is Node's own rather
 // than an imitation of it, which is the choice internal/runtime/golang makes when it
 // asks `go list -m` instead of reading go.mod — and it is what makes a workspace
 // whose node_modules is hoisted above the project root work, along with pnpm's
@@ -28,20 +28,20 @@
 //
 // # Where the path comes from
 //
-// From the package, not from here. @migr/sdk's own bin field names its executable,
+// From the package, not from here. @migrasyon/sdk's own bin field names its executable,
 // so the location of the built file is stated once, in the package that builds it,
 // and this adapter reads it. It runs that file through node rather than running
-// node_modules/.bin/migr-runtime-node, which is a shell script on POSIX and a .cmd
+// node_modules/.bin/migrasyon-runtime-node, which is a shell script on POSIX and a .cmd
 // on Windows — the file both of them point at is the one bin names.
 //
 // The resulting Command carries an argument, where the Go adapter's carries none.
 // That is not in tension with docs/protocol.md §9: what §9 forbids is a runtime
-// depending on argv, and migr-runtime-node reads none. Naming a script to node is
+// depending on argv, and migrasyon-runtime-node reads none. Naming a script to node is
 // how the program is spelled.
 //
 // # What this adapter deliberately does not do
 //
-// There is no build, no stamp, no cache and no .migr/ directory. Node loads its own
+// There is no build, no stamp, no cache and no .migrasyon/ directory. Node loads its own
 // source, and the SDK transpiles a .ts migration as it imports it, so there is
 // nothing to generate and nothing whose staleness needs deciding.
 //
@@ -52,10 +52,10 @@
 //
 // # Where the cross-language proof lives
 //
-// Here, in conformance_test.go, behind //go:build conformance: depguard permits only cmd/migr to
+// Here, in conformance_test.go, behind //go:build conformance: depguard permits only cmd/migrasyon to
 // name a concrete runtime, so the suite in test/conformance/runtime cannot start one and each
 // adapter carries its own run. It writes the fixture set into a project shaped like an install --
-// a "type": "module" package.json, a node_modules/@migr/sdk, the sources under migrations/ -- and
+// a "type": "module" package.json, a node_modules/@migrasyon/sdk, the sources under migrations/ -- and
 // holds every operation the runtime emits to a file that belongs to no language.
 //
 // The tag is there because Node is a toolchain make test may not have; make test-conformance

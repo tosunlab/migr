@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // everythingBrief is a declaration that performs every operation at a brief lock, which is a fact nobody would write.
@@ -33,7 +33,7 @@ func guideWith(t *testing.T, body string) string {
 	t.Helper()
 
 	doc := filepath.Join(t.TempDir(), "zero-downtime.md")
-	text := "# guide\n\n<!-- migr:lock-table fake 1 -->\n" + body + "<!-- /migr:lock-table -->\n\nprose after\n"
+	text := "# guide\n\n<!-- migrasyon:lock-table fake 1 -->\n" + body + "<!-- /migrasyon:lock-table -->\n\nprose after\n"
 
 	if err := os.WriteFile(doc, []byte(text), 0o600); err != nil {
 		t.Fatalf("writing the guide: %v", err)
@@ -87,7 +87,7 @@ func TestAGuideWithNoBlockForTheEngineFailsNamingTheMarkers(t *testing.T) {
 	table := LockTable{Engine: "other 2", Driver: "fake", Capabilities: everythingBrief(t), Doc: doc}
 
 	for _, updating := range []bool{false, true} {
-		if problem := table.check(updating); !strings.Contains(problem, "<!-- migr:lock-table other 2 -->") {
+		if problem := table.check(updating); !strings.Contains(problem, "<!-- migrasyon:lock-table other 2 -->") {
 			t.Errorf("a missing block (update %v) was reported as %q", updating, problem)
 		}
 	}

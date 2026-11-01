@@ -29,12 +29,12 @@ jobs:
         with:
           node-version: 24
       - name: Install
-        run: npm ci && npm install --global @migr/cli
+        run: npm ci && npm install --global @migrasyon/cli
       - name: Test
         run: npm test
       - name: Check against the server
-        run: migr validate --connect
+        run: migrasyon validate --connect
       - name: Round trip
         run: |
-          migr up
-          migr down --step 3
+          migrasyon up
+          migrasyon down --step 3

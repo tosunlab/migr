@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // shadowSuffix is what a history table's name gains to name the table its shadow-table migrations live in.
@@ -167,12 +167,12 @@ func FindShadow(states []ShadowState, version string) (ShadowState, bool) {
 	return ShadowState{}, false
 }
 
-// Owned names every table migr keeps for one history table: the history and the three beside it.
+// Owned names every table migrasyon keeps for one history table: the history and the three beside it.
 func Owned(table string) []string {
 	return []string{table, ProgressTable(table), ReleaseTable(table), ShadowTable(table)}
 }
 
-// OwnedSchema returns the operations that create every table migr keeps for one history table.
+// OwnedSchema returns the operations that create every table migrasyon keeps for one history table.
 func OwnedSchema(table string) ir.Operations {
 	return slices.Concat(Schema(table), ProgressSchema(table), ReleaseSchema(table), ShadowSchema(table))
 }

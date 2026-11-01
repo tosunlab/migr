@@ -18,9 +18,9 @@ import { LANGUAGE } from "../index.ts";
 import { BINARY_VAR, CACHE_DIR, project, render, table } from "./index.ts";
 import type { Project } from "./index.ts";
 
-// How this suite gets a migr to drive, and why it does not skip when it has none.
+// How this suite gets a migrasyon to drive, and why it does not skip when it has none.
 //
-// MIGR_BIN first, then this repository's bin/migr, then a build of this working tree. A migr that
+// MIGRASYON_BIN first, then this repository's bin/migrasyon, then a build of this working tree. A migrasyon that
 // happened to be on PATH is deliberately not a rung here: it could be an old release, and a suite
 // that measured it would be measuring something nobody chose. The last rung being a build rather than
 // a skip is what keeps these cases inside `npm test`, which runs before `make build` in CI.
@@ -31,13 +31,13 @@ const here = import.meta.dirname;
 /** repository is this working tree's root, which holds the engine these cases are about. */
 const repository = join(here, "..", "..", "..", "..");
 
-/** packaged is this package's root, which a staged project links as @migr/sdk. */
+/** packaged is this package's root, which a staged project links as @migrasyon/sdk. */
 const packaged = join(here, "..", "..");
 
 /** built is the engine this suite drives, resolved once and removed by the last case that ran. */
 let built: string | undefined;
 
-/** engine reports the migr every case here drives, building this repository's when none is named. */
+/** engine reports the migrasyon every case here drives, building this repository's when none is named. */
 function engine(): string {
   if (built !== undefined) {
     return built;
@@ -51,7 +51,7 @@ function engine(): string {
     return built;
   }
 
-  const release = join(repository, "bin", "migr");
+  const release = join(repository, "bin", "migrasyon");
 
   if (existsSync(release)) {
     built = release;
@@ -59,9 +59,12 @@ function engine(): string {
     return built;
   }
 
-  const into = join(mkdtempSync(join(tmpdir(), "migr-engine-")), "migr");
+  const into = join(mkdtempSync(join(tmpdir(), "migrasyon-engine-")), "migrasyon");
 
-  execFileSync("go", ["build", "-o", into, "./cmd/migr"], { cwd: repository, stdio: "pipe" });
+  execFileSync("go", ["build", "-o", into, "./cmd/migrasyon"], {
+    cwd: repository,
+    stdio: "pipe",
+  });
 
   built = into;
 
@@ -72,7 +75,7 @@ function engine(): string {
 const theMigrations: { name: string; body: string }[] = [
   {
     name: "20260101T000000_add_accounts.ts",
-    body: `import { defineMigration, t } from "@migr/sdk";
+    body: `import { defineMigration, t } from "@migrasyon/sdk";
 
 export default defineMigration({
   up: (s) =>
@@ -99,7 +102,7 @@ export default defineMigration({
   },
   {
     name: "20260101T000100_add_tier.ts",
-    body: `import { defineMigration, t } from "@migr/sdk";
+    body: `import { defineMigration, t } from "@migrasyon/sdk";
 
 export default defineMigration({
   up: (s) => s.table("accounts").addColumn("tier", t.int32()).null().apply(),
@@ -111,7 +114,7 @@ export default defineMigration({
 /** dropsWithoutRecording drops an index naming nothing it was, which nothing can invert. */
 const dropsWithoutRecording = {
   name: "20260101T000200_drop_index.ts",
-  body: `import { defineMigration } from "@migr/sdk";
+  body: `import { defineMigration } from "@migrasyon/sdk";
 
 export default defineMigration({
   up: (s) => s.table("accounts").dropIndex("idx_accounts_email").apply(),
@@ -121,11 +124,11 @@ export default defineMigration({
 
 /** stage writes a project whose migrations directory holds the files given, and returns that directory. */
 function stage(...files: { name: string; body: string }[]): string {
-  const root = mkdtempSync(join(tmpdir(), "migr-project-"));
+  const root = mkdtempSync(join(tmpdir(), "migrasyon-project-"));
 
   writeFileSync(join(root, "package.json"), `{"name":"staged","type":"module"}\n`);
 
-  const scope = join(root, "node_modules", "@migr");
+  const scope = join(root, "node_modules", "@migrasyon");
 
   mkdirSync(scope, { recursive: true });
   symlinkSync(packaged, join(scope, "sdk"));
@@ -198,7 +201,7 @@ test("the config is written inside the project because the runtime works from it
       dirname(dirname(p.config)),
       join(dirname(dir), CACHE_DIR),
       "docs/protocol.md §9 makes the config's directory the runtime's working directory, and the " +
-        "Node adapter resolves @migr/sdk from there",
+        "Node adapter resolves @migrasyon/sdk from there",
     );
 
     const body = readFileSync(p.config, "utf8");
@@ -343,7 +346,7 @@ test("the rendered config names everything the engine needs", () => {
     { dir: "/srv/app/migrations" },
     "/srv/app/migrations",
     "/tmp/app.db",
-    "migr_case",
+    "migrasyon_case",
   );
 
   for (const want of [
@@ -351,7 +354,7 @@ test("the rendered config names everything the engine needs", () => {
     `language: "${LANGUAGE}"`,
     `driver: "sqlite"`,
     `dsn: "/tmp/app.db"`,
-    `table: "migr_case"`,
+    `table: "migrasyon_case"`,
     "timeout: 5s",
   ]) {
     assert.ok(rendered.includes(want), `${rendered}\ndoes not hold ${want}`);
@@ -369,7 +372,7 @@ test("a project permits destruction by naming the kinds", () => {
     { dir: "/srv/app/migrations", destructive: ["raw", "drop_table"] },
     "/srv/app/migrations",
     "/tmp/app.db",
-    "migr_case",
+    "migrasyon_case",
   );
 
   assert.ok(rendered.includes(`allow_destructive: ["raw", "drop_table"]`), rendered);
@@ -382,8 +385,8 @@ test("a config supplied whole is what is written", () => {
 });
 
 test("each project records its runs in a table of its own", () => {
-  const first = table({ dir: "/a" }, "/a/.migr/test-abc123");
-  const second = table({ dir: "/a" }, "/a/.migr/test-def456");
+  const first = table({ dir: "/a" }, "/a/.migrasyon/test-abc123");
+  const second = table({ dir: "/a" }, "/a/.migrasyon/test-def456");
 
   assert.notEqual(
     first,
@@ -393,12 +396,12 @@ test("each project records its runs in a table of its own", () => {
   );
 
   assert.match(first, /^[a-z0-9_]+$/);
-  assert.equal(table({ dir: "/a", history: "named" }, "/a/.migr/test-abc123"), "named");
+  assert.equal(table({ dir: "/a", history: "named" }, "/a/.migrasyon/test-abc123"), "named");
 });
 
-/** fakeEngine writes a stand-in migr running one shell line, for a case about this helper, not migr. */
+/** fakeEngine writes a stand-in migrasyon running one shell line, for a case about this helper, not migrasyon. */
 function fakeEngine(body: string): string {
-  const path = join(mkdtempSync(join(tmpdir(), "migr-fake-")), "migr");
+  const path = join(mkdtempSync(join(tmpdir(), "migrasyon-fake-")), "migrasyon");
 
   writeFileSync(path, `#!/bin/sh\n${body}\n`, { mode: 0o700 });
 

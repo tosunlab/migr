@@ -3,8 +3,8 @@ package postgres
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // nativeType returns PostgreSQL's spelling of a logical type, and nothing when it has none.

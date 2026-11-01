@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 func TestAMigrationRunsAsOneTransaction(t *testing.T) {
@@ -192,7 +192,7 @@ func TestAFailedRunIsRecordedOnlyAfterItsTransactionRolledBack(t *testing.T) {
 		t.Fatalf("the history holds %v, want one failed run", conn.store.runs)
 	}
 
-	t.Log("The log records every run including failures, and migr history is what an")
+	t.Log("The log records every run including failures, and migrasyon history is what an")
 	t.Log("operator reads after an incident. Written inside the transaction the row would be")
 	t.Log("discarded with it, and PostgreSQL refuses every statement in an aborted one anyway.")
 }
@@ -332,7 +332,7 @@ func TestABatchIsOneMoreThanTheLastRecordedRun(t *testing.T) {
 		t.Fatalf("the invocation recorded under batch %d, want 8", result.Batch)
 	}
 
-	t.Log("A batch is one migr invocation and migr down reverses the last one (M4-T8), so a batch")
+	t.Log("A batch is one migrasyon invocation and migrasyon down reverses the last one (M4-T8), so a batch")
 	t.Log("that reused a number would roll back two invocations as though they were one.")
 }
 
@@ -843,7 +843,7 @@ func TestARunThatAppliesNothingStillReportsWhatItSkipped(t *testing.T) {
 		t.Errorf("the session was asked for %v with nothing to apply", conn.calls)
 	}
 
-	t.Log("migr up on an up-to-date database is the common case, and it must not open a")
+	t.Log("migrasyon up on an up-to-date database is the common case, and it must not open a")
 	t.Log("transaction, allocate a batch, or ask a runtime what any migration does.")
 }
 
@@ -936,7 +936,7 @@ func TestABookkeepingFailureDoesNotReplaceTheFailureItWasBookkeeping(t *testing.
 	}
 
 	t.Log("Reporting only the bookkeeping failure replaces the operator's problem with a")
-	t.Log("diagnostic's; reporting only the migration's hides that migr history will not show it.")
+	t.Log("diagnostic's; reporting only the migration's hides that migrasyon history will not show it.")
 }
 
 func TestTheCleanupPathsDoNotInheritTheContextThatCanceledTheRun(t *testing.T) {

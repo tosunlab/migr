@@ -1,6 +1,6 @@
 // Package typescript is the .ts migration format, as far as the CLI is concerned.
 //
-// It holds the extension and the template `migr create --lang ts` writes, and nothing
+// It holds the extension and the template `migrasyon create --lang ts` writes, and nothing
 // else. Where internal/source/sql also holds a parser, this package has none and never
 // will, for the reason internal/source/golang has none: a TypeScript migration is read
 // by Node, and what comes back is IR over the wire rather than a file to parse.
@@ -12,7 +12,7 @@
 // prefix internal/cli is carved out of.
 //
 // The template is written against the contract M7-T2 landed and the schema builder
-// M7-T3 landed, and M7-T5 shipped the migr-runtime-node process that executes it. What
+// M7-T3 landed, and M7-T5 shipped the migrasyon-runtime-node process that executes it. What
 // is still missing is the adapter that starts one, which is M7-T6 — so a migration
-// created today typechecks, states both its directions, and cannot yet be run by migr.
+// created today typechecks, states both its directions, and cannot yet be run by migrasyon.
 package typescript

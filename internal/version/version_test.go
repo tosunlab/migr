@@ -14,27 +14,27 @@ func TestInfoString(t *testing.T) {
 		{
 			name: "tagged release shows both version and commit",
 			info: Info{Version: "v1.2.3", Commit: "abc1234", Go: "go1.26.3", Platform: "linux/amd64"},
-			want: "migr v1.2.3 (abc1234) go1.26.3 linux/amd64",
+			want: "migrasyon v1.2.3 (abc1234) go1.26.3 linux/amd64",
 		},
 		{
 			name: "untagged build does not repeat the commit",
 			info: Info{Version: "abc1234-dirty", Commit: "abc1234", Dirty: true, Go: "go1.26.3", Platform: "linux/amd64"},
-			want: "migr abc1234-dirty go1.26.3 linux/amd64",
+			want: "migrasyon abc1234-dirty go1.26.3 linux/amd64",
 		},
 		{
 			name: "plain go build reports dev plus the stamped commit",
 			info: Info{Version: "dev", Commit: "abc1234", Go: "go1.26.3", Platform: "linux/amd64"},
-			want: "migr dev (abc1234) go1.26.3 linux/amd64",
+			want: "migrasyon dev (abc1234) go1.26.3 linux/amd64",
 		},
 		{
 			name: "dirty marker appears when version omits it",
 			info: Info{Version: "dev", Commit: "abc1234", Dirty: true, Go: "go1.26.3", Platform: "linux/amd64"},
-			want: "migr dev (abc1234-dirty) go1.26.3 linux/amd64",
+			want: "migrasyon dev (abc1234-dirty) go1.26.3 linux/amd64",
 		},
 		{
 			name: "no vcs stamp at all",
 			info: Info{Version: "v1.2.3", Go: "go1.26.3", Platform: "linux/amd64"},
-			want: "migr v1.2.3 go1.26.3 linux/amd64",
+			want: "migrasyon v1.2.3 go1.26.3 linux/amd64",
 		},
 	}
 

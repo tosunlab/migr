@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // loadSeeding parses a minimal valid document with whatever seeds and databases blocks a test gives.
@@ -20,7 +20,7 @@ func loadSeeding(t *testing.T, seeds, databases string) (*Config, error) {
 
 	src := "version: 1\nmigrations:\n  language: sql\n" + seeds + "databases:\n" + databases
 
-	return parse([]byte(src), filepath.Join("project", "migr.yaml"), env(nil))
+	return parse([]byte(src), filepath.Join("project", "migrasyon.yaml"), env(nil))
 }
 
 // fieldProblem returns the message a validation failure gives one path, and whether it gave one.
@@ -46,7 +46,7 @@ func TestSeedsLiveApartFromMigrationsUnlessTheConfigSaysOtherwise(t *testing.T) 
 	}
 
 	if want := filepath.Join("project", "seeds"); cfg.Seeds.Dir != want {
-		t.Errorf("seeds.dir resolved to %q, want %q beside migr.yaml", cfg.Seeds.Dir, want)
+		t.Errorf("seeds.dir resolved to %q, want %q beside migrasyon.yaml", cfg.Seeds.Dir, want)
 	}
 
 	if cfg.Seeds.Table != driver.DefaultSeedTable || cfg.Seeds.Table == cfg.History.Table {
@@ -90,7 +90,7 @@ func TestDeclaredEnvironmentsAreTheOnesASeedsDirectoryMayHold(t *testing.T) {
 
 	if got := cfg.Environments(); !slices.Equal(got, []string{"development", "production"}) {
 		t.Errorf("the environments are %v, want the declared ones", got)
-		t.Log("One migr.yaml commonly serves every environment through ${VAR}, so the databases")
+		t.Log("One migrasyon.yaml commonly serves every environment through ${VAR}, so the databases")
 		t.Log("it names on one machine are not every environment the seeds directory holds.")
 	}
 }
@@ -111,7 +111,7 @@ func TestSeedsMayShareNoTableAndNoDirectoryWithMigrations(t *testing.T) {
 		seeds string
 		path  string
 	}{
-		{name: "the history table", seeds: "seeds:\n  table: migr_migrations\n", path: "seeds.table"},
+		{name: "the history table", seeds: "seeds:\n  table: migrasyon_migrations\n", path: "seeds.table"},
 		{name: "the migrations directory", seeds: "seeds:\n  dir: ./migrations\n", path: "seeds.dir"},
 		{name: "a directory inside it", seeds: "seeds:\n  dir: ./migrations/seeds\n", path: "seeds.dir"},
 		{name: "a directory holding it", seeds: "seeds:\n  dir: .\n", path: "seeds.dir"},

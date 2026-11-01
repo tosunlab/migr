@@ -10,13 +10,13 @@ import (
 	"strings"
 	"testing"
 
-	conformance "github.com/emrebdr/migr/test/conformance/runtime"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/runtime"
 )
 
 // The TypeScript SDK held to the fixtures no language owns.
 //
 // This is the run behind M7-T7's claim, and it lives here rather than in the suite's own package
-// because depguard permits only cmd/migr to name a concrete runtime -- the same reason
+// because depguard permits only cmd/migrasyon to name a concrete runtime -- the same reason
 // internal/runtime/golang carries Go's run.
 //
 // Neither SDK is compared to the other. Both are compared to the manifests, whose own bytes are
@@ -68,7 +68,7 @@ func TestAMachineThatCannotRunTheSuiteFailsRatherThanSkipping(t *testing.T) {
 }
 
 // reexec names the variable the child reads, so the re-executed binary runs the suite and not this.
-const reexec = "MIGR_CONFORMANCE_CHILD"
+const reexec = "MIGRASYON_CONFORMANCE_CHILD"
 
 // suiteTest names the one test the child is asked for, which is the run this policy governs.
 const suiteTest = "TestTheTypeScriptSDKPassesTheRuntimeConformanceSuite"

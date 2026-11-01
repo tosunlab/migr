@@ -12,7 +12,7 @@ import (
 //
 // It is Go's reference instant, so it reads as nonsense to anyone who has not met that convention;
 // versionShape is the same format written the way a diagnostic has to say it. Both are here rather
-// than in the CLI because M5-T1's `migr create` has to produce exactly what this package accepts,
+// than in the CLI because M5-T1's `migrasyon create` has to produce exactly what this package accepts,
 // and a layout string written down twice is a format with two definitions.
 const versionLayout = "20060102T150405"
 

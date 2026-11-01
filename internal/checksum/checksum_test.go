@@ -4,8 +4,8 @@ import (
 	"crypto/sha256"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // mustType parses a canonical logical type string for a fixture.
@@ -70,7 +70,7 @@ func seal(t *testing.T, migration string, src ir.Source, ops ir.Operations) *ir.
 }
 
 func TestTheSameMigrationHashesIdenticallyOnEveryRun(t *testing.T) {
-	const source = "func Up(s *migr.Schema) error { return s.CreateTable(\"users\") }\n"
+	const source = "func Up(s *migrasyon.Schema) error { return s.CreateTable(\"users\") }\n"
 
 	first := mustOf(t, []byte(source), sampleOps(t))
 
@@ -86,7 +86,7 @@ func TestTheSameMigrationHashesIdenticallyOnEveryRun(t *testing.T) {
 }
 
 func TestSourceAttributionNeverReachesTheHash(t *testing.T) {
-	const source = "func Up(s *migr.Schema) error { return nil }\n"
+	const source = "func Up(s *migrasyon.Schema) error { return nil }\n"
 
 	laptop := seal(t, "20260727T153000_add_users", ir.Source{
 		File: "/Users/dev/projects/shop/migrations/20260727T153000_add_users.ts",
@@ -169,7 +169,7 @@ func TestAnEmptyDownRecordingHasOneStableDigest(t *testing.T) {
 }
 
 func TestChangingEitherHalfChangesTheChecksum(t *testing.T) {
-	const source = "func Up(s *migr.Schema) error { return nil }\n"
+	const source = "func Up(s *migrasyon.Schema) error { return nil }\n"
 
 	base := mustOf(t, []byte(source), sampleOps(t))
 
@@ -196,7 +196,7 @@ func TestChangingEitherHalfChangesTheChecksum(t *testing.T) {
 }
 
 func TestOperationOrderIsPartOfTheChecksum(t *testing.T) {
-	const source = "func Up(s *migr.Schema) error { return nil }\n"
+	const source = "func Up(s *migrasyon.Schema) error { return nil }\n"
 
 	forward := sampleOps(t)
 	reversed := ir.Operations{forward[1], forward[0]}
@@ -209,7 +209,7 @@ func TestOperationOrderIsPartOfTheChecksum(t *testing.T) {
 }
 
 func TestAChecksumRendersAsSchemeAndTwoDigests(t *testing.T) {
-	const source = "func Up(s *migr.Schema) error { return nil }\n"
+	const source = "func Up(s *migrasyon.Schema) error { return nil }\n"
 
 	got := mustOf(t, []byte(source), sampleOps(t)).String()
 

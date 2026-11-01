@@ -3,8 +3,8 @@ package driver
 import (
 	"context"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Shadow is one table changed through a copy of itself: the table, its copy, and the name it retires under.

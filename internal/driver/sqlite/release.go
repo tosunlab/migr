@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/history"
+	"github.com/tosunlab/migrasyon/internal/history"
 )
 
 // releaseColumns is the order the release store binds and scans, held to history.ReleaseSchema.

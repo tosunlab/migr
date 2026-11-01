@@ -8,7 +8,7 @@ import { ambient, BINARY_VAR, found, NoBinaryError } from "./index.ts";
 
 /** executable writes something this ladder will accept as a binary, and returns its path. */
 function executable(name: string): string {
-  const path = join(mkdtempSync(join(tmpdir(), "migr-ladder-")), name);
+  const path = join(mkdtempSync(join(tmpdir(), "migrasyon-ladder-")), name);
 
   writeFileSync(path, "#!/bin/sh\nexit 0\n", { mode: 0o700 });
 
@@ -16,21 +16,21 @@ function executable(name: string): string {
 }
 
 test("the variable is preferred to whatever is on PATH", () => {
-  const named = executable("migr");
+  const named = executable("migrasyon");
 
   assert.equal(
     found({ named, path: ["/usr/local/bin"] }),
     named,
-    "whoever set MIGR_BIN meant it; preferring PATH would silently measure a different binary",
+    "whoever set MIGRASYON_BIN meant it; preferring PATH would silently measure a different binary",
   );
 });
 
 test("PATH is the second rung", () => {
-  const directory = mkdtempSync(join(tmpdir(), "migr-ladder-"));
+  const directory = mkdtempSync(join(tmpdir(), "migrasyon-ladder-"));
 
-  writeFileSync(join(directory, "migr"), "#!/bin/sh\nexit 0\n", { mode: 0o700 });
+  writeFileSync(join(directory, "migrasyon"), "#!/bin/sh\nexit 0\n", { mode: 0o700 });
 
-  assert.equal(found({ named: undefined, path: [directory] }), join(directory, "migr"));
+  assert.equal(found({ named: undefined, path: [directory] }), join(directory, "migrasyon"));
 });
 
 test("neither rung is a failure naming both", () => {
@@ -49,8 +49,8 @@ test("neither rung is a failure naming both", () => {
 });
 
 test("a variable naming something that is not an executable is a failure and not a fallback", () => {
-  const directory = mkdtempSync(join(tmpdir(), "migr-ladder-"));
-  const unrunnable = join(directory, "migr");
+  const directory = mkdtempSync(join(tmpdir(), "migrasyon-ladder-"));
+  const unrunnable = join(directory, "migrasyon");
 
   writeFileSync(unrunnable, "not a program", { mode: 0o600 });
 
@@ -66,7 +66,7 @@ test("a variable naming something that is not an executable is a failure and not
 
 test("ambient reads the real environment without starting anything", () => {
   const before = process.env[BINARY_VAR];
-  const named = executable("migr");
+  const named = executable("migrasyon");
 
   process.env[BINARY_VAR] = named;
 

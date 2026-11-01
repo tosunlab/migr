@@ -7,12 +7,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
-// bounding stages a project whose migr.yaml ends in a safety block of the test's choosing.
+// bounding stages a project whose migrasyon.yaml ends in a safety block of the test's choosing.
 func bounding(t *testing.T, safety string) (string, *fake, *driver.Registry) {
 	t.Helper()
 
@@ -21,7 +21,7 @@ func bounding(t *testing.T, safety string) (string, *fake, *driver.Registry) {
 
 	body, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("reading migr.yaml: %v", err)
+		t.Fatalf("reading migrasyon.yaml: %v", err)
 	}
 
 	write(t, path, string(body)+"safety:\n"+safety)

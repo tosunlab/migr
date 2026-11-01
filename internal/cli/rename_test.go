@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // These schemas are what the prompt is driven from rather than hand-made candidates, because the
@@ -155,7 +155,7 @@ func TestAStreamWithNothingInItConfirmsNothingAndSaysNobodyAnswered(t *testing.T
 
 	t.Log("A stream that ran out is not somebody saying no, and the two are reported apart because")
 	t.Log("they are different facts. Both decline, which is the half that matters: an unread byte")
-	t.Log("must never become a rename, and a migr diff with no terminal must not hang either.")
+	t.Log("must never become a rename, and a migrasyon diff with no terminal must not hang either.")
 }
 
 func TestAnUnrecognizedAnswerIsAskedAgainRatherThanTakenAsEither(t *testing.T) {

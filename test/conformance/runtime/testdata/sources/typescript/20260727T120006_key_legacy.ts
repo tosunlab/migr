@@ -1,4 +1,4 @@
-import { columns, defineMigration } from "@migr/sdk";
+import { columns, defineMigration } from "@migrasyon/sdk";
 
 /** KeyLegacy is the fixture for add_primary_key and drop_primary_key, which key a table that exists. */
 export default defineMigration({

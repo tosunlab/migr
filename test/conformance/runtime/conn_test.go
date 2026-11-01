@@ -3,7 +3,7 @@ package runtime
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // dialed builds the database a fixture reaches, failing the test rather than the language.

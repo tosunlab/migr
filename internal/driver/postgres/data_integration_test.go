@@ -6,8 +6,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // column reads one column of every row of a table, in key order, as the server renders each value.

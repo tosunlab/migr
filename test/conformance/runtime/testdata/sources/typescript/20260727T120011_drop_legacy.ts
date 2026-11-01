@@ -1,4 +1,4 @@
-import { defineMigration } from "@migr/sdk";
+import { defineMigration } from "@migrasyon/sdk";
 
 /** DropLegacy is the fixture whose author states it cannot be undone, and says why. */
 export default defineMigration({

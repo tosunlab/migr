@@ -226,9 +226,9 @@ test("the helpers import the library rather than bundling a second copy of it", 
 
 test("the executable the bin field names was built, and it loads the bundle beside it", () => {
   const named = manifest()["bin"] as unknown as Record<string, string>;
-  const path = named["migr-runtime-node"];
+  const path = named["migrasyon-runtime-node"];
 
-  assert.ok(path, "package.json installs no migr-runtime-node");
+  assert.ok(path, "package.json installs no migrasyon-runtime-node");
 
   const source = shipped(path);
 

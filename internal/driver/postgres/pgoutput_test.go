@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pglogrepl"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // The messages here are pgoutput's protocol version 1 as the PostgreSQL documentation lays it out,

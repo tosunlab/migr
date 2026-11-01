@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // tableColumns is the history table restated independently, so a change has to be made twice.
@@ -33,7 +33,7 @@ func createdBy(t *testing.T, ops ir.Operations) ir.CreateTable {
 }
 
 func TestEveryOperationTheSchemaEmitsIsWellFormed(t *testing.T) {
-	ops := Schema("migr_migrations")
+	ops := Schema("migrasyon_migrations")
 
 	if len(ops) == 0 {
 		t.Fatal("the schema emits no operations")
@@ -67,7 +67,7 @@ func TestTheSchemaUsesTheTableItWasGiven(t *testing.T) {
 }
 
 func TestTheSchemaHasAColumnForEveryRecordField(t *testing.T) {
-	created := createdBy(t, Schema("migr_migrations"))
+	created := createdBy(t, Schema("migrasyon_migrations"))
 
 	if len(created.Columns) != reflect.TypeOf(Record{}).NumField() {
 		t.Errorf("the table has %d columns and Record has %d fields",
@@ -85,7 +85,7 @@ func TestTheSchemaHasAColumnForEveryRecordField(t *testing.T) {
 }
 
 func TestTheSchemaIsDeterministic(t *testing.T) {
-	first, again := mustMarshalAll(t, Schema("migr_migrations")), mustMarshalAll(t, Schema("migr_migrations"))
+	first, again := mustMarshalAll(t, Schema("migrasyon_migrations")), mustMarshalAll(t, Schema("migrasyon_migrations"))
 
 	if !bytes.Equal(first, again) {
 		t.Error("two calls produced different operations")
@@ -96,7 +96,7 @@ func TestTheSchemaIsDeterministic(t *testing.T) {
 }
 
 func TestTheSchemaNamesNoNativeType(t *testing.T) {
-	for _, column := range createdBy(t, Schema("migr_migrations")).Columns {
+	for _, column := range createdBy(t, Schema("migrasyon_migrations")).Columns {
 		if column.Type.Zero() {
 			t.Errorf("column %q has no type", column.Name)
 

@@ -4,34 +4,34 @@ package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(CreateUsers{}) }
+func init() { migrasyon.Register(CreateUsers{}) }
 
 // CreateUsers is the fixture for create_table and drop_table.
 type CreateUsers struct{}
 
 // Up creates the table the rest of the fixture set builds on.
-func (m CreateUsers) Up(ctx context.Context, s *migr.Schema) error {
+func (m CreateUsers) Up(ctx context.Context, s *migrasyon.Schema) error {
 	return s.CreateTable("users").
-		Column("id", migr.UUID()).
-		Column("email", migr.String(255)).
-		Column("created_at", migr.TimestampTZ()).Null().
-		Default(migr.Call(migr.FuncCurrentTimestamp)).
+		Column("id", migrasyon.UUID()).
+		Column("email", migrasyon.String(255)).
+		Column("created_at", migrasyon.TimestampTZ()).Null().
+		Default(migrasyon.Call(migrasyon.FuncCurrentTimestamp)).
 		PrimaryKey("id").
 		Apply(ctx)
 }
 
 // Down drops it, recording what it held so that the drop inverts exactly.
-func (m CreateUsers) Down(ctx context.Context, s *migr.Schema) error {
-	return s.Table("users").Drop().Was(migr.TableDef{
-		Columns: []migr.Column{
-			{Name: "id", Type: migr.UUID()},
-			{Name: "email", Type: migr.String(255)},
+func (m CreateUsers) Down(ctx context.Context, s *migrasyon.Schema) error {
+	return s.Table("users").Drop().Was(migrasyon.TableDef{
+		Columns: []migrasyon.Column{
+			{Name: "id", Type: migrasyon.UUID()},
+			{Name: "email", Type: migrasyon.String(255)},
 			{
-				Name: "created_at", Type: migr.TimestampTZ(),
-				Nullable: true, Default: migr.Call(migr.FuncCurrentTimestamp),
+				Name: "created_at", Type: migrasyon.TimestampTZ(),
+				Nullable: true, Default: migrasyon.Call(migrasyon.FuncCurrentTimestamp),
 			},
 		},
 		PrimaryKey: []string{"id"},

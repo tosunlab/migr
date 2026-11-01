@@ -7,7 +7,7 @@ import (
 
 	lib "github.com/go-sql-driver/mysql"
 
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
 // The connection-string flags this driver owns, because each changes what a statement or a value means.
@@ -30,7 +30,7 @@ var ownedFlags = []string{flagClientFoundRows, flagMultiStatements, flagParseTim
 //
 // MySQL has no application_name. A connection attribute is the nearest thing, and an ordinary user
 // cannot read performance_schema.session_connect_attrs back -- measured, on both servers, as a 1142
-// denial -- so this is for whoever holds those grants rather than something migr can rely on. M9-T4's
+// denial -- so this is for whoever holds those grants rather than something migrasyon can rely on. M9-T4's
 // LockHolder therefore reads information_schema.PROCESSLIST instead.
 const attributeName = "program_name"
 
@@ -152,7 +152,7 @@ func pinAttributes(config *lib.Config) {
 	config.ConnectionAttributes = attributeName + ":" + applicationName()
 }
 
-// applicationName is what a migr session calls itself, with the two bytes an attribute list uses removed.
+// applicationName is what a migrasyon session calls itself, with the two bytes an attribute list uses removed.
 func applicationName() string {
 	return attributeSafe(version.Program + " " + version.Version)
 }

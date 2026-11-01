@@ -81,7 +81,7 @@ export interface Options {
   send?: (line: string) => Promise<void>;
 }
 
-/** run serves this program as a migr runtime until the engine is done with it. */
+/** run serves this program as a migrasyon runtime until the engine is done with it. */
 export async function run(options: Options): Promise<number> {
   const send = options.send ?? guard();
   const input = options.input ?? process.stdin;

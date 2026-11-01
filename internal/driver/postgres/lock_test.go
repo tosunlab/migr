@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // modernServer is a PostgreSQL 17 that has gen_random_uuid, as both test servers do.

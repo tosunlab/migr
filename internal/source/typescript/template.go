@@ -1,21 +1,21 @@
 package typescript
 
-// Ext is the extension a TypeScript migration is stored under, and the one migr create writes.
+// Ext is the extension a TypeScript migration is stored under, and the one migrasyon create writes.
 const Ext = ".ts"
 
-// Exts are every extension migr-runtime-node loads, which sdk/typescript's EXTENSIONS is held to.
+// Exts are every extension migrasyon-runtime-node loads, which sdk/typescript's EXTENSIONS is held to.
 var Exts = []string{Ext, ".js", ".mjs"}
 
 // SDK is the package a TypeScript migration imports, which a new project adds with npm install.
-const SDK = "@migr/sdk"
+const SDK = "@migrasyon/sdk"
 
-// Template is the file migr create writes, which typechecks once the SDK is in node_modules.
+// Template is the file migrasyon create writes, which typechecks once the SDK is in node_modules.
 const Template = `import { defineMigration, t } from "` + SDK + `";
 
 /**
  * What this migration does. Rename the file to something the next reader will recognize.
  *
- * migr reads either of two styles and a module uses one of them, never both. This is the
+ * migrasyon reads either of two styles and a module uses one of them, never both. This is the
  * default-export style; the other exports the parts one by one:
  *
  *   export async function up(s) { ... }
@@ -41,12 +41,12 @@ export default defineMigration({
    * view. A column is NOT NULL unless the chain says null.
    *
    * Nothing is emitted until apply, and a chain built without it emits nothing at all --
-   * so migr fails such a migration rather than reporting a change it never made.
+   * so migrasyon fails such a migration rather than reporting a change it never made.
    */
   async up(s) {},
 
   /**
-   * down undoes it. Delete this member and migr derives the inverse from what up emitted:
+   * down undoes it. Delete this member and migrasyon derives the inverse from what up emitted:
    *
    *   await s.table("users").drop().was({ columns: [...] }).apply();
    *

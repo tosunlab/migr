@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestALiteralDefaultCannotEscapeItsQuotes(t *testing.T) {

@@ -1,4 +1,4 @@
-import { literal, replaceColumn, t } from "@migr/sdk";
+import { literal, replaceColumn, t } from "@migrasyon/sdk";
 
 /** The expand of renaming accounts.handle to login, which carries a default from the start. */
 export default replaceColumn("accounts", "handle", t.string(64))

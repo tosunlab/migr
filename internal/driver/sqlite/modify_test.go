@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // exotic carries, in one table, everything this driver understands nothing about and must keep.

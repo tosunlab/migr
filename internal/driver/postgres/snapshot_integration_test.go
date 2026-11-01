@@ -5,8 +5,8 @@ package postgres
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // M11-T6 replaced M3-T5's stand-in with the comparison that task's done-when actually asked for.
@@ -34,7 +34,7 @@ func describeSchema(t *testing.T, session *pgConn) string {
 }
 
 // loneTable is a table whose only column drop_column takes away, leaving the relation behind.
-const loneTable = "migr_probe_lone"
+const loneTable = "migrasyon_probe_lone"
 
 func TestASnapshotTellsAnEmptiedTableFromADroppedOne(t *testing.T) {
 	for _, server := range servers {

@@ -10,8 +10,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // briefWait is the bound a contention case gives up at, long enough to be a wait and short to fail in.
@@ -198,8 +198,8 @@ func TestTheHoldersAccountAndStateAreWhatTheServerSaysTheyAre(t *testing.T) {
 			t.Fatalf("the wait returned %v with no holder", err)
 		}
 
-		if !strings.HasPrefix(busy.Holder.Application, "migr@") {
-			t.Errorf("the holder is reported as %q, and these tests connect as migr",
+		if !strings.HasPrefix(busy.Holder.Application, "migrasyon@") {
+			t.Errorf("the holder is reported as %q, and these tests connect as migrasyon",
 				busy.Holder.Application)
 		}
 
@@ -388,7 +388,7 @@ func TestAKilledHolderLeavesALockTheNextRunTakesImmediately(t *testing.T) {
 		}
 
 		t.Log("This is why this strategy owes no staleness rule and SQLite's file lock does: the lock")
-		t.Log("is a row in a server that dies with the session holding it, so a crashed migr leaves")
+		t.Log("is a row in a server that dies with the session holding it, so a crashed migrasyon leaves")
 		t.Log("nothing behind to reclaim. The id killed here is the one the report named, so the")
 		t.Log("instruction an operator is given is the instruction this test followed.")
 	})
@@ -552,7 +552,7 @@ func TestTheHolderReportIsAboutTheConnectionItWasAsked(t *testing.T) {
 			t.Fatal("this session has PROCESS and could not describe itself")
 		}
 
-		if !strings.HasPrefix(held.Application, "migr@") {
+		if !strings.HasPrefix(held.Application, "migrasyon@") {
 			t.Errorf("this session reports itself as %q", held.Application)
 		}
 
@@ -700,7 +700,7 @@ func TestAReleaseAnotherSessionHasTakenOverIsAnError(t *testing.T) {
 
 		t.Log("Measured: RELEASE_LOCK answers 0 for a lock another session holds and NULL for one")
 		t.Log("nobody holds, on both servers. Both are the server saying this session did not hold")
-		t.Log("it, and reporting either as a release would have migr believe it had given back a lock")
+		t.Log("it, and reporting either as a release would have migrasyon believe it had given back a lock")
 		t.Log("somebody else is relying on.")
 	})
 }

@@ -9,8 +9,8 @@ import (
 	"slices"
 	"strconv"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // applySchema records the operations a migration performs, in both modes, per §6.

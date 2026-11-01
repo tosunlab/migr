@@ -8,8 +8,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // M11-T4's done-when is that a likely rename is confirmed interactively rather than guessed, and
@@ -18,7 +18,7 @@ import (
 // arguments, so a confirmer handed to Diff would make the same two snapshots diff two ways.
 //
 // The default is no, and the asymmetry is the whole argument. A declined rename becomes a drop and a
-// create, which invariant #7 gates: migr up refuses the generated migration until the project
+// create, which invariant #7 gates: migrasyon up refuses the generated migration until the project
 // permits that kind. A confirmed rename is Destructive() == false and is gated by nothing at all. So
 // the answer nothing else checks is the one a person has to type, and every other answer -- an empty
 // line, end of input, a terminal that is not there -- declines.

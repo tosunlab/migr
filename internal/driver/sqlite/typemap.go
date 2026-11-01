@@ -3,8 +3,8 @@ package sqlite
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // nativeType returns SQLite's declared type for a logical one, and nothing when it has none.

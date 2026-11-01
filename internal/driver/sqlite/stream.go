@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // errNoCapture is why this driver opens no change stream, which every shadow-table migration needs.

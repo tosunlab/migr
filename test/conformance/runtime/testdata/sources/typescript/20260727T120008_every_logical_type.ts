@@ -1,4 +1,4 @@
-import { defineMigration, t } from "@migr/sdk";
+import { defineMigration, t } from "@migrasyon/sdk";
 
 /** EveryLogicalType is the fixture that spells all eighteen logical types once each. */
 export default defineMigration({

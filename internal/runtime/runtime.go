@@ -7,12 +7,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 // Runtime is one language's adapter: it finds a toolchain and says how to start one process.
 type Runtime interface {
-	// Name is the language this adapter runs, spelled as migr.yaml spells migrations.language.
+	// Name is the language this adapter runs, spelled as migrasyon.yaml spells migrations.language.
 	Name() string
 	// Discover reports whether this machine can run this language at all, opening no process.
 	Discover(ctx context.Context) error
@@ -22,13 +22,13 @@ type Runtime interface {
 
 // Project is what a runtime is told about the run it was started for, and carries no secret.
 type Project struct {
-	// Root is the directory holding migr.yaml, which docs/protocol.md §9 makes the working directory.
+	// Root is the directory holding migrasyon.yaml, which docs/protocol.md §9 makes the working directory.
 	Root string
 	// Dir is the migrations directory, absolute, since a runtime's working directory is not it.
 	Dir string
-	// Language is what migr.yaml holds in migrations.language, for a runtime serving more than one.
+	// Language is what migrasyon.yaml holds in migrations.language, for a runtime serving more than one.
 	Language string
-	// Database is the key migr.yaml holds the target under, which is for messages alone.
+	// Database is the key migrasyon.yaml holds the target under, which is for messages alone.
 	Database string
 	// Driver is the engine that will compile the operations, which a migration may branch on.
 	Driver string
@@ -69,7 +69,7 @@ func (c Command) check() error {
 	return nil
 }
 
-// Timeouts are the bounds docs/protocol.md §8.2 tabulates, which migr.yaml surfaces.
+// Timeouts are the bounds docs/protocol.md §8.2 tabulates, which migrasyon.yaml surfaces.
 type Timeouts struct {
 	// Handshake bounds spawn to the initialize result, after which the runtime never started.
 	Handshake time.Duration

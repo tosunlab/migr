@@ -5,11 +5,11 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Previewed is what one direction would do against a database, having done none of it.
@@ -26,7 +26,7 @@ type Previewed struct {
 	Skipped []Skipped
 	// Held is the step the run would stop at because it waits for a later release, nil where none would.
 	Held *Held
-	// Unreleased is why migr up would refuse this run for naming no release, nil where it would not.
+	// Unreleased is why migrasyon up would refuse this run for naming no release, nil where it would not.
 	Unreleased error
 }
 
@@ -189,7 +189,7 @@ func (e *executor) previewGates(ctx context.Context, previewed *Previewed, repor
 // would mark a correct migration for naming a table its predecessor creates. The one about to run
 // is the one an operator is deciding about, and it is the only one a preview can judge exactly.
 //
-// It goes through the same permission the run does, so what is marked here is what migr up will
+// It goes through the same permission the run does, so what is marked here is what migrasyon up will
 // refuse rather than everything that could be refused -- a migration that authors its own down
 // keeps the implied half, exactly as it does on the run path. A failure to read the schema marks
 // nothing: a preview refuses nothing and must not fail over a question it only asked to annotate.
@@ -220,7 +220,7 @@ func (e *executor) judgedFirst(ctx context.Context, at int, ready prepared) []Di
 // the schema every later operation would run against is the one its predecessors leave.
 //
 // Everything else is left deferred and marked, because printing what it compiles to now would print
-// SQL that is not the SQL that runs -- the reason migr plan counts a bound argument rather than
+// SQL that is not the SQL that runs -- the reason migrasyon plan counts a bound argument rather than
 // splicing it in. Expanding by executing into a transaction the preview discards was rejected: it
 // would take the rebuild's own exclusive lock and copy the table's rows for a report (invariants #12
 // and #13), and on an engine whose DDL commits it would not be discardable at all.

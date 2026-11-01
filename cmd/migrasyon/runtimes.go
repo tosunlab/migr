@@ -1,0 +1,22 @@
+package main
+
+import (
+	"github.com/tosunlab/migrasyon/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/runtime/golang"
+	"github.com/tosunlab/migrasyon/internal/runtime/node"
+)
+
+// runtimes builds the registry of languages this binary can run, refusing a name registered twice.
+func runtimes() (*runtime.Registry, error) {
+	registry := runtime.NewRegistry()
+
+	if err := registry.Register(golang.Name, golang.New); err != nil {
+		return nil, err
+	}
+
+	if err := registry.Register(node.Name, node.New); err != nil {
+		return nil, err
+	}
+
+	return registry, nil
+}

@@ -1,4 +1,4 @@
-package migr
+package migrasyon
 
 // CreateView creates or replaces a view whose query is engine SQL and does not port.
 type CreateView struct {

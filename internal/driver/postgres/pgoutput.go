@@ -8,7 +8,7 @@ import (
 
 	"github.com/jackc/pglogrepl"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 // A change stream reads pgoutput, PostgreSQL's own logical decoding plugin, through a publication of
@@ -151,7 +151,7 @@ func (d *decoder) relation(msg *pglogrepl.RelationMessage) error {
 
 	if !slices.Equal(names, d.columns) {
 		return fmt.Errorf("%w: %s now has the columns %v where it had %v -- the copy cannot follow an "+
-			"ALTER of the table it is copying, so abandon the migration with migr resolve --rolled-back "+
+			"ALTER of the table it is copying, so abandon the migration with migrasyon resolve --rolled-back "+
 			"and run it again", errReshaped, d.table, names, d.columns)
 	}
 
@@ -239,7 +239,7 @@ func (d *decoder) truncate(msg *pglogrepl.TruncateMessage) error {
 	for _, id := range msg.RelationIDs {
 		if _, ours := d.ours(id); ours {
 			return fmt.Errorf("%w: %s -- the copy would keep every row the original lost, so abandon "+
-				"the migration with migr resolve --rolled-back and run it again", errTruncated, d.table)
+				"the migration with migrasyon resolve --rolled-back and run it again", errTruncated, d.table)
 		}
 	}
 

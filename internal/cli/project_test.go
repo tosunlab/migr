@@ -7,15 +7,15 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/source/sql"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/source/sql"
 )
 
 // projectConfig is the scaffold init writes, pointed at the fake driver instead of a real one.
 var projectConfig = strings.Replace(scaffoldConfig, "driver: postgres", "driver: "+fakeName, 1)
 
-// stagedMigration is one migration a test writes, in the two-section format migr create writes.
+// stagedMigration is one migration a test writes, in the two-section format migrasyon create writes.
 type stagedMigration struct {
 	// name is the snake_case name the file carries.
 	name string
@@ -46,7 +46,7 @@ func fileAt(n int, name string) string {
 	return versionAt(n) + "_" + name + sql.Ext
 }
 
-// project writes a migr.yaml naming the fake driver, plus the migrations given, and returns both.
+// project writes a migrasyon.yaml naming the fake driver, plus the migrations given, and returns both.
 func project(t *testing.T, migrations ...stagedMigration) (string, *fake, *driver.Registry) {
 	t.Helper()
 

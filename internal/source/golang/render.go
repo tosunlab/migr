@@ -5,10 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/source"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/source"
 )
 
 // The Go and TypeScript writers differ only in how something is written down -- the method names
@@ -36,21 +36,21 @@ const generated = `package migrations
 import (
 	"context"
 
-	migr "%[1]s"
+	migrasyon "%[1]s"
 )
 
-func init() { migr.Register(%[2]s{}) }
+func init() { migrasyon.Register(%[2]s{}) }
 
-// %[2]s is what migr diff found between the database and the migrations.
+// %[2]s is what migrasyon diff found between the database and the migrations.
 //
 // Rename it to something the next reader will recognize, and read what it does before you run it.
 type %[2]s struct{}
 
-// Up closes the gap migr diff found, in the order the operations have to run in.
+// Up closes the gap migrasyon diff found, in the order the operations have to run in.
 //
-// There is deliberately no Down: every operation here records what it replaced, so migr derives
+// There is deliberately no Down: every operation here records what it replaced, so migrasyon derives
 // the inverse from what Up emits. Writing one by hand is still allowed and is always preferred.
-func (m %[2]s) Up(ctx context.Context, s *migr.Schema) error {
+func (m %[2]s) Up(ctx context.Context, s *migrasyon.Schema) error {
 %[3]s}
 `
 
@@ -84,7 +84,7 @@ func statements(ops ir.Operations) (string, error) {
 	return body.String(), nil
 }
 
-// A chain that is never applied emits nothing at all, and migr fails such a migration rather than
+// A chain that is never applied emits nothing at all, and migrasyon fails such a migration rather than
 // reporting a change it never made. So every statement but the last checks its error
 // and returns it, and the last one returns the apply itself -- which is how an author writes it.
 
@@ -105,7 +105,7 @@ func render(chain source.Chain, last bool) (string, error) {
 }
 
 // A qualifier stays on the line of the call it qualifies, because that is where an author puts it:
-// the SDK's own template writes Column("nickname", migr.Text()).Null() on one line, and a chain
+// the SDK's own template writes Column("nickname", migrasyon.Text()).Null() on one line, and a chain
 // that broke every link would read as a list of unrelated calls rather than as one column.
 
 // written renders a chain's root and its links as the dotted call sequence they are.
@@ -228,10 +228,10 @@ func record(held source.Record) (string, error) {
 		fields = append(fields, field.Member+": "+written)
 	}
 
-	return "migr." + name + "{" + strings.Join(fields, ", ") + "}", nil
+	return "migrasyon." + name + "{" + strings.Join(fields, ", ") + "}", nil
 }
 
-// A default is a constructor call rather than a struct, since migr.Literal distinguishes an empty
+// A default is a constructor call rather than a struct, since migrasyon.Literal distinguishes an empty
 // string from no default at all and a bare struct literal cannot.
 
 // defaultCall renders a default as the constructor the SDK gives it.
@@ -244,10 +244,10 @@ func defaultCall(held source.Record) (string, error) {
 	}
 
 	if field.Member == "Function" {
-		return "migr.Call(" + written + ")", nil
+		return "migrasyon.Call(" + written + ")", nil
 	}
 
-	return "migr.Literal(" + written + ")", nil
+	return "migrasyon.Literal(" + written + ")", nil
 }
 
 // structs names the SDK type each payload shape is written as.
@@ -274,10 +274,10 @@ func list(held source.List) (string, error) {
 			return "", err
 		}
 
-		written = append(written, strings.TrimPrefix(rendered, "migr."))
+		written = append(written, strings.TrimPrefix(rendered, "migrasyon."))
 	}
 
-	return "[]migr." + structs[held[0].Shape] + "{\n\t\t\t{" +
+	return "[]migrasyon." + structs[held[0].Shape] + "{\n\t\t\t{" +
 		strings.Join(trimmed(written), "},\n\t\t\t{") + "},\n\t\t}", nil
 }
 
@@ -309,7 +309,7 @@ func named(held map[string]string, word, vocabulary string) (string, error) {
 		return "", fmt.Errorf("nothing here writes the %s %q", vocabulary, word)
 	}
 
-	return "migr." + identifier, nil
+	return "migrasyon." + identifier, nil
 }
 
 // functions names the identifier the SDK declares each neutral default function under.
@@ -336,7 +336,7 @@ func logical(held source.Logical) (string, error) {
 
 // spelling is how Go writes the parts of a logical type that are not the shape of it.
 var spelling = source.Spelling{
-	Prefix: "migr.",
+	Prefix: "migrasyon.",
 	Quote:  quoted,
 	Names: map[schema.Kind]string{
 		schema.KindString:      "String",

@@ -10,20 +10,20 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
-	"github.com/emrebdr/migr/internal/remedy"
-	"github.com/emrebdr/migr/internal/rule"
-	"github.com/emrebdr/migr/internal/runtime"
-	"github.com/emrebdr/migr/internal/schema"
-	"github.com/emrebdr/migr/internal/source/sql"
-	"github.com/emrebdr/migr/internal/validate"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/rule"
+	"github.com/tosunlab/migrasyon/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/source/sql"
+	"github.com/tosunlab/migrasyon/internal/validate"
 )
 
 // errNoDrivers marks a build that reached a database command with no drivers registered at all.
@@ -36,9 +36,9 @@ var errNoRuntimes = errors.New("this build registered no language runtimes")
 type target struct {
 	// cfg is the whole resolved configuration, defaults applied and secrets expanded.
 	cfg *config.Config
-	// root is the directory holding migr.yaml, which docs/protocol.md §9 gives a runtime to work in.
+	// root is the directory holding migrasyon.yaml, which docs/protocol.md §9 gives a runtime to work in.
 	root string
-	// name is the key migr.yaml holds this database under.
+	// name is the key migrasyon.yaml holds this database under.
 	name string
 	// db is what that key resolved to, DSN included.
 	db config.Database
@@ -66,7 +66,7 @@ type session struct {
 	conn driver.Conn
 	// stop ends the runtime process this session's source is talking to, nil when there is none.
 	stop closer
-	// database is the name migr.yaml holds this target under.
+	// database is the name migrasyon.yaml holds this target under.
 	database string
 	// options is what the engine was given beyond that connection, bare for a command that runs nothing.
 	options engine.Options
@@ -115,7 +115,7 @@ func (t *target) discovered(opts *options) ([]migration.Migration, error) {
 	return found, nil
 }
 
-// unreadable separates a directory migr went looking for from the files it found and refused.
+// unreadable separates a directory migrasyon went looking for from the files it found and refused.
 func unreadable(err error) error {
 	if errors.Is(err, migration.ErrNoDirectory) {
 		return err
@@ -501,7 +501,7 @@ func (t *target) project(lang config.Language) (runtime.Project, error) {
 	}, nil
 }
 
-// timeouts renders §8.2's bounds as migr.yaml resolved them, which applyDefaults has already filled.
+// timeouts renders §8.2's bounds as migrasyon.yaml resolved them, which applyDefaults has already filled.
 func (t *target) timeouts() runtime.Timeouts {
 	return runtime.Timeouts{
 		Handshake:     t.cfg.Runtime.HandshakeTimeout.Duration(),
@@ -742,7 +742,7 @@ func hashed(fsys fs.FS, found []migration.Migration) ([]history.File, error) {
 		src, err := fs.ReadFile(fsys, m.Filename())
 		if err != nil {
 			return nil, remedy.With(fmt.Errorf("reading %s: %w", m.Filename(), err),
-				"make the file readable by the user migr runs as, or move it out of the migrations "+
+				"make the file readable by the user migrasyon runs as, or move it out of the migrations "+
 					"directory")
 		}
 
@@ -755,7 +755,7 @@ func hashed(fsys fs.FS, found []migration.Migration) ([]history.File, error) {
 // runnable returns the adapter that runs one language, or why nothing can run it here.
 func runnable(lang config.Language, runtimes *runtime.Registry) (runtime.Runtime, error) {
 	if !slices.Contains(config.Languages(), lang) {
-		return nil, fmt.Errorf("migrations.language: %q is not a language migr knows (expected: %s)",
+		return nil, fmt.Errorf("migrations.language: %q is not a language migrasyon knows (expected: %s)",
 			lang, joinLanguages(config.Languages()))
 	}
 
@@ -771,7 +771,7 @@ func runnable(lang config.Language, runtimes *runtime.Registry) (runtime.Runtime
 	return adapter, nil
 }
 
-// compiler builds the driver migr.yaml names, which needs no DSN and reaches no database.
+// compiler builds the driver migrasyon.yaml names, which needs no DSN and reaches no database.
 func (t *target) compiler(opts *options) (driver.Driver, error) {
 	if opts.drivers == nil {
 		return nil, errNoDrivers
@@ -785,7 +785,7 @@ func (t *target) compiler(opts *options) (driver.Driver, error) {
 	return d, nil
 }
 
-// dial builds the driver migr.yaml names and opens a connection to the database it points at.
+// dial builds the driver migrasyon.yaml names and opens a connection to the database it points at.
 func dial(ctx context.Context, opts *options, t *target) (driver.Driver, driver.Conn, error) {
 	d, err := t.compiler(opts)
 	if err != nil {
@@ -795,8 +795,8 @@ func dial(ctx context.Context, opts *options, t *target) (driver.Driver, driver.
 	conn, err := d.Open(ctx, t.db.DSN.Reveal())
 	if err != nil {
 		return nil, nil, remedy.Fallback(fmt.Errorf("connecting to database %q: %w", t.name, err),
-			fmt.Sprintf("check that the server is up and that databases.%s.dsn in migr.yaml reaches "+
-				"it; migr config prints the DSN as resolved, secret redacted", t.name))
+			fmt.Sprintf("check that the server is up and that databases.%s.dsn in migrasyon.yaml reaches "+
+				"it; migrasyon config prints the DSN as resolved, secret redacted", t.name))
 	}
 
 	return d, conn, nil

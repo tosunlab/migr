@@ -3,13 +3,13 @@ package node
 import (
 	"context"
 
-	"github.com/emrebdr/migr/internal/runtime"
+	"github.com/tosunlab/migrasyon/internal/runtime"
 )
 
-// Name is the language this adapter runs, spelled as migr.yaml spells migrations.language.
+// Name is the language this adapter runs, spelled as migrasyon.yaml spells migrations.language.
 const Name = "typescript"
 
-// Adapter runs TypeScript and JavaScript migrations through the executable @migr/sdk installs.
+// Adapter runs TypeScript and JavaScript migrations through the executable @migrasyon/sdk installs.
 type Adapter struct{}
 
 // compile-time proof that this adapter satisfies the contract a session starts its runtime through.
@@ -46,7 +46,7 @@ func (a *Adapter) Command(ctx context.Context, p runtime.Project) (runtime.Comma
 type resolved struct {
 	// path is the node binary that answered the probe.
 	path string
-	// executable is the migr-runtime-node this project's own @migr/sdk ships.
+	// executable is the migrasyon-runtime-node this project's own @migrasyon/sdk ships.
 	executable string
 }
 

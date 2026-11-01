@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // A matched column is judged attribute by attribute, so a column whose type the catalog cannot pin
@@ -87,7 +87,7 @@ func (d *differ) stateChanges(op *ir.AlterColumn, subject string,
 // guesses that agree propose nothing, since the best answer available is that the column is
 // unchanged; two that disagree are refused, because the operation would carry a target type nothing
 // verified and record a prior type that is itself a guess -- the recorded-state trust problem, written by
-// migr rather than by an author. Creating is not changing: a new column is emitted off the logical
+// migrasyon rather than by an author. Creating is not changing: a new column is emitted off the logical
 // answer however certain it is, there being nothing to compare it against and no data at risk.
 
 // typeChange reports whether a column is being retyped, and what stops that question being answered.

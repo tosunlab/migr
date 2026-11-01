@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // stateAt is a shadow-table state at a stage, as a run records it.
 func stateAt(stage history.Stage, position string) history.ShadowState {
-	return history.ShadowState{Version: "20261020T130000", Table: "people", Shadow: "_people_migr_new",
-		Retired: "_people_migr_old", Capture: "migr_capture", Stage: stage, Cursor: []string{"7"},
+	return history.ShadowState{Version: "20261020T130000", Table: "people", Shadow: "_people_migrasyon_new",
+		Retired: "_people_migrasyon_old", Capture: "migrasyon_capture", Stage: stage, Cursor: []string{"7"},
 		Position: position, Copied: 7, Applied: 2,
 		UpdatedAt: time.Date(2026, 10, 20, 9, 30, 0, 0, time.FixedZone("CEST", 2*60*60))}
 }
@@ -79,7 +79,7 @@ func TestTheShadowStateTableIsNeverIntrospected(t *testing.T) {
 	}
 
 	if _, seen := snapshot.Table(history.ShadowTable(c.table)); seen {
-		t.Error("Introspect reported the shadow-state table, which migr diff would propose dropping")
+		t.Error("Introspect reported the shadow-state table, which migrasyon diff would propose dropping")
 	}
 }
 

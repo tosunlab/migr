@@ -5,19 +5,19 @@ title: TypeScript
 # Writing migrations in TypeScript
 
 A TypeScript migration is a module that describes the change through a schema builder from
-[`@migr/sdk`](https://www.npmjs.com/package/@migr/sdk). migr compiles what it describes for whichever
+[`@migrasyon/sdk`](https://www.npmjs.com/package/@migrasyon/sdk). migrasyon compiles what it describes for whichever
 database it runs against, and derives the down from it unless you write one. The operations it emits
 are byte for byte the ones the same migration written in Go would emit.
 
 ## Set up
 
 ```console
-$ npm install @migr/sdk
-$ npm install --save-dev @migr/cli       # or install migr any other way
+$ npm install @migrasyon/sdk
+$ npm install --save-dev @migrasyon/cli       # or install migrasyon any other way
 ```
 
 ```yaml
-# migr.yaml, in the project root
+# migrasyon.yaml, in the project root
 version: 1
 migrations:
   dir: ./migrations
@@ -29,18 +29,18 @@ databases:
 ```
 
 ```console
-$ npx migr create create_accounts
+$ npx migrasyon create create_accounts
 created migrations/20261023T120000_create_accounts.ts
 ```
 
-**How migr runs it:** it starts Node 24 or later, which loads each migration and compiles it with
+**How migrasyon runs it:** it starts Node 24 or later, which loads each migration and compiles it with
 esbuild on the way in. `enum` and other non-erasable syntax work, but nothing is typechecked. Run
 `tsc` for that. A migration can be `.ts`, `.js` or `.mjs`, in either module format.
 
 ## Describing a change
 
 ```ts
-import { defineMigration, t } from "@migr/sdk";
+import { defineMigration, t } from "@migrasyon/sdk";
 
 export default defineMigration({
   async up(s) {
@@ -72,7 +72,7 @@ Types are logical, and each driver maps them to native ones: `t.string(n)`, `t.t
 
 There are three ways a migration can be undone, and it uses exactly one of them:
 
-- **Derived.** Write no `down`, and migr inverts what `up` emitted. `migr validate` warns
+- **Derived.** Write no `down`, and migrasyon inverts what `up` emitted. `migrasyon validate` warns
   (`missing-down`) because the inverse is computed when the rollback runs.
 - **Authored.** Write a `down`. A drop records what it removes with `.was(...)`, so the drop can
   itself be reversed:
@@ -119,14 +119,14 @@ export default defineMigration({
 
 - **Every value is a string or `null`**, never a number: a 64-bit integer doesn't survive a JSON
   number in JavaScript.
-- **A read runs against the database as it is now.** So `migr plan` over a queue where an earlier
+- **A read runs against the database as it is now.** So `migrasyon plan` over a queue where an earlier
   pending migration creates the table fails on the read. Apply up to that point first
-  (`migr up --to <version>`).
+  (`migrasyon up --to <version>`).
 - **The placeholder is the engine's own:** `$1` on PostgreSQL, `?` on MySQL and SQLite.
   `(await s.info()).driver` says which.
 
 `s.exec(sql)` sends a statement the builder can't express. It runs outside the migration's
-transaction, `migr plan` records it instead of running it, and a migration that calls it must write
+transaction, `migrasyon plan` records it instead of running it, and a migration that calls it must write
 its down.
 
 ## Data migrations and phased changes
@@ -136,7 +136,7 @@ holds nothing else. `replaceColumn` changes a column through four migrations, ea
 phase:
 
 ```ts
-import { replaceColumn, t } from "@migr/sdk";
+import { replaceColumn, t } from "@migrasyon/sdk";
 
 export default replaceColumn("users", "email", t.string(255)).with(t.string(320)).expand();
 ```
@@ -148,10 +148,10 @@ and `--release`.
 ## Large tables
 
 `online: SHADOW_TABLE` performs the migration through a shadow copy of its table, which you cut over
-with `migr cutover` once it's in sync:
+with `migrasyon cutover` once it's in sync:
 
 ```ts
-import { columns, defineMigration, SHADOW_TABLE } from "@migr/sdk";
+import { columns, defineMigration, SHADOW_TABLE } from "@migrasyon/sdk";
 
 export default defineMigration({
   online: SHADOW_TABLE,
@@ -166,10 +166,10 @@ export default defineMigration({
 
 ## Testing
 
-`@migr/sdk/testing` has three helpers:
+`@migrasyon/sdk/testing` has three helpers:
 - **`capture`** reports what a half emits;
 - **`reversal`** reports how a migration is undone;
-- **`project`** builds a throwaway project and drives the real `migr` binary against it.
+- **`project`** builds a throwaway project and drives the real `migrasyon` binary against it.
 
 **Tests don't go in the migrations directory**, which accepts only migrations:
 
@@ -178,8 +178,8 @@ export default defineMigration({
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { t } from "@migr/sdk";
-import { answer, capture, reversal } from "@migr/sdk/testing";
+import { t } from "@migrasyon/sdk";
+import { answer, capture, reversal } from "@migrasyon/sdk/testing";
 
 import addNickname from "../migrations/20261023T120100_add_accounts_nickname.ts";
 import addTier from "../migrations/20261023T120200_add_accounts_tier.ts";
@@ -211,11 +211,11 @@ both module formats, how a migration is loaded, and what each helper returns.
 
 ## In a pipeline
 
-`ghcr.io/emrebdr/migr:<version>-node` runs a TypeScript project with nothing else installed. The
-project's own `node_modules`, with `@migr/sdk` in it, comes along in the mount. The
+`ghcr.io/tosunlab/migrasyon:<version>-node` runs a TypeScript project with nothing else installed. The
+project's own `node_modules`, with `@migrasyon/sdk` in it, comes along in the mount. The
 [zero-downtime guide's CI job](../zero-downtime.md#a-github-actions-job) uses it.
 
 ## Example project
 
 [`examples/ts-mysql`](../../examples/ts-mysql/README.md) is a TypeScript project on MySQL with an
-enum, an authored down, a chunked data migration, and tests using `@migr/sdk/testing`.
+enum, an authored down, a chunked data migration, and tests using `@migrasyon/sdk/testing`.

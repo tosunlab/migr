@@ -9,8 +9,8 @@ import (
 	"strings"
 )
 
-// workDir is the directory migr keeps its own build products in, inside the user's module.
-const workDir = ".migr"
+// workDir is the directory migrasyon keeps its own build products in, inside the user's module.
+const workDir = ".migrasyon"
 
 // buildDir is where this adapter's generated runner and its binary live, under workDir.
 const buildDir = "go"
@@ -24,7 +24,7 @@ const sourceFile = "main.go"
 // stampFile records what the binary beside it was built from, and is written last.
 const stampFile = "stamp"
 
-// ignoreFile keeps migr's build products out of the user's commits, from inside the directory itself.
+// ignoreFile keeps migrasyon's build products out of the user's commits, from inside the directory itself.
 const ignoreFile = ".gitignore"
 
 // ignoreAll is what that file holds, which ignores everything beneath it including itself.
@@ -40,7 +40,7 @@ const pathJoint = "__"
 type cache struct {
 	// dir is the build directory itself, inside the module rather than beside it.
 	dir string
-	// work is migr's own directory above it, which the ignore file is written into.
+	// work is migrasyon's own directory above it, which the ignore file is written into.
 	work string
 }
 

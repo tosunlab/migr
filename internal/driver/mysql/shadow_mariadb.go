@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // MariaDB refuses RENAME TABLE under LOCK TABLES (error 1192), and an ALTER TABLE ... RENAME under the

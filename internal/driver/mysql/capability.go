@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // transactionalDDL is false for MySQL, and it is the premise every later M9 task is built on.
@@ -34,7 +34,7 @@ const (
 	expressionDefaultPatch = 13
 )
 
-// redefineStrategy names how this driver achieves a column change, which migr plan displays.
+// redefineStrategy names how this driver achieves a column change, which migrasyon plan displays.
 const redefineStrategy = "column redefinition"
 
 // The release where MySQL began enforcing a check constraint rather than parsing and discarding it.

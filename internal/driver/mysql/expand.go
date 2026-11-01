@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // columnQuery reads everything a redefinition must restate, and the two fields that say it cannot.

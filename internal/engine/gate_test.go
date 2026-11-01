@@ -5,9 +5,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // contracting is a contract step waiting on the swap the first staged migration carries.
@@ -56,14 +56,14 @@ func TestAStepWaitsForAReleaseAfterTheOneThatAppliedItsPrior(t *testing.T) {
 		t.Error("a later release is still held")
 	}
 
-	t.Log("migr cannot see the app, so the release is what stands for it: a step runs only under a")
+	t.Log("migrasyon cannot see the app, so the release is what stands for it: a step runs only under a")
 	t.Log("deploy after the one that applied the step before it, once that deploy's app is serving.")
 }
 
 func TestAPriorStepAppliedBeforeReleasesWereRecordedIsAnEarlierRelease(t *testing.T) {
 	if _, waits := Gated(contracting(t, "swap"), priorIn(t, history.StateApplied, 1), nil, "r2",
 		true); waits {
-		t.Error("a step applied before migr recorded releases holds forever, which no deploy can end")
+		t.Error("a step applied before migrasyon recorded releases holds forever, which no deploy can end")
 	}
 }
 

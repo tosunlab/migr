@@ -7,8 +7,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/source/golang"
-	"github.com/emrebdr/migr/internal/source/typescript"
+	"github.com/tosunlab/migrasyon/internal/source/golang"
+	"github.com/tosunlab/migrasyon/internal/source/typescript"
 )
 
 // decodeRun reads the document --json promised of a run, failing the test rather than the command.
@@ -17,7 +17,7 @@ func decodeRun(t *testing.T, stdout string) runSummary {
 
 	var summary runSummary
 	if err := json.Unmarshal([]byte(stdout), &summary); err != nil {
-		t.Fatalf("migr up --json emitted %v:\n%s", err, stdout)
+		t.Fatalf("migrasyon up --json emitted %v:\n%s", err, stdout)
 	}
 
 	return summary

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/capture"
 )
 
 func TestLogicalDecodingIsPermittedOnlyWithEverySettingAndPrivilegeInPlace(t *testing.T) {
@@ -41,7 +41,7 @@ func TestAPermittedServerSaysHowLongASlotKeepsItsWAL(t *testing.T) {
 	if !strings.Contains(unbounded.Retention, "max_slot_wal_keep_size = -1") ||
 		!strings.Contains(unbounded.Retention, "fills it") {
 		t.Errorf("an unbounded slot is described as %q", unbounded.Retention)
-		t.Log("A slot nobody reads keeps WAL until the disk fills, and migr plan prints this line")
+		t.Log("A slot nobody reads keeps WAL until the disk fills, and migrasyon plan prints this line")
 		t.Log("beside a shadow-table migration so the operator knows what a stopped one costs.")
 	}
 
@@ -54,7 +54,7 @@ func TestAPermittedServerSaysHowLongASlotKeepsItsWAL(t *testing.T) {
 func TestAChangeStreamIsRefusedARequestItCannotCarry(t *testing.T) {
 	for name, req := range map[string]capture.Request{
 		"no name":    {Tables: []string{"people"}},
-		"two tables": {Name: "migr_x", Tables: []string{"people", "teams"}},
+		"two tables": {Name: "migrasyon_x", Tables: []string{"people", "teams"}},
 	} {
 		t.Run(name, func(t *testing.T) {
 			if _, err := (&pgDriver{}).Capture(context.Background(), "", req); err == nil {

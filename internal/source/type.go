@@ -5,12 +5,12 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Spelling is how one language writes the parts of a logical type that are not the shape of it.
 type Spelling struct {
-	// Prefix opens every type constructor: "migr." for Go, "t." for TypeScript.
+	// Prefix opens every type constructor: "migrasyon." for Go, "t." for TypeScript.
 	Prefix string
 	// Names the constructor each logical kind is called, which is the one table that differs.
 	Names map[schema.Kind]string

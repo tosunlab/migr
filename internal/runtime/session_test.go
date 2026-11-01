@@ -11,9 +11,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/runtime/protocol"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/runtime/protocol"
 )
 
 func TestARuntimeIsSpawnedShakesHandsAndShutsDown(t *testing.T) {
@@ -581,8 +581,8 @@ func TestAPlannedMigrationsOwnStatementsComeBackHeldRatherThanRun(t *testing.T) 
 		t.Fatalf("Emit: %v", err)
 	}
 
-	t.Log("host.Call.Statements() had no reader until M6-T6, so migr plan over a Go migration")
-	t.Log("would have omitted a statement migr up commits on its own.")
+	t.Log("host.Call.Statements() had no reader until M6-T6, so migrasyon plan over a Go migration")
+	t.Log("would have omitted a statement migrasyon up commits on its own.")
 
 	if len(emitted.Direct) != 1 {
 		t.Fatalf("Emit carried out %d statements, want the one the migration sent", len(emitted.Direct))

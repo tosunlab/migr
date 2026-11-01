@@ -7,7 +7,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // root is what Discover reads, since the filesystem it is handed is already rooted at the directory.
@@ -48,8 +48,8 @@ func Merge(found ...[]Migration) ([]Migration, error) {
 // describeUnreadable separates a directory that is not there from one that could not be read.
 func describeUnreadable(err error) error {
 	if errors.Is(err, fs.ErrNotExist) {
-		return remedy.With(fmt.Errorf("%w: %w", ErrNoDirectory, err), "create it with migr init, or "+
-			"point migrations.dir in migr.yaml at the directory that holds the migrations")
+		return remedy.With(fmt.Errorf("%w: %w", ErrNoDirectory, err), "create it with migrasyon init, or "+
+			"point migrations.dir in migrasyon.yaml at the directory that holds the migrations")
 	}
 
 	return fmt.Errorf("reading the migrations directory: %w", err)

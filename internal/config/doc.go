@@ -1,4 +1,4 @@
-// Package config loads and validates migr.yaml: migration source settings,
+// Package config loads and validates migrasyon.yaml: migration source settings,
 // database definitions with ${VAR} environment expansion, history and lock
 // configuration, and the safety thresholds that gate zero-downtime checks.
 //
@@ -20,11 +20,11 @@
 //
 // # Paths follow their config file
 //
-// A relative migrations.dir is anchored to the directory migr.yaml sits in,
+// A relative migrations.dir is anchored to the directory migrasyon.yaml sits in,
 // never to the working directory, so a config names its own migrations from
-// anywhere. Read the other way, `migr --config ../other/migr.yaml up` would
+// anywhere. Read the other way, `migrasyon --config ../other/migrasyon.yaml up` would
 // apply whatever ./migrations happened to be beside the operator to the other
-// project's database. The default is unchanged — filepath.Dir("migr.yaml") is
+// project's database. The default is unchanged — filepath.Dir("migrasyon.yaml") is
 // "." — and an absolute path is left where it points. Nothing read the field
 // until M4-T1, which is why nothing had noticed.
 //
@@ -39,7 +39,7 @@
 // rather than teaching the CLI to write a value this loader refuses. M5's own
 // goal is SQL-file migrations as the interim source format until M6 lands the
 // SDKs, and engine.Options.Runtime is documented as the language "spelled as
-// migr.yaml spells it" -- so a format with no spelling here is one nothing can
+// migrasyon.yaml spells it" -- so a format with no spelling here is one nothing can
 // be asked to run.
 //
 // It is a real value and not a placeholder: a .sql file reaches the database as
@@ -51,12 +51,12 @@
 //
 // validation.allow_destructive is a list of operation kinds rather than a bool, and the reason is
 // a property of one source format: every .sql migration reaches the database as ir.Raw, which is
-// destructive by definition because migr cannot read what it does. A bool would therefore be
+// destructive by definition because migrasyon cannot read what it does. A bool would therefore be
 // mandatory for an entire language, so such a project permits raw once -- here, in a file a review
 // sees -- while drop_table stays refused. It validates against ir.DestructiveKinds for the reason
 // max_lock_impact validates against capability.Ceilings, and refuses three things that mean
 // nothing: a name that is no operation, a kind that destroys nothing, and a kind named twice. An
-// absent key permits nothing and resolves to an empty list rather than nil, so migr config --json
+// absent key permits nothing and resolves to an empty list rather than nil, so migrasyon config --json
 // prints [] rather than null.
 //
 // # Lock impact
@@ -65,7 +65,7 @@
 // spellings this package froze in its testdata are the ones it adopted.
 // safety.max_lock_impact validates against capability.Ceilings rather than a
 // list kept here, so a verdict renamed on either side fails a test instead of
-// leaving migr.yaml accepting a word no driver reports.
+// leaving migrasyon.yaml accepting a word no driver reports.
 //
 // Ceilings is deliberately narrower than the full verdict set: a driver may
 // report an unresolved lock impact, but "block anything worse than unknown" is
@@ -83,7 +83,7 @@
 //
 // Validation.Rules is a map from lint rule id to severity, and applyDefaults fills in every rule
 // internal/rule ships before validation runs -- so the resolved config *is* the complete set and
-// migr config lists every rule with what this project decided it is worth. That is where an
+// migrasyon config lists every rule with what this project decided it is worth. That is where an
 // operator discovers the ids, and it is CLAUDE.md §9's rule exactly: the scaffold writes only keys
 // that have no default. An id no rule answers to, and a severity outside error/warn/off, are both
 // refused by name -- a line that reads like permission and silently does nothing is

@@ -3,8 +3,8 @@ package validate
 import (
 	"slices"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // Unchecked is one half of one migration a run could not judge, and what stopped it.

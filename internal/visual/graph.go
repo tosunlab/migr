@@ -5,7 +5,7 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // EdgeKind is why one migration must come after another.

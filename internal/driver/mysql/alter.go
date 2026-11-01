@@ -3,8 +3,8 @@ package mysql
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // redefinitionReason states why a column change reaches the database before it becomes a statement.

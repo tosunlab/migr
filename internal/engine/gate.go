@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // ErrNoRelease refuses a run reaching a step of a change across deploys without naming the deploy it is.
@@ -88,7 +88,7 @@ func reconciled(statuses []history.Status, version string) (history.Status, bool
 // A batch with no recorded release is an earlier release with no name. Only a run before releases were
 // recorded can leave one beside a step, since a run whose queue holds any step must name its release
 // -- so it is never this run's, and treating it as a wait nothing could ever end would strand every
-// change begun before migr recorded deploys.
+// change begun before migrasyon recorded deploys.
 
 // needsRelease reports whether a queue holds a step of a change across deploys, which only a named release may run.
 func (e *executor) needsRelease(queue []queued) error {
@@ -101,7 +101,7 @@ func (e *executor) needsRelease(queue []queued) error {
 			return remedy.With(fmt.Errorf("%w: %s declares a step of %q, which runs only a deploy after "+
 				"the step before it", ErrNoRelease, item.migration.Filename(),
 				e.opts.Phases[item.migration.Version].Change),
-				"name the deploy this run belongs to: migr up --release <build id>, or MIGR_RELEASE set")
+				"name the deploy this run belongs to: migrasyon up --release <build id>, or MIGRASYON_RELEASE set")
 		}
 	}
 
@@ -117,7 +117,7 @@ func (e *executor) releases(ctx context.Context, queue []queued) ([]history.Rele
 	releaser, records := e.store.(history.Releaser)
 	if !records {
 		return nil, remedy.With(ErrNoReleases, "this driver's history store records no releases, which "+
-			"is a bug in the driver: report it at https://github.com/emrebdr/migr/issues")
+			"is a bug in the driver: report it at https://github.com/tosunlab/migrasyon/issues")
 	}
 
 	return releaser.Releases(ctx)

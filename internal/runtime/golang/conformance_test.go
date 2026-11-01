@@ -6,8 +6,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/runtime"
-	conformance "github.com/emrebdr/migr/test/conformance/runtime"
+	"github.com/tosunlab/migrasyon/internal/runtime"
+	conformance "github.com/tosunlab/migrasyon/test/conformance/runtime"
 )
 
 // manifest is the module the conformance fixtures are built inside, written rather than stored.
@@ -15,9 +15,9 @@ const manifest = `module example.com/conformance
 
 go 1.26
 
-require github.com/emrebdr/migr/sdk/go v0.0.0
+require github.com/tosunlab/migrasyon/sdk/go v0.0.0
 
-replace github.com/emrebdr/migr/sdk/go => `
+replace github.com/tosunlab/migrasyon/sdk/go => `
 
 func TestTheGoSDKPassesTheRuntimeConformanceSuite(t *testing.T) {
 	adapter, err := New()

@@ -68,13 +68,13 @@ func TestPgxLeaksWhatThisDriverWithholds(t *testing.T) {
 }
 
 func TestAValidDSNParses(t *testing.T) {
-	cfg, err := parseDSN("postgres://migr:hunter2@localhost:5432/migr?sslmode=disable")
+	cfg, err := parseDSN("postgres://migrasyon:hunter2@localhost:5432/migrasyon?sslmode=disable")
 	if err != nil {
 		t.Fatalf("parseDSN: %v", err)
 	}
 
-	if cfg.User != "migr" || cfg.Database != "migr" || cfg.Port != 5432 {
-		t.Errorf("parsed user %q database %q port %d, want migr/migr/5432",
+	if cfg.User != "migrasyon" || cfg.Database != "migrasyon" || cfg.Port != 5432 {
+		t.Errorf("parsed user %q database %q port %d, want migrasyon/migrasyon/5432",
 			cfg.User, cfg.Database, cfg.Port)
 	}
 }

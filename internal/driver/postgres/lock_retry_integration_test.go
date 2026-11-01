@@ -13,8 +13,8 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
 )
 
 // retryLockWait is safety.lock_timeout for these runs, short enough that four attempts fit in seconds.
@@ -176,7 +176,7 @@ func contendedFor(t *testing.T, dsn string, wait time.Duration) (*pgConn, string
 	return session, quote(target) + ".accounts", target
 }
 
-// retried builds the run's options with a real backoff and a real sleep, as migr up has.
+// retried builds the run's options with a real backoff and a real sleep, as migrasyon up has.
 func retried(t *testing.T, retries int, base time.Duration) engine.Options {
 	t.Helper()
 

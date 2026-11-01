@@ -1,8 +1,8 @@
 package diff
 
 import (
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Diff returns the operations that turn one schema into the other, and every change it will not propose.

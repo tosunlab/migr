@@ -9,10 +9,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/checksum"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/checksum"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // sourceDigest and irDigest are the two halves of a checksum, neither of which this store parses.
@@ -53,7 +53,7 @@ func ensured(t *testing.T, c *mysqlConn) mysqlHistory {
 func run(t *testing.T, batch int64, ordinal int32) history.Record {
 	t.Helper()
 
-	sum, err := checksum.Parse("migr1:" + sourceDigest + ":" + irDigest)
+	sum, err := checksum.Parse("migrasyon1:" + sourceDigest + ":" + irDigest)
 	if err != nil {
 		t.Fatalf("parsing a checksum: %v", err)
 	}

@@ -5,7 +5,7 @@ import (
 	"maps"
 	"slices"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // Rule answers both axes for one concrete operation, after the server is already known.

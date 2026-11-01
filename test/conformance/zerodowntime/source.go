@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // The two migrations a case is: its setup, and the change that is measured.
@@ -20,7 +20,7 @@ const (
 	changeFile = "20261101T000100_zd_change.sql"
 )
 
-// The defaults a migr.yaml naming no safety key resolves to, which is what an operator's first run uses --
+// The defaults a migrasyon.yaml naming no safety key resolves to, which is what an operator's first run uses --
 // all but statementBound. The suite judges what a client waits and never how long a statement runs, and
 // measured, MySQL's online NOT NULL rebuild of SeededRows under the load runs past the default 30s.
 const (
@@ -87,7 +87,7 @@ func (s staged) files() ([]history.File, migration.Migration, error) {
 	return append(found, history.NewFile(change, []byte("-- zero-downtime change\n"))), change, nil
 }
 
-// optionsFor builds the options migr up builds from a migr.yaml that names no safety key.
+// optionsFor builds the options migrasyon up builds from a migrasyon.yaml that names no safety key.
 func optionsFor(d driver.Driver, conn driver.Conn, src staged, files []history.File, online migration.Online,
 	captured func(context.Context, capture.Request) (capture.Stream, error),
 ) engine.Options {

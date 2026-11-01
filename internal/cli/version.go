@@ -6,10 +6,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/version"
+	"github.com/tosunlab/migrasyon/internal/version"
 )
 
-// newVersionCmd builds the `migr version` subcommand.
+// newVersionCmd builds the `migrasyon version` subcommand.
 func newVersionCmd(opts *options) *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",

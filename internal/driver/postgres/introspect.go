@@ -8,15 +8,15 @@ import (
 
 	"github.com/jackc/pgx/v5"
 
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // The four probes one snapshot is built from, each over the namespace the session is pointed at.
 //
-// current_schema() rather than Options.Schema: migr.yaml need not name one, and an unset schema
+// current_schema() rather than Options.Schema: migrasyon.yaml need not name one, and an unset schema
 // leaves the search path to the server, so the namespace is asked for rather than assumed. The bound
-// parameters are the tables migr records its own runs, seeds and checkpoints in, which a differ
+// parameters are the tables migrasyon records its own runs, seeds and checkpoints in, which a differ
 // would otherwise propose dropping -- their indexes go with them, not being reported independently.
 const (
 	relationQuery = `
@@ -85,7 +85,7 @@ const (
 	contypeForeignKey = "f"
 )
 
-// Introspect reads the session's own namespace back, less the table migr records its own runs in.
+// Introspect reads the session's own namespace back, less the table migrasyon records its own runs in.
 func (c *pgConn) Introspect(ctx context.Context) (*schema.Snapshot, error) {
 	relations, err := c.readRelations(ctx)
 	if err != nil {
@@ -339,7 +339,7 @@ func (c *pgConn) failedProbe(what string, err error) error {
 	return fmt.Errorf("%w: reading %s: %w", ErrIntrospect, what, err)
 }
 
-// owned is every table migr keeps for this session's migrations and seeds, which Introspect never reports.
+// owned is every table migrasyon keeps for this session's migrations and seeds, which Introspect never reports.
 func (c *pgConn) owned() []any {
 	var names []any
 	for _, name := range slices.Concat(history.Owned(c.history.table), history.Owned(c.seeds.table)) {

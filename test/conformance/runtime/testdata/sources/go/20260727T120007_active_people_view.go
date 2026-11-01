@@ -3,16 +3,16 @@ package migrations
 import (
 	"context"
 
-	migr "github.com/emrebdr/migr/sdk/go"
+	migrasyon "github.com/tosunlab/migrasyon/sdk/go"
 )
 
-func init() { migr.Register(ActivePeopleView{}) }
+func init() { migrasyon.Register(ActivePeopleView{}) }
 
 // ActivePeopleView is the fixture for create_view and drop_view, whose queries are engine SQL.
 type ActivePeopleView struct{}
 
 // Up defines one view and replaces another, which is the case that must record what it overwrote.
-func (m ActivePeopleView) Up(ctx context.Context, s *migr.Schema) error {
+func (m ActivePeopleView) Up(ctx context.Context, s *migrasyon.Schema) error {
 	if err := s.View("active_people").
 		Create("SELECT id, address FROM people WHERE tier = 'paid'").
 		Apply(ctx); err != nil {
@@ -26,7 +26,7 @@ func (m ActivePeopleView) Up(ctx context.Context, s *migr.Schema) error {
 }
 
 // Down drops both, recording the query each was defined by.
-func (m ActivePeopleView) Down(ctx context.Context, s *migr.Schema) error {
+func (m ActivePeopleView) Down(ctx context.Context, s *migrasyon.Schema) error {
 	if err := s.View("recent_people").
 		Drop().Was("SELECT id FROM people ORDER BY created_at DESC").
 		Apply(ctx); err != nil {

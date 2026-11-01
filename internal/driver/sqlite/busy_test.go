@@ -8,7 +8,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // busyWait is safety.lock_timeout for these cases, which busy_timeout spends before SQLITE_BUSY.

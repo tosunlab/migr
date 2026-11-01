@@ -24,7 +24,7 @@ function manifest(): { name: string; version: string } {
 /** Reads the protocol version the specification itself states in its title. */
 function specifiedProtocolVersion(): number {
   const spec = readFileSync(join(here, "..", "..", "..", "docs", "protocol.md"), "utf8");
-  const stated = /^#\s+migr Runtime Protocol.*`protocolVersion`\s+(\d+)/m.exec(spec);
+  const stated = /^#\s+migrasyon Runtime Protocol.*`protocolVersion`\s+(\d+)/m.exec(spec);
 
   assert.ok(stated, "docs/protocol.md does not state a protocolVersion in its title");
 
@@ -49,7 +49,7 @@ test("the package's major version is the protocol version it speaks", () => {
   assert.equal(
     major(VERSION),
     PROTOCOL_VERSION,
-    "@migr/sdk encodes the protocol version in its major: 1.x.y speaks protocol 1",
+    "@migrasyon/sdk encodes the protocol version in its major: 1.x.y speaks protocol 1",
   );
 });
 
@@ -74,7 +74,7 @@ test("the IR version is stated rather than negotiated", () => {
   assert.ok(IR_VERSION >= 1);
 });
 
-test("the language is spelled as migr.yaml spells migrations.language", () => {
+test("the language is spelled as migrasyon.yaml spells migrations.language", () => {
   assert.equal(LANGUAGE, "typescript");
 });
 

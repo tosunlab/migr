@@ -6,19 +6,19 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
-const concurrently = `-- migr:up
+const concurrently = `-- migrasyon:up
 CREATE TABLE users (id int PRIMARY KEY, email text);
 
--- migr:no-transaction
+-- migrasyon:no-transaction
 CREATE INDEX CONCURRENTLY users_email ON users (email);
 INSERT INTO users VALUES (1, 'a');
 
--- migr:down
--- migr:no-transaction
+-- migrasyon:down
+-- migrasyon:no-transaction
 DROP INDEX CONCURRENTLY users_email;
 DROP TABLE users;
 `
@@ -65,7 +65,7 @@ func TestTheMarkerDeclaresTheOneStatementBelowIt(t *testing.T) {
 }
 
 func TestAFileWithNoMarkerEmitsTheBytesItAlwaysDid(t *testing.T) {
-	ops := emit(t, sourceOf(t, "-- migr:up\nCREATE TABLE t (id int);\n"), ir.Up)
+	ops := emit(t, sourceOf(t, "-- migrasyon:up\nCREATE TABLE t (id int);\n"), ir.Up)
 
 	if got := ir.VersionOf(ops); got != 1 {
 		t.Errorf("a .sql migration with no marker states irVersion %d, want 1", got)
@@ -75,13 +75,13 @@ func TestAFileWithNoMarkerEmitsTheBytesItAlwaysDid(t *testing.T) {
 }
 
 func TestAMarkerInsideQuotingOrAStatementIsNotAMarker(t *testing.T) {
-	quoted := "-- migr:up\nCREATE FUNCTION f() RETURNS int AS $$\n-- migr:no-transaction\nSELECT 1;\n" +
+	quoted := "-- migrasyon:up\nCREATE FUNCTION f() RETURNS int AS $$\n-- migrasyon:no-transaction\nSELECT 1;\n" +
 		"$$ LANGUAGE sql;\n"
 	if got := standaloneOf(t, emit(t, sourceOf(t, quoted), ir.Up)); !slices.Equal(got, []bool{false}) {
 		t.Errorf("a marker inside a function body declared %v", got)
 	}
 
-	inline := "-- migr:up\nCREATE INDEX i ON t (c); -- migr:no-transaction\nSELECT 1;\n"
+	inline := "-- migrasyon:up\nCREATE INDEX i ON t (c); -- migrasyon:no-transaction\nSELECT 1;\n"
 	if got := standaloneOf(t, emit(t, sourceOf(t, inline), ir.Up)); !slices.Equal(got, []bool{false, false}) {
 		t.Errorf("a marker trailing a statement on its own line declared %v", got)
 	}
@@ -93,23 +93,23 @@ func TestAMarkerOutOfPlaceIsRefusedNamingItsLine(t *testing.T) {
 		line string
 	}{
 		"inside a statement": {
-			body: "-- migr:up\nCREATE TABLE t (\n-- migr:no-transaction\n  id int);\n",
+			body: "-- migrasyon:up\nCREATE TABLE t (\n-- migrasyon:no-transaction\n  id int);\n",
 			line: "line 3",
 		},
 		"twice in a row": {
-			body: "-- migr:up\n-- migr:no-transaction\n-- migr:no-transaction\nVACUUM;\n",
+			body: "-- migrasyon:up\n-- migrasyon:no-transaction\n-- migrasyon:no-transaction\nVACUUM;\n",
 			line: "line 3",
 		},
 		"at the end of a section": {
-			body: "-- migr:up\nVACUUM;\n-- migr:no-transaction\n-- migr:down\nSELECT 1;\n",
+			body: "-- migrasyon:up\nVACUUM;\n-- migrasyon:no-transaction\n-- migrasyon:down\nSELECT 1;\n",
 			line: "line 3",
 		},
 		"above the up marker": {
-			body: "-- migr:no-transaction\n-- migr:up\nVACUUM;\n",
+			body: "-- migrasyon:no-transaction\n-- migrasyon:up\nVACUUM;\n",
 			line: "line 1",
 		},
 		"below a declaration": {
-			body: "-- migr:up\nVACUUM;\n-- migr:irreversible: gone\n-- migr:no-transaction\n",
+			body: "-- migrasyon:up\nVACUUM;\n-- migrasyon:irreversible: gone\n-- migrasyon:no-transaction\n",
 			line: "line 4",
 		},
 	} {

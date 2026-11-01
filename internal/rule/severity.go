@@ -9,9 +9,9 @@ import (
 // Severity is what a project has decided one rule's findings are worth.
 type Severity string
 
-// The three severities a rule can be configured to, which migr.yaml names it by.
+// The three severities a rule can be configured to, which migrasyon.yaml names it by.
 const (
-	// SeverityError makes a finding a problem, so migr validate exits 2 over it.
+	// SeverityError makes a finding a problem, so migrasyon validate exits 2 over it.
 	SeverityError Severity = "error"
 	// SeverityWarn makes a finding a warning, which is printed and changes no exit code.
 	SeverityWarn Severity = "warn"
@@ -37,7 +37,7 @@ func (s Severity) Reports() bool {
 	return s == SeverityError || s == SeverityWarn
 }
 
-// String returns the severity's wire name, which is what migr.yaml holds and --json renders.
+// String returns the severity's wire name, which is what migrasyon.yaml holds and --json renders.
 func (s Severity) String() string {
 	return string(s)
 }

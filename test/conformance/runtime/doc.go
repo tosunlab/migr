@@ -74,15 +74,15 @@
 //
 // # Where a language's run lives
 //
-// Not here. depguard permits only cmd/migr to name a concrete runtime, so each adapter runs the
+// Not here. depguard permits only cmd/migrasyon to name a concrete runtime, so each adapter runs the
 // suite from its own package -- internal/runtime/golang/conformance_test.go and
 // internal/runtime/node/conformance_test.go -- exactly as M5-T2 put the end-to-end CLI suite in
-// cmd/migr for the same reason. This package must therefore never import
+// cmd/migrasyon for the same reason. This package must therefore never import
 // internal/runtime/<language>.
 //
 // Assembling the sources is each language's own problem and the two look nothing alike: Go writes a
 // go.mod with a replace onto sdk/go and has the adapter build a runner; TypeScript writes a
-// package.json and links node_modules/@migr/sdk, and the runtime compiles each migration as it
+// package.json and links node_modules/@migrasyon/sdk, and the runtime compiles each migration as it
 // imports it. That difference is why Sources hands over the files rather than a project.
 //
 // # No build tag here, and one on the TypeScript run

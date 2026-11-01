@@ -3,9 +3,9 @@ package fold_test
 import (
 	"testing"
 
-	"github.com/emrebdr/migr/internal/diff"
-	"github.com/emrebdr/migr/internal/fold"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/diff"
+	"github.com/tosunlab/migrasyon/internal/fold"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Nothing can judge a projection correct on its own, so the thing that judges it is the differ: the

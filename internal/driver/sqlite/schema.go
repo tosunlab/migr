@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // The reads a rebuild makes before it changes anything, all of them against sqlite_schema.

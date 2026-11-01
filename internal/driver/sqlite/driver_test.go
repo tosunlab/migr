@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/driver/drivertest"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver/drivertest"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestTheDriverAnswersToTheNameItIsRegisteredUnder(t *testing.T) {
@@ -153,7 +153,7 @@ func TestALockStrategyThisDriverDoesNotImplementIsRefused(t *testing.T) {
 func TestAHistoryTableNameThisDriverCannotCarryIsRefused(t *testing.T) {
 	for name, table := range map[string]string{
 		"blank":  "   ",
-		"a NUL":  "migr\x00migrations",
+		"a NUL":  "migrasyon\x00migrations",
 		"nested": "schema\x00.migrations",
 	} {
 		t.Run(name, func(t *testing.T) {
@@ -163,11 +163,11 @@ func TestAHistoryTableNameThisDriverCannotCarryIsRefused(t *testing.T) {
 		})
 	}
 
-	if _, err := New(driver.Options{HistoryTable: "migr_migrations"}); err != nil {
+	if _, err := New(driver.Options{HistoryTable: "migrasyon_migrations"}); err != nil {
 		t.Errorf("New refused an ordinary table name: %v", err)
 	}
 
-	_, err := New(driver.Options{HistoryTable: "migr\x00migrations"})
+	_, err := New(driver.Options{HistoryTable: "migrasyon\x00migrations"})
 	if !errors.Is(err, driver.ErrUnsupported) {
 		t.Errorf("the refusal is %v, and not one the compiler produced", err)
 	}

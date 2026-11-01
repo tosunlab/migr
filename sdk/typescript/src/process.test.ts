@@ -14,15 +14,15 @@ import { fileURLToPath } from "node:url";
 // spawned child. §9 owes two more: end of file on stdin ends the process, because the engine that
 // held the other end of that pipe is gone; and after answering shutdown it exits 0.
 //
-// What is spawned is dist/esm/migr-runtime-node.js itself, by path and not through node, so the
+// What is spawned is dist/esm/migrasyon-runtime-node.js itself, by path and not through node, so the
 // shebang and the executable bit are driven too -- that file is what npm links into a project's
 // node_modules/.bin, and nothing else here reads it. The project it is pointed at is a real one: a
-// package.json, a node_modules/@migr/sdk, and migration files on disk.
+// package.json, a node_modules/@migrasyon/sdk, and migration files on disk.
 
 const sdk = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 /** RUNTIME is the executable package.json's bin field names, which is what a project runs. */
-const RUNTIME = join(sdk, "dist", "esm", "migr-runtime-node.js");
+const RUNTIME = join(sdk, "dist", "esm", "migrasyon-runtime-node.js");
 
 /** MIGRATIONS are the two files every project here holds, one of each format that matters.
  *
@@ -35,7 +35,7 @@ const RUNTIME = join(sdk, "dist", "esm", "migr-runtime-node.js");
  * authors one, and declares that it follows the first.
  */
 const MIGRATIONS: Record<string, string> = {
-  "migrations/20260727T153000_add_users.ts": `import { defineMigration, t } from "@migr/sdk";
+  "migrations/20260727T153000_add_users.ts": `import { defineMigration, t } from "@migrasyon/sdk";
 
 enum Width {
   Email = 255,
@@ -88,11 +88,11 @@ interface Runtime extends Child {
 
 /** started writes a project, spawns the runtime in it, and returns both over real pipes. */
 function started(files: Record<string, string> = MIGRATIONS): Runtime {
-  const root = mkdtempSync(join(tmpdir(), "migr-process-"));
+  const root = mkdtempSync(join(tmpdir(), "migrasyon-process-"));
 
   writeFileSync(join(root, "package.json"), '{"name":"fixture","type":"module"}\n');
-  mkdirSync(join(root, "node_modules", "@migr"), { recursive: true });
-  symlinkSync(sdk, join(root, "node_modules", "@migr", "sdk"));
+  mkdirSync(join(root, "node_modules", "@migrasyon"), { recursive: true });
+  symlinkSync(sdk, join(root, "node_modules", "@migrasyon", "sdk"));
   mkdirSync(join(root, "migrations"), { recursive: true });
 
   for (const [path, contents] of Object.entries(files)) {
@@ -190,7 +190,7 @@ function within<T>(waiting: Promise<T>, what: string): Promise<T> {
 function handshakeFor(dir: string): string {
   return (
     '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersions":[1],' +
-    `"irVersion":1,"client":{"name":"migr","version":"0.1.0"},"migrations":` +
+    `"irVersion":1,"client":{"name":"migrasyon","version":"0.1.0"},"migrations":` +
     `{"dir":${JSON.stringify(dir)},"language":"typescript"},"database":` +
     '{"name":"default","driver":"postgres"}}}'
   );

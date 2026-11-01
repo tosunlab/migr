@@ -4,14 +4,14 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestTheReleaseTableIsNamedAfterItsHistoryAndKeyedByBatch(t *testing.T) {
-	ops := ReleaseSchema("migr_migrations")
+	ops := ReleaseSchema("migrasyon_migrations")
 
 	created, ok := ops[0].(ir.CreateTable)
-	if len(ops) != 1 || !ok || created.Table != "migr_migrations_releases" ||
+	if len(ops) != 1 || !ok || created.Table != "migrasyon_migrations_releases" ||
 		len(created.PrimaryKey) != 1 || created.PrimaryKey[0] != "batch" {
 		t.Fatalf("ReleaseSchema is %+v", ops)
 	}

@@ -10,14 +10,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/capture"
-	"github.com/emrebdr/migr/internal/config"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/capture"
+	"github.com/tosunlab/migrasyon/internal/config"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
 )
 
 // warmUp is how long the load runs before a window opens, so every client is already waiting on the server.
@@ -40,7 +40,7 @@ const minWindow = 50 * time.Millisecond
 type Suite struct {
 	// Driver is the driver under test, which compiles every operation.
 	Driver driver.Driver
-	// Open opens a fresh session recording its runs in the history table named, as migr up opens one.
+	// Open opens a fresh session recording its runs in the history table named, as migrasyon up opens one.
 	Open func(t *testing.T, historyTable string) driver.Conn
 	// Load is every statement a client sends, spelled for this engine.
 	Load Load
@@ -291,7 +291,7 @@ func (r *run) runCase(t *testing.T, sc scenario) {
 	}
 }
 
-// unattended has a run cut over by itself, at the lag migr up's default gives the suite's lock wait, logging each held read's lag.
+// unattended has a run cut over by itself, at the lag migrasyon up's default gives the suite's lock wait, logging each held read's lag.
 func unattended(t *testing.T, opts engine.Options) engine.Options {
 	t.Helper()
 

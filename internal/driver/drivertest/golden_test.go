@@ -9,8 +9,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // fakeCompiler turns operations into marker comments, so no golden file can hold engine SQL.
@@ -136,7 +136,7 @@ func TestUpdateRecordsWhatTheDriverCompiled(t *testing.T) {
 		t.Fatalf("reading the recorded golden: %v", err)
 	}
 
-	if string(recorded) != "-- migr:statement 1\n-- drop_table\n" {
+	if string(recorded) != "-- migrasyon:statement 1\n-- drop_table\n" {
 		t.Errorf("recorded %q, want the compiled statement and a trailing newline", recorded)
 	}
 

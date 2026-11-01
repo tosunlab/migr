@@ -8,7 +8,7 @@
 //
 // Behaviour is a method and a fact is a property. `dependencies` is a readonly array rather than a
 // method for one reason: a dependency is declared and never computed, and a method
-// invites the graph that would let migr plan and migr up order the same migrations differently.
+// invites the graph that would let migrasyon plan and migrasyon up order the same migrations differently.
 //
 // A .js or .mjs migration is loaded by the same runtime and checked by no compiler at all, so every
 // rule stated here has a runtime twin in load.ts. The named-export style needs one regardless: no
@@ -45,11 +45,11 @@ export const SHADOW_TABLE: Strategy = "shadow_table";
 interface Change {
   /** up performs the change, and is the only member a migration must have. */
   up: Up;
-  /** validate is the migration's own check, which migr validate runs and which emits nothing. */
+  /** validate is the migration's own check, which migrasyon validate runs and which emits nothing. */
   validate?: Validate;
   /** dependencies are the versions this migration must follow, declared and never computed. */
   dependencies?: readonly string[];
-  /** phase is the step of a change across deploys this migration is, which migr runs a release apart. */
+  /** phase is the step of a change across deploys this migration is, which migrasyon runs a release apart. */
   phase?: Phase;
   /** online is how this migration runs against a live table, which only a shadow table is today. */
   online?: Strategy;

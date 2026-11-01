@@ -77,8 +77,8 @@ jobs:
         id: tools
         run: echo "version=$(awk '/^GOLANGCI_VERSION/ {print $3}' Makefile)" >> "$GITHUB_OUTPUT"
 
-      # The tool alone, never the whole of bin: that directory also holds the bin/migr
-      # `make build` writes, and a cache saved after one run restored that run's migr into
+      # The tool alone, never the whole of bin: that directory also holds the bin/migrasyon
+      # `make build` writes, and a cache saved after one run restored that run's migrasyon into
       # every later one -- which the SDK test helpers, running before Build, then drove.
       - name: Cache dev tools
         id: cache-tools
@@ -108,7 +108,7 @@ jobs:
         run: make test-conformance
 
       - name: Smoke run
-        run: ./bin/migr
+        run: ./bin/migrasyon
 
       # The site deploys from main alone, so a dead link or a page Vue cannot compile fails here, on the
       # change that broke it. One OS is enough: the build reads files.
@@ -233,7 +233,7 @@ jobs:
         run: docker compose -f test/docker-compose.yml ps
 
   # The example projects (M14-T6), each run as its README says against its own compose.yaml, with
-  # this commit's migr and SDKs. Ubuntu only, like every job that starts a database.
+  # this commit's migrasyon and SDKs. Ubuntu only, like every job that starts a database.
   examples:
     name: examples
     runs-on: ubuntu-latest

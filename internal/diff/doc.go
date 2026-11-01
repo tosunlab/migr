@@ -33,7 +33,7 @@
 // to rebuild every key it can see.
 //
 // An unconfirmed rename therefore reaches the operations as a drop and a create, which is
-// safe because invariant #7 makes both destructive: migr up refuses a generated migration
+// safe because invariant #7 makes both destructive: migrasyon up refuses a generated migration
 // that destroys what the project has not permitted. It is also not what the operator wanted,
 // which is what the next section is for.
 //
@@ -82,10 +82,10 @@
 // # Every operation it emits carries a complete from payload
 //
 // Nine operations can record what they replace, and a differ is the one producer
-// that knows both states exactly -- so it fills every one of them, and a migration migr diff
+// that knows both states exactly -- so it fills every one of them, and a migration migrasyon diff
 // writes is reversible by derivation. That is also why a drop of something the operations
 // cannot express is refused rather than emitted bare: a drop_index carrying the columns of a
-// partial index recreates it as a plain one at the next migr down, which is the degradation
+// partial index recreates it as a plain one at the next migrasyon down, which is the degradation
 // the marker exists to prevent, arriving a milestone later.
 //
 // # The two things that are refused on
@@ -93,7 +93,7 @@
 // An Unrepresented marker and a column type's certainty, read in express.go and nowhere
 // else. The marker is read as a lookup rather than as a report: an element that carries one
 // and is identical in both schemas produces no operation, so it produces no refusal either,
-// and diffing a database against itself is empty however much of it migr could not have
+// and diffing a database against itself is empty however much of it migrasyon could not have
 // created. A caller that wants the whole picture calls schema.Unrepresentable, which is
 // exported for exactly that.
 //

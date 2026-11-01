@@ -18,7 +18,7 @@ file=$(echo "$position" | awk '{print $1}')
 offset=$(echo "$position" | awk '{print $2}')
 
 mysql -uroot -p"$MYSQL_ROOT_PASSWORD" <<SQL
-GRANT REPLICATION CLIENT ON *.* TO 'migr'@'%';
+GRANT REPLICATION CLIENT ON *.* TO 'migrasyon'@'%';
 FLUSH PRIVILEGES;
 CHANGE REPLICATION SOURCE TO SOURCE_HOST='mysql80', SOURCE_PORT=3306, SOURCE_USER='root',
   SOURCE_PASSWORD='$MYSQL_ROOT_PASSWORD', GET_SOURCE_PUBLIC_KEY=1, SOURCE_DELAY=3,

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // value returns the one cell a single-row, single-column read came back with.

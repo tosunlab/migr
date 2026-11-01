@@ -8,7 +8,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestAValueTheServerClampedIsReportedRatherThanBelieved(t *testing.T) {

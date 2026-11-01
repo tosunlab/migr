@@ -1,4 +1,4 @@
 node_modules/
-.migr/
+.migrasyon/
 app.db
-*.db-migr.lock
+*.db-migrasyon.lock

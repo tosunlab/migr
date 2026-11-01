@@ -12,12 +12,12 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/engine"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/migration"
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/engine"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/migration"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
 // errSchemaInSeed marks a seed that emitted a schema change, which belongs in a migration instead.
@@ -29,7 +29,7 @@ var errNoSeedsDir = errors.New("the seeds directory does not exist")
 // seedKinds are the operations a seed may emit: raw, and the data operations irVersion 2 added.
 var seedKinds = append([]ir.Kind{ir.KindRaw}, ir.DataKinds()...)
 
-// newSeedCmd builds the `migr seed` subcommand.
+// newSeedCmd builds the `migrasyon seed` subcommand.
 func newSeedCmd(opts *options) *cobra.Command {
 	narrow := &narrowing{}
 
@@ -186,13 +186,13 @@ func discoverCommon(dir string, environments []string) ([]migration.Migration, e
 	entries, err := os.ReadDir(dir)
 	if errors.Is(err, fs.ErrNotExist) {
 		return nil, remedy.With(fmt.Errorf("%w: seeds.dir is %s, so there is nothing to seed",
-			errNoSeedsDir, dir), "create the directory, or point seeds.dir in migr.yaml at the one that "+
+			errNoSeedsDir, dir), "create the directory, or point seeds.dir in migrasyon.yaml at the one that "+
 			"holds the seeds")
 	}
 
 	if err != nil {
 		return nil, remedy.With(fmt.Errorf("reading the seeds directory: %w", err),
-			"make the seeds directory readable by the user migr runs as")
+			"make the seeds directory readable by the user migrasyon runs as")
 	}
 
 	if err := checkEnvironments(dir, entries, environments); err != nil {
@@ -217,9 +217,9 @@ func checkEnvironments(dir string, entries []fs.DirEntry, environments []string)
 
 		return NewExitError(ExitValidation, remedy.With(fmt.Errorf("%s: a subdirectory of the seeds "+
 			"directory holds the seeds of the environment it is named for, and no database in "+
-			"migr.yaml runs under %q (environments: %s)", filepath.Join(dir, entry.Name()), entry.Name(),
+			"migrasyon.yaml runs under %q (environments: %s)", filepath.Join(dir, entry.Name()), entry.Name(),
 			strings.Join(environments, ", ")), "rename the directory to one of those environments, or "+
-			"set databases.<name>.environment in migr.yaml to its name"))
+			"set databases.<name>.environment in migrasyon.yaml to its name"))
 	}
 
 	return nil
@@ -234,7 +234,7 @@ func discoverOwn(dir string) ([]migration.Migration, error) {
 
 	if err != nil {
 		return nil, remedy.With(fmt.Errorf("reading %s: %w", dir, err),
-			"make the directory readable by the user migr runs as")
+			"make the directory readable by the user migrasyon runs as")
 	}
 
 	if !info.IsDir() {
@@ -288,7 +288,7 @@ func absentHistory(migrations int) error {
 
 	return remedy.With(fmt.Errorf("this database is not ready to seed -- none of the %d migrations has "+
 		"run, and a seed runs against the schema every migration leaves, never between two of them: %w",
-		migrations, history.ErrNoTable), "run migr up first")
+		migrations, history.ErrNoTable), "run migrasyon up first")
 }
 
 // attachSeeds gives this session what reads the seeds, in their own order and against their own table.

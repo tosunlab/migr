@@ -8,7 +8,7 @@
 //
 // # Everything here is denied to nothing, so nothing here may reach a driver
 //
-// depguard denies the internal/driver/ prefix everywhere but cmd/migr, which would put this
+// depguard denies the internal/driver/ prefix everywhere but cmd/migrasyon, which would put this
 // package out of reach of internal/driver/postgres and test/conformance/driver — the only two
 // places that need it. One allow entry lifts that, using the same longer-prefix-beats-shorter
 // resolution that keeps internal/runtime/protocol importable.
@@ -30,10 +30,10 @@
 //
 // A golden file records the statements under numbered headers:
 //
-//	-- migr:statement 1
+//	-- migrasyon:statement 1
 //	ALTER TABLE "users" ADD COLUMN "email" varchar(255) NOT NULL;
 //
-//	-- migr:statement 2 no-transaction
+//	-- migrasyon:statement 2 no-transaction
 //	CREATE INDEX CONCURRENTLY "idx_users_email" ON "users" ("email");
 //
 // A statement that blocks no write once its lock is held adds " unblocking" to that header (M13-T11),
@@ -55,7 +55,7 @@
 //
 // An operation a driver declares Unsupported records the refusal rather than being skipped:
 //
-//	-- migr:unsupported drop_column: requires a full table rebuild before 3.35
+//	-- migrasyon:unsupported drop_column: requires a full table rebuild before 3.35
 //
 // So make golden-update runs across the full operation set with no per-driver skip list, and an
 // operation that starts or stops being refused arrives as a diff instead of an edited test. A
@@ -100,5 +100,5 @@
 // package.
 //
 // Only test binaries link this package, and the flag is inert at false, so registering it costs
-// the migr binary nothing — cmd/migr speaks pflag through cobra and never parses flag.CommandLine.
+// the migrasyon binary nothing — cmd/migrasyon speaks pflag through cobra and never parses flag.CommandLine.
 package drivertest

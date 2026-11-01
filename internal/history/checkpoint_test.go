@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestACursorSurvivesItsTextWhateverItsKeyHolds(t *testing.T) {
@@ -50,10 +50,10 @@ func TestACheckpointNoCommittedChunkCouldLeaveIsRefused(t *testing.T) {
 }
 
 func TestTheCheckpointTableIsNamedAfterItsHistoryAndKeyedByMigrationAndDirection(t *testing.T) {
-	ops := ProgressSchema("migr_migrations")
+	ops := ProgressSchema("migrasyon_migrations")
 
 	created, ok := ops[0].(ir.CreateTable)
-	if len(ops) != 1 || !ok || created.Table != "migr_migrations_progress" ||
+	if len(ops) != 1 || !ok || created.Table != "migrasyon_migrations_progress" ||
 		!slices.Equal(created.PrimaryKey, []string{"version", "direction"}) {
 		t.Fatalf("the checkpoint schema is %+v", ops)
 	}

@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 func TestEnsureCreatesTheTableTheIndexItsLookupNeedsAndTheCheckpointTable(t *testing.T) {
@@ -47,14 +47,14 @@ func TestEnsureIsIdempotent(t *testing.T) {
 }
 
 func TestEnsureFindsATableWhoseNameFoldsToAnotherCase(t *testing.T) {
-	c := open(t, filepath.Join(t.TempDir(), "app.db"), driver.Options{HistoryTable: "MigrRuns"})
+	c := open(t, filepath.Join(t.TempDir(), "app.db"), driver.Options{HistoryTable: "MigrasyonRuns"})
 
 	held, ok := c.History().(sqliteHistory)
 	if !ok {
 		t.Fatalf("History returned %T", c.History())
 	}
 
-	exec(t, c, `CREATE TABLE "migrruns" (a integer)`)
+	exec(t, c, `CREATE TABLE "migrasyonruns" (a integer)`)
 
 	err := held.Ensure(t.Context())
 	if !errors.Is(err, ErrHistoryShape) {

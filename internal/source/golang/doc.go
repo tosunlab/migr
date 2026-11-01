@@ -1,6 +1,6 @@
 // Package golang is the .go migration format, as far as the CLI is concerned.
 //
-// It holds the extension and the template `migr create --lang go` writes, and
+// It holds the extension and the template `migrasyon create --lang go` writes, and
 // nothing else. Where internal/source/sql also holds a parser, this package has
 // none and never will: a Go migration is read by the Go toolchain, compiled into
 // a runner, and executed as a process. What comes back is IR over the

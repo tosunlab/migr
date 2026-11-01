@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emrebdr/migr/internal/ir"
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Sense is which of the two ways an operation and the live schema can disagree.

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 func TestAdmitsRefusesEachTableAShadowWouldGetWrongNamingWhy(t *testing.T) {
@@ -33,7 +33,7 @@ func TestAdmitsRefusesEachTableAShadowWouldGetWrongNamingWhy(t *testing.T) {
 		exec(t, c, stmt)
 	}
 
-	if err := asRoot(t, "CREATE TRIGGER `migr`."+quote(base+"_tr")+" BEFORE INSERT ON `migr`."+
+	if err := asRoot(t, "CREATE TRIGGER `migrasyon`."+quote(base+"_tr")+" BEFORE INSERT ON `migrasyon`."+
 		quote(base+"_triggered")+" FOR EACH ROW SET NEW.n = 1"); err != nil {
 		t.Fatalf("creating the trigger as root, which binary logging requires: %v", err)
 	}

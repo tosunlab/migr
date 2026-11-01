@@ -6,9 +6,9 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/emrebdr/migr/internal/capability"
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/capability"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // checkedNotNullRelease is the release whose SET NOT NULL trusts a validated check instead of scanning.
@@ -27,7 +27,7 @@ const (
 	notNullReason = "a validated check stands in for the scan, so SET NOT NULL holds its lock for " +
 		"a moment rather than for the whole table"
 	concurrentReason = "built CONCURRENTLY, outside any transaction, so writes go on while it builds " +
-		"-- a build that fails leaves the index INVALID, which migr drops before trying again"
+		"-- a build that fails leaves the index INVALID, which migrasyon drops before trying again"
 	concurrentDropReason = "dropped CONCURRENTLY, outside any transaction, so it waits for the queries " +
 		"using the index rather than locking them out of the table"
 	concurrentUniqueReason = "its index built CONCURRENTLY and then attached, so only the attach takes " +

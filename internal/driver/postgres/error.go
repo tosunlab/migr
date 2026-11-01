@@ -9,7 +9,7 @@ import (
 // ErrDSN marks a connection string this driver cannot parse, for errors.Is.
 var ErrDSN = errors.New("connection string cannot be parsed")
 
-// ErrReplicas refuses replicas in migr.yaml, since this engine reports every standby's lag on the primary.
+// ErrReplicas refuses replicas in migrasyon.yaml, since this engine reports every standby's lag on the primary.
 var ErrReplicas = errors.New("replicas is not read for PostgreSQL: the primary reports every standby's " +
 	"lag in pg_stat_replication, so remove the key")
 
@@ -61,7 +61,7 @@ var ErrWaitTooLong = errors.New("the configured wait is longer than PostgreSQL c
 
 // WaitError reports a configured wait this driver cannot pass to the server, naming its config key.
 type WaitError struct {
-	// Key is the migr.yaml key that set it, so an operator edits the line they wrote.
+	// Key is the migrasyon.yaml key that set it, so an operator edits the line they wrote.
 	Key string
 	// Wait is what that key was set to.
 	Wait time.Duration
@@ -141,7 +141,7 @@ var ErrAlreadyRecorded = errors.New("this run is already recorded")
 
 // HistoryError reports a history failure, naming the table so an operator knows which one.
 type HistoryError struct {
-	// Table is the history table migr.yaml resolved to, unqualified as this driver writes it.
+	// Table is the history table migrasyon.yaml resolved to, unqualified as this driver writes it.
 	Table string
 	// Detail states what went wrong with it, in terms an operator can act on.
 	Detail string
@@ -168,7 +168,7 @@ var ErrNoSchema = errors.New("the configured schema does not exist on this serve
 
 // SchemaError reports a configured schema PostgreSQL would silently ignore.
 type SchemaError struct {
-	// Schema is the name migr.yaml configured, which the server does not have.
+	// Schema is the name migrasyon.yaml configured, which the server does not have.
 	Schema string
 }
 

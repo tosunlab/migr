@@ -1,4 +1,4 @@
-import { replaceColumn, t } from "@migr/sdk";
+import { replaceColumn, t } from "@migrasyon/sdk";
 
 /** The swap of widening accounts.email: both columns change nullability, then names. */
 export default replaceColumn("accounts", "email", t.string(255))

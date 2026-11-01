@@ -32,7 +32,7 @@ func TestTheTemplateCarriesNoSQLOfItsOwn(t *testing.T) {
 		}
 
 		t.Errorf("line %d is neither blank nor a comment: %q", i+1, line)
-		t.Log(`Invariant #3 is "no raw SQL outside a driver package. Ever." The one file migr`)
+		t.Log(`Invariant #3 is "no raw SQL outside a driver package. Ever." The one file migrasyon`)
 		t.Log("itself authors that is named .sql is markers and guidance only -- an example")
 		t.Log("statement, however illustrative, is the exception that turns the invariant into")
 		t.Log("a preference, and it would ship in every migration anyone ever creates.")
@@ -63,10 +63,10 @@ func TestTheUpSectionComesFirst(t *testing.T) {
 
 func TestTheMarkersCarryTheHouseMarkerPrefix(t *testing.T) {
 	for _, marker := range []string{MarkerUp, MarkerDown} {
-		if !strings.HasPrefix(marker, "-- migr:") {
-			t.Errorf("%q does not begin with the -- migr: prefix", marker)
-			t.Log("The golden files already spell theirs -- migr:statement 1 and -- migr:unsupported.")
-			t.Log("One prefix is what lets a reader tell a marker migr owns from a comment they wrote.")
+		if !strings.HasPrefix(marker, "-- migrasyon:") {
+			t.Errorf("%q does not begin with the -- migrasyon: prefix", marker)
+			t.Log("The golden files already spell theirs -- migrasyon:statement 1 and -- migrasyon:unsupported.")
+			t.Log("One prefix is what lets a reader tell a marker migrasyon owns from a comment they wrote.")
 		}
 	}
 }
@@ -96,6 +96,6 @@ func TestTheExtensionIsADotAndALowercaseWord(t *testing.T) {
 		t.Errorf("Ext is %q, want a dot followed by a lowercase word", Ext)
 		t.Log("internal/migration takes everything after the last dot as the extension and")
 		t.Log("records it without judging it, so a bare dot or an empty one is refused there")
-		t.Log("rather than here -- which would make migr create fail on its own template.")
+		t.Log("rather than here -- which would make migrasyon create fail on its own template.")
 	}
 }

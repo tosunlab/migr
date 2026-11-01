@@ -6,22 +6,22 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/emrebdr/migr/internal/remedy"
+	"github.com/tosunlab/migrasyon/internal/remedy"
 )
 
-// sdkManifest is the file the probe resolves, and one of the two paths @migr/sdk exports at all.
-const sdkManifest = "@migr/sdk/package.json"
+// sdkManifest is the file the probe resolves, and one of the two paths @migrasyon/sdk exports at all.
+const sdkManifest = "@migrasyon/sdk/package.json"
 
-// executableName is the runtime @migr/sdk installs, whose location the package itself states.
-const executableName = "migr-runtime-node"
+// executableName is the runtime @migrasyon/sdk installs, whose location the package itself states.
+const executableName = "migrasyon-runtime-node"
 
-// manifest is the part of @migr/sdk's package.json this adapter reads, and no more of it.
+// manifest is the part of @migrasyon/sdk's package.json this adapter reads, and no more of it.
 type manifest struct {
 	// Bin maps each installed executable to the file it runs, in either shape npm accepts.
 	Bin json.RawMessage `json:"bin"`
 	// Engines is what the package requires of its runtime, which a test holds MinimumNode to.
 	Engines struct {
-		// Node is the semver range @migr/sdk's own engines field states.
+		// Node is the semver range @migrasyon/sdk's own engines field states.
 		Node string `json:"node"`
 	} `json:"engines"`
 }
@@ -44,7 +44,7 @@ func executableIn(path string) (string, error) {
 	if _, err := os.Stat(at); err != nil {
 		return "", remedy.With(fmt.Errorf("%w: the package at %s names %s, which is not there",
 			ErrNoExecutable, filepath.Dir(path), named),
-			"reinstall @migr/sdk with npm install; a linked checkout of it needs npm run build first")
+			"reinstall @migrasyon/sdk with npm install; a linked checkout of it needs npm run build first")
 	}
 
 	return at, nil

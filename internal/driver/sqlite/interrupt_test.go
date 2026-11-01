@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // endless is a write that would run for minutes, so only an interrupt can end it in a test.

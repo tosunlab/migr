@@ -1,9 +1,9 @@
 // The conformance fixture set expressed in TypeScript.
 //
 // One file per manifest, under the same stem, written the way an author writes one: the builder
-// rather than operation literals, and the default export migr create --lang ts writes.
+// rather than operation literals, and the default export migrasyon create --lang ts writes.
 
-import { call, defineMigration, t } from "@migr/sdk";
+import { call, defineMigration, t } from "@migrasyon/sdk";
 
 /** CreateUsers is the fixture for create_table and drop_table. */
 export default defineMigration({

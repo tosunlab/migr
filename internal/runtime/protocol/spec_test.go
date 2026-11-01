@@ -11,7 +11,7 @@ import (
 	"testing"
 	"unicode"
 
-	"github.com/emrebdr/migr/internal/ir"
+	"github.com/tosunlab/migrasyon/internal/ir"
 )
 
 // specPath is the specification this package answers to, relative to the package directory.
@@ -127,13 +127,13 @@ func TestEveryDeclaredCodeIsInTheOrderedList(t *testing.T) {
 func TestNoReservedCodeIsAlsoAnApplicationCode(t *testing.T) {
 	for _, code := range Reserved() {
 		if code.Valid() {
-			t.Errorf("code %d (%s) is listed as both JSON-RPC's own and migr's", code, code)
+			t.Errorf("code %d (%s) is listed as both JSON-RPC's own and migrasyon's", code, code)
 		}
 
 		if code >= ApplicationMin && code <= ApplicationMax {
 			t.Errorf("reserved code %d (%s) sits inside %d..%d, the band left to an implementation",
 				code, code, ApplicationMin, ApplicationMax)
-			t.Log("Valid() means 'one of the twelve migr assigns' and Reserved() means 'one of the")
+			t.Log("Valid() means 'one of the twelve migrasyon assigns' and Reserved() means 'one of the")
 			t.Log("five JSON-RPC defines'. A code in both bands makes each of those answers a lie.")
 		}
 	}
@@ -394,7 +394,7 @@ func modesAsked(t *testing.T, e example) map[ir.Direction]Mode {
 	return asked
 }
 
-// assigned returns every code this protocol version names, JSON-RPC's own and migr's alike.
+// assigned returns every code this protocol version names, JSON-RPC's own and migrasyon's alike.
 func assigned() []Code {
 	return slices.Concat(Codes(), Reserved())
 }

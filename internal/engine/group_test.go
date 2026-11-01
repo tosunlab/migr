@@ -4,7 +4,7 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/emrebdr/migr/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/driver"
 )
 
 // statements builds a list from a spelling where an uppercase letter cannot run in a transaction.

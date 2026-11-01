@@ -189,7 +189,7 @@ export interface CapabilityGetResult {
 
 /** InfoResult reports the facts about this run a migration may branch on. */
 export interface InfoResult {
-  /** The key migr.yaml holds the target under. */
+  /** The key migrasyon.yaml holds the target under. */
   database: string;
   /** The engine that will compile the operations. */
   driver: string;

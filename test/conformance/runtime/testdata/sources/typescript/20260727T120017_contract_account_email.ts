@@ -1,4 +1,4 @@
-import { replaceColumn, t } from "@migr/sdk";
+import { replaceColumn, t } from "@migrasyon/sdk";
 
 /** The contract of widening accounts.email, whose down copies the old values back. */
 export default replaceColumn("accounts", "email", t.string(255))

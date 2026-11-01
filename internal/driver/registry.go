@@ -17,17 +17,17 @@ type Options struct {
 	HistoryTable string
 	// SeedTable is where seeds are recorded, on the same session and under the same lock.
 	SeedTable string
-	// LockStrategy is how migr.yaml asked for the migration lock, empty meaning the driver's own.
+	// LockStrategy is how migrasyon.yaml asked for the migration lock, empty meaning the driver's own.
 	LockStrategy string
-	// LockWait bounds the wait for the migration lock, and is migr.yaml's lock.timeout.
+	// LockWait bounds the wait for the migration lock, and is migrasyon.yaml's lock.timeout.
 	LockWait time.Duration
-	// StatementLockWait bounds one statement's wait for a lock, and is migr.yaml's safety.lock_timeout.
+	// StatementLockWait bounds one statement's wait for a lock, and is migrasyon.yaml's safety.lock_timeout.
 	StatementLockWait time.Duration
 	// Replicas are the servers a driver reads replica lag on, where its engine reports lag only there.
 	Replicas []string
 }
 
-// Namespace returns what identifies one migr installation, defaulting what migr.yaml left unset.
+// Namespace returns what identifies one migrasyon installation, defaulting what migrasyon.yaml left unset.
 func (o Options) Namespace() (schema, table string) {
 	if o.HistoryTable == "" {
 		return o.Schema, DefaultHistoryTable
@@ -36,7 +36,7 @@ func (o Options) Namespace() (schema, table string) {
 	return o.Schema, o.HistoryTable
 }
 
-// Seeding returns the table seeds are recorded in, defaulting what migr.yaml left unset.
+// Seeding returns the table seeds are recorded in, defaulting what migrasyon.yaml left unset.
 func (o Options) Seeding() string {
 	if o.SeedTable == "" {
 		return DefaultSeedTable
@@ -45,7 +45,7 @@ func (o Options) Seeding() string {
 	return o.SeedTable
 }
 
-// Waits returns the two lock bounds, defaulting whichever migr.yaml left unset.
+// Waits returns the two lock bounds, defaulting whichever migrasyon.yaml left unset.
 func (o Options) Waits() (lock, statement time.Duration) {
 	return orDefault(o.LockWait, DefaultLockWait), orDefault(o.StatementLockWait,
 		DefaultStatementLockWait)
@@ -60,7 +60,7 @@ func orDefault(wait, fallback time.Duration) time.Duration {
 	return wait
 }
 
-// Constructor builds a driver from settings resolved out of migr.yaml.
+// Constructor builds a driver from settings resolved out of migrasyon.yaml.
 type Constructor func(opts Options) (Driver, error)
 
 // ErrNoConstructor reports a registration with nothing to construct.
@@ -98,7 +98,7 @@ type UnknownError struct {
 
 // Error names the driver that was asked for and the ones this build has.
 func (e *UnknownError) Error() string {
-	return fmt.Sprintf("unknown driver %q: this build of migr has %s", e.Name, describeKnown(e.Known))
+	return fmt.Sprintf("unknown driver %q: this build of migrasyon has %s", e.Name, describeKnown(e.Known))
 }
 
 // describeKnown renders the registered set, saying so plainly when it is empty.

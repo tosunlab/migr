@@ -3,7 +3,7 @@ package diff
 import (
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/schema"
+	"github.com/tosunlab/migrasyon/internal/schema"
 )
 
 // Structure decides and the name only breaks a tie, because the name is the thing that changed. A

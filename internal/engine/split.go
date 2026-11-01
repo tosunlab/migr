@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/emrebdr/migr/internal/driver"
-	"github.com/emrebdr/migr/internal/history"
-	"github.com/emrebdr/migr/internal/plan"
+	"github.com/tosunlab/migrasyon/internal/driver"
+	"github.com/tosunlab/migrasyon/internal/history"
+	"github.com/tosunlab/migrasyon/internal/plan"
 )
 
 // A migration runs as a sequence of parts. Consecutive statements that may share a

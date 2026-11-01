@@ -6,6 +6,6 @@
     "test": "node --test test/migrations.test.ts"
   },
   "dependencies": {
-    "@migr/sdk": "file:../../sdk/typescript"
+    "@migrasyon/sdk": "file:../../sdk/typescript"
   }
 }

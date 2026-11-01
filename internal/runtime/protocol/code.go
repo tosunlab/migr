@@ -118,7 +118,7 @@ func (c Code) Valid() bool {
 	return slices.Contains(codes, c)
 }
 
-// Reserved reports whether a number is one JSON-RPC 2.0 defines rather than one migr assigns.
+// Reserved reports whether a number is one JSON-RPC 2.0 defines rather than one migrasyon assigns.
 func (c Code) Reserved() bool {
 	return slices.Contains(reserved, c)
 }
